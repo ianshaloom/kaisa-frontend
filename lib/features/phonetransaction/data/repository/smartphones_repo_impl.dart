@@ -10,20 +10,6 @@ import '../provider/network/firestore_smartphone_ds.dart';
 class SmartphonesRepoImpl implements SmartphonesRepo {
   SmartphonesRepoImpl(this._firestoreSmartPhoneDs);
   final FirestoreSmartPhoneDs _firestoreSmartPhoneDs;
-
-  @override
-  Future<Either<Failure, void>> createSmartphone({
-    required SmartphoneEntity smartphone,
-  }) async {
-    try {
-      await _firestoreSmartPhoneDs.createSmartPhone(smartphone: smartphone);
-
-      return Future.value(const Right(null));
-    } on CouldNotCreateException catch (e) {
-      return Future.value(Left(SmartphoneFailure(errorMessage: e.toString())));
-    }
-  }
-
   @override
   Future<Either<Failure, List<SmartphoneEntity>>> fetchSmartphones() async {
     try {
@@ -31,32 +17,6 @@ class SmartphonesRepoImpl implements SmartphonesRepo {
 
       return Future.value(Right(smartphones));
     } on CouldNotFetchException catch (e) {
-      return Future.value(Left(SmartphoneFailure(errorMessage: e.toString())));
-    }
-  }
-
-  @override
-  Future<Either<Failure, void>> updateSmartphone({
-    required SmartphoneEntity smartphone,
-  }) async {
-    try {
-      await _firestoreSmartPhoneDs.updateSmartPhone(smartphone: smartphone);
-
-      return Future.value(const Right(null));
-    } on CouldNotUpdateException catch (e) {
-      return Future.value(Left(SmartphoneFailure(errorMessage: e.toString())));
-    }
-  }
-
-  @override
-  Future<Either<Failure, void>> deleteSmartphone({
-    required String id,
-  }) async {
-    try {
-      await _firestoreSmartPhoneDs.deleteSmartPhone(id: id);
-
-      return Future.value(const Right(null));
-    } on CouldNotDeleteException catch (e) {
       return Future.value(Left(SmartphoneFailure(errorMessage: e.toString())));
     }
   }

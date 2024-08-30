@@ -19,39 +19,6 @@ class FirestoreUsersDs {
     }
   }
 
-  // update user
-  static Future<void> updateUser({
-    required KaisaUser user,
-  }) async {
-    final docId = user.uuid;
-    final document = user.toJson();
-
-    try {
-      await users.doc(docId).update(document);
-    } catch (e) {
-      throw CouldNotUpdateException();
-    }
-  }
-
-  // delete user
-  static Future<void> deleteUser({required KaisaUser user}) async {
-    final docId = user.uuid;
-
-    try {
-      await users.doc(docId).delete();
-    } catch (e) {
-      throw CouldNotDeleteException();
-    }
-  }
-
-  // get all users
-  static Stream<List<KaisaUser>> listenToUsers() {
-    final allUsers = users.snapshots().map((event) => event.docs
-        .map((doc) => KaisaUser.fromQuerySnapshot(documentSnapshot: doc))
-        .toList());
-    return allUsers;
-  }
-
   static Future<List<KaisaUser>> fetchUsers() async {
     final snapShot = await users.get();
     final fetchedUsers = snapShot.docs

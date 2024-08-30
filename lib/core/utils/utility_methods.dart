@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:kaisa/core/constants/constants.dart';
 import 'package:kaisa/core/constants/network_const.dart';
@@ -44,47 +43,6 @@ String newDate(DateTime date) {
   String month = DateFormat.MMM().format(date);
   String year = DateFormat.y().format(date);
   return '$day $month $year';
-}
-
-Color getTitileColor(String title) {
-  switch (title) {
-    case 'Pending':
-      return Colors.blue;
-    case 'Received':
-      return Colors.green;
-    case 'Cancelled':
-      return Colors.black;
-    default:
-      return Colors.black;
-  }
-}
-
-bool fromHome(String page) {
-  return page == 'home';
-}
-
-bool fromDynamicList(String page) {
-  return page == 'dynamicList';
-}
-
-bool fromPurchaseList(String page) {
-  return page == 'purchase-list';
-}
-
-
-
-String extractNameFromEmail(String email) {
-  // Split the email address at the '@' symbol
-  List<String> parts = email.split('@');
-
-  // Check if there are exactly two parts (name and domain)
-  if (parts.length == 2) {
-    // Return the first part (name)
-    return parts[0];
-  } else {
-    // Return empty string if the email format is invalid
-    return email;
-  }
 }
 
 // return a string of date in this format 2024-05-27
