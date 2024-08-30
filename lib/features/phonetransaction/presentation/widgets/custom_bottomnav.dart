@@ -48,8 +48,7 @@ class CustomBottomNavBar extends StatelessWidget {
 
   bool validateOrder(BuildContext context) {
     Snack snack = Snack();
-    if (_ptCtrl.kaisaShopsList.isEmpty ||
-        _ptCtrl.isShopEmpty) {
+    if (_ptCtrl.kaisaShopsList.isEmpty || _ptCtrl.isShopEmpty) {
       snack.showSnackBar(context: context, message: 'Please select a shop');
       return false;
     }
@@ -64,7 +63,7 @@ class CustomBottomNavBar extends StatelessWidget {
   }
 
   void placeOrder(BuildContext context, String id) async {
-    final transferId = const Uuid().v4();
+    final transferId = _ptCtrl.barcode.value;
     final sender = _ptCtrl.getMyProfile;
     final smartphone = _ptCtrl.selectedPhone;
 
