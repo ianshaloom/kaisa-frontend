@@ -8,13 +8,31 @@ import '../../domain/usecase/phone_transaction_usecase.dart';
 import '../../domain/usecase/smartphones_usecase.dart';
 import 'phone_transaction_ctrl.dart';
 import 'smartphones_ctrl.dart';
+import 'transac_history_ctrl.dart';
 
 class PhoneTransitBind extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<SmartphonesCtrl>(() => SmartphonesCtrl(
-        SmartphonesUsecase(SmartphonesRepoImpl(FirestoreSmartPhoneDs()),),),);
-    Get.lazyPut<PhoneTransactionCtrl>(() => PhoneTransactionCtrl(
-        PhoneTransactionUsecase(PhoneTransactionRepoImpl(FirestorePhoneTransactionDs()),),),);
+    Get.lazyPut<SmartphonesCtrl>(
+      () => SmartphonesCtrl(
+        SmartphonesUsecase(
+          SmartphonesRepoImpl(FirestoreSmartPhoneDs()),
+        ),
+      ),
+    );
+    Get.lazyPut<PhoneTransactionCtrl>(
+      () => PhoneTransactionCtrl(
+        PhoneTransactionUsecase(
+          PhoneTransactionRepoImpl(FirestorePhoneTransactionDs()),
+        ),
+      ),
+    );
+
+    Get.lazyPut<TransacHistoryCtrl>(
+      () => TransacHistoryCtrl( PhoneTransactionUsecase(
+          PhoneTransactionRepoImpl(FirestorePhoneTransactionDs()),
+        ),
+      ),
+    );
   }
 }

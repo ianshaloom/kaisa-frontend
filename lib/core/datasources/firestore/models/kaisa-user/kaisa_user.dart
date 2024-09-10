@@ -11,6 +11,7 @@ class KaisaUser {
     required this.uuid,
     required this.fullName,
     required this.email,
+    required this.phoneNumber,
     required this.address,
     required this.isEmailVerified,
     required this.role,
@@ -19,6 +20,7 @@ class KaisaUser {
   final String uuid;
   final String fullName;
   final String email;
+  final String phoneNumber;
   final String address;
   final bool isEmailVerified;
   final String role;
@@ -27,6 +29,7 @@ class KaisaUser {
         uuid: '',
         fullName: 'Stranger',
         email: '',
+        phoneNumber: '',
         address: '',
         role: '',
         isEmailVerified: true,
@@ -36,6 +39,7 @@ class KaisaUser {
     String? uuid,
     String? fullName,
     String? email,
+    String? phoneNumber,
     String? address,
     String? role,
     bool? isEmailVerified,
@@ -45,6 +49,7 @@ class KaisaUser {
       uuid: uuid ?? this.uuid,
       fullName: fullName ?? this.fullName,
       email: email ?? this.email,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
       address: address ?? this.address,
       role: role ?? this.role,
       isEmailVerified: isEmailVerified ?? this.isEmailVerified,
@@ -55,6 +60,7 @@ class KaisaUser {
       : uuid = userDataHive.uuid,
         fullName = userDataHive.fullName,
         email = userDataHive.email,
+        phoneNumber = userDataHive.phoneNumber,
         address = userDataHive.address,
         role = userDataHive.role,
         isEmailVerified = userDataHive.isEmailVerified;
@@ -64,6 +70,7 @@ class KaisaUser {
       : uuid = documentSnapshot.id,
         fullName = documentSnapshot['fullName'],
         email = documentSnapshot['email'],
+        phoneNumber = documentSnapshot['phoneNumber'],
         address = documentSnapshot['address'],
         role = documentSnapshot['role'],
         isEmailVerified = documentSnapshot['isEmailVerified'];
@@ -73,6 +80,7 @@ class KaisaUser {
       : uuid = documentSnapshot.id,
         fullName = documentSnapshot['fullName'],
         email = documentSnapshot['email'],
+        phoneNumber = documentSnapshot['phoneNumber'],
         address = documentSnapshot['address'],
         role = documentSnapshot['role'],
         isEmailVerified = documentSnapshot['isEmailVerified'];

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../../../router/route_names.dart';
 import '../../../../../core/widgets/custom_filled_btn.dart';
@@ -54,7 +55,7 @@ class SignInPage extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Please enter your credentials',
-                  style: bodyDefault(textTheme).copyWith(
+                  style: bodyMedium(textTheme).copyWith(
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
                   ),
@@ -80,7 +81,7 @@ class SignInPage extends StatelessWidget {
                             context.go(AppNamedRoutes.toForgotPass),
                         child: Text(
                           'Forgot Password?',
-                          style: bodyDefaultBold(textTheme).copyWith(
+                          style: bodyBold(textTheme).copyWith(
                             color: Theme.of(context).colorScheme.primary,
                           ),
                         ),
@@ -115,19 +116,15 @@ class SignInPage extends StatelessWidget {
   // Login Page Members
   Future _signIn(BuildContext context, String email, String password) async {
     final color = Theme.of(context).colorScheme;
-    final controller = Get.find<AuthRepoController>();
+    final controller = Get.find<AuthController>();
     showDialog(
-      barrierColor: Colors.black.withOpacity(0.5),
+      barrierColor: color.primary.withOpacity(0.2),
       context: context,
       barrierDismissible: false,
       builder: (_) => Center(
-        child: SizedBox(
-          height: 75,
-          width: 75,
-          child: CircularProgressIndicator(
-            color: color.surface,
-            backgroundColor: Theme.of(context).colorScheme.primary,
-          ),
+        child: LoadingAnimationWidget.fourRotatingDots(
+          color: color.primary,
+          size: 50,
         ),
       ),
     );

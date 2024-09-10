@@ -8,12 +8,11 @@ class LogOutButtonOne extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<AuthRepoController>();
+    final controller = Get.find<AuthController>();
 
     return IconButton(
       onPressed: () async {
         await controller.signOut();
-        await controller.deleteUser();
       },
       icon: const Icon(Icons.logout),
     );

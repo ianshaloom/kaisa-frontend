@@ -37,7 +37,7 @@ class _CustomFormTfState extends State<CustomFormTf> {
       keyboardType: widget.isNumber ? TextInputType.number : TextInputType.text,
       autocorrect: false,
       decoration: InputDecoration(
-        labelStyle: bodyDefault(textTheme).copyWith(
+        labelStyle: bodyMedium(textTheme).copyWith(
           color: color.onSurface.withOpacity(0.5),
         ),
         labelText: widget.labelText,

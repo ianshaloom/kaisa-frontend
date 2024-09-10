@@ -5,6 +5,9 @@ import '../../../../core/errors/failure_n_success.dart';
 import '../entity/auth_user.dart';
 
 abstract class AuthRepository {
+
+  Future<Either<Failure, bool>> checkQualification(int code);
+
   AuthUser get currentUser;
 
   Stream<AuthUser> get user;
@@ -17,6 +20,7 @@ abstract class AuthRepository {
         required String fullName,
     required String address,
     required String email,
+    required String phoneNumber,
     required String password,
       });
   

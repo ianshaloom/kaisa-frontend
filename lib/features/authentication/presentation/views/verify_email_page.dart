@@ -51,7 +51,7 @@ class VerifyEmailPage extends StatelessWidget {
                 child: Text(
                   'We,ve sent a verification email to verify your email address.'
                   'You might wanna check your spam if you cant find it.',
-                  style: bodyDefault(textTheme).copyWith(
+                  style: bodyMedium(textTheme).copyWith(
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
                   ),
@@ -86,7 +86,7 @@ class CountdownTimer extends StatefulWidget {
 }
 
 class _CountdownTimerState extends State<CountdownTimer> {
-  final controller = Get.find<AuthRepoController>();
+  final controller = Get.find<AuthController>();
 
   int _secondsRemaining = 59;
   late Timer _timer1;
@@ -141,7 +141,6 @@ class _CountdownTimerState extends State<CountdownTimer> {
                     _isTimerActive = true;
                   });
                   startCountdown();
-                  
                 },
           title: 'Resend verification email',
           pad: 0,
@@ -149,7 +148,7 @@ class _CountdownTimerState extends State<CountdownTimer> {
         const SizedBox(height: 27),
         CustomOutlinedBtn(
           onPressed: () async {
-            final c = Get.find<AuthRepoController>();
+            final c = Get.find<AuthController>();
             await c.signOut();
           },
           title: 'Cancel',

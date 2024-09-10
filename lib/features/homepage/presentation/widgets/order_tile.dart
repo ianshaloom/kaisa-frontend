@@ -33,7 +33,7 @@ class OrderTile extends StatelessWidget {
               top: 0,
               child: Text(
                 elapsedTime(order.createdAt, customTime(order.createdAt)),
-                style: bodyDefault(font).copyWith(
+                style: bodyMedium(font).copyWith(
                   color: color.onSurface.withOpacity(0.3),
                   fontSize: 11,
                 ),
@@ -60,13 +60,13 @@ class OrderTile extends StatelessWidget {
                 ),
                 title: Text(
                   '# ${order.ram} ${order.storage}',
-                  style: bodyDefault(font).copyWith(
+                  style: bodyMedium(font).copyWith(
                     fontSize: 10,
                   ),
                 ),
                 subtitle: Text(
                   order.phoneName,
-                  style: bodyDefault(font).copyWith(
+                  style: bodyMedium(font).copyWith(
                     fontWeight: FontWeight.w400,
                     color: color.onSurface,
                   ),

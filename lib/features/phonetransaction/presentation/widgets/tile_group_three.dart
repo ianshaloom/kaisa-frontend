@@ -13,7 +13,7 @@ class TileGroupThree extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
     final font = Theme.of(context).textTheme;
-    final bodyDft = bodyDefault(font);
+    final bodyDft = bodyMedium(font);
     const double height = 20.0;
 
     return Container(
@@ -51,7 +51,6 @@ class TileGroupThree extends StatelessWidget {
               Text(phoneTrans.storage, style: bodyDft),
             ],
           ),
-          
         ],
       ),
     );
@@ -85,21 +84,21 @@ class ReceiptItemTileO extends StatelessWidget {
         ),
         ListTile(
           leading: Text(quantity.toString(),
-              style: bodyDefaultBold(font).copyWith(
+              style: bodyBold(font).copyWith(
                 fontWeight: FontWeight.w600,
                 fontSize: 15,
               )),
           title: Text(
             title,
-            style: bodyDefaultBold(font),
+            style: bodyBold(font),
           ),
           subtitle: Text(
             'X ${unitprice.toString()}',
-            style: bodyDefault(font),
+            style: bodyMedium(font),
           ),
           trailing: Text(
             NumberFormat('#,##0.00').format((unitprice * quantity)),
-            style: bodyDefaultBold(font),
+            style: bodyBold(font),
           ),
         ),
       ],

@@ -13,24 +13,37 @@ class AuthRepoImpl implements AuthRepository {
   final FirebaseAuthentification _firebaseAuthentification;
 
   @override
+  Future<Either<Failure, bool>> checkQualification(int code) async {
+    try {
+      final isQualified =
+          await _firebaseAuthentification.checkQualification(code);
+
+      return Future.value(Right(isQualified));
+    } on AuthenticationException catch (e) {
+      return Future.value(Left(AuthFailure(errorMessage: e.message)));
+    }
+  }
+
+  @override
   AuthUser get currentUser => _firebaseAuthentification.currentUser;
 
   @override
   Stream<AuthUser> get user => _firebaseAuthentification.user;
 
   @override
-  Future<Either<Failure, AuthUser>> createUser(
-      {
-        required String fullName,
+  Future<Either<Failure, AuthUser>> createUser({
+    required String fullName,
     required String address,
     required String email,
+    required String phoneNumber,
     required String password,
-      }) async {
+  }) async {
     try {
       final user = await _firebaseAuthentification.signUp(
         fullName: fullName,
         address: address,
         email: email,
+        phoneNumber: phoneNumber,
         password: password,
       );
 

@@ -1,5 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
+import '../../../../constants/network_const.dart';
 import '../../../firestore/models/kaisa-user/kaisa_user.dart';
 
 part 'hive_user_data_model.g.dart';
@@ -10,28 +11,34 @@ class UserDataHive extends HiveObject {
     required this.uuid,
     required this.fullName,
     required this.email,
+    required this.phoneNumber,
     required this.address,
     required this.isEmailVerified,
     required this.role,
   });
 
   @HiveField(0)
-  final String uuid;
+   String uuid;
   @HiveField(1)
-  final String fullName;
+   String fullName;
   @HiveField(2)
-  final String email;
+   String email;
+  @HiveField(6)
+   String phoneNumber;
   @HiveField(3)
-  final String address;
+   String address;
   @HiveField(4)
-  final bool isEmailVerified;
+   bool isEmailVerified;
   @HiveField(5)
-  final String role;
+   String role;
+   @HiveField(7)
+    String profileImgUrl = profilePictures[3];
 
   static UserDataHive get empty => UserDataHive(
         uuid: '',
         fullName: 'Stranger',
         email: '',
+        phoneNumber: '',
         address: '',
         role: '',
         isEmailVerified: true,
@@ -42,6 +49,7 @@ class UserDataHive extends HiveObject {
       uuid: userData.uuid,
       fullName: userData.fullName,
       email: userData.email,
+      phoneNumber: userData.phoneNumber,
       address: userData.address,
       role: userData.role,
       isEmailVerified: userData.isEmailVerified,
@@ -53,6 +61,7 @@ class UserDataHive extends HiveObject {
     String? uuid,
     String? fullName,
     String? email,
+    String? phoneNumber,
     String? address,
     String? role,
     bool? isEmailVerified,
@@ -62,6 +71,7 @@ class UserDataHive extends HiveObject {
       uuid: uuid ?? this.uuid,
       fullName: fullName ?? this.fullName,
       email: email ?? this.email,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
       address: address ?? this.address,
       role: role ?? this.role,
       isEmailVerified: isEmailVerified ?? this.isEmailVerified,

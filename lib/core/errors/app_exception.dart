@@ -17,7 +17,16 @@ class FetchDataException extends AppException {
   FetchDataException(String? details)
       : super(
           code: "fetch-data",
-          message: "Error During Communication",
+          message: "Error During Fetching Data",
+          details: details,
+        );
+}
+
+class PostDataException extends AppException {
+  PostDataException(String? details)
+      : super(
+          code: "post-data",
+          message: "Error During Posting Data",
           details: details,
         );
 }

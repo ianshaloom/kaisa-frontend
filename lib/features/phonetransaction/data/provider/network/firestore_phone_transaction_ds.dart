@@ -3,12 +3,16 @@ import 'package:kaisa/core/utils/extension_methods.dart';
 
 import '../../../../../core/datasources/firestore/models/phone-transaction/phone_transaction.dart';
 import '../../../../../core/datasources/hive/hive-crud/hive_user_crud.dart';
+import '../../../../../core/datasources/kaisa-backend/crud/kaisa_backend_orders_ds.dart';
+import '../../../../../core/datasources/kaisa-backend/models/kaisa-order/kaisa_order.dart';
+import '../../../../../core/errors/app_exception.dart';
 import '../../core/constants/phone_transaction_const.dart';
 import '../../core/errors/phone_transactions_exception.dart';
 
 class FirestorePhoneTransactionDs {
   static final trans = FirebaseFirestore.instance.collection(transaction);
   final HiveUserDataCrud hiveUser = HiveUserDataCrud();
+  final KBOrders kbOrders = KBOrders();
 
   Future<void> newPhoneTransaction(
       {required PhoneTransaction phoneTransaction}) async {
@@ -68,13 +72,21 @@ class FirestorePhoneTransactionDs {
       final documentId = phoneTransaction.transferId;
       final exchangesId = phoneTransaction.exchangesId;
 
+      // add transaction to completed transactions in kaisa backend
+      await kbOrders.postOrder(KOrder.fromPhoneTransaction(
+        phoneTransaction: phoneTransaction,
+      ));
+
+      // persist transaction in firestore
       final DocumentReference transactionDocRef =
           trans.doc(exchangesId).collection(phoneTransactions).doc(documentId);
 
       final document = phoneTransaction.toJson();
       await transactionDocRef.update(document);
-    } catch (e) {
+    } on PostDataException catch (e) {
      throw CouldNotUpdateTrans(e.toString());
+    } catch (e) {
+      throw CouldNotUpdateTrans(e.toString());
     }
   }
 

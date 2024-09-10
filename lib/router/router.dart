@@ -10,7 +10,9 @@ import '../features/phonetransaction/presentation/views/receiving_order.dart';
 import '../features/phonetransaction/presentation/views/sending_order.dart';
 import '../features/phonetransaction/presentation/views/send_scan.dart';
 import '../features/phonetransaction/presentation/views/smartphone_detail.dart';
-import '../features/phonetransaction/presentation/views/products_grid_list.dart';
+import '../features/phonetransaction/presentation/views/smartphone_grid_list.dart';
+import '../features/phonetransaction/presentation/views/trans_history.dart';
+import '../features/profile/presentation/views/profile_view.dart';
 import '../features/zkeleton/views/zleton.dart';
 
 final router = GoRouter(
@@ -36,8 +38,10 @@ final router = GoRouter(
         GoRoute(
           path: RoutePath.signUp.path,
           name: RoutePath.signUp.name,
-          builder: (context, state) => SignUpPage(),
+          builder: (context, state) => const SignUpPage(),
         ),
+
+        // root page is Home page, to show order details
         GoRoute(
           path: RoutePath.orderDetailFromHome.path,
           name: RoutePath.orderDetailFromHome.name,
@@ -63,7 +67,7 @@ final router = GoRouter(
           ],
         ),
 
-        // root page is Home page
+        // root page is Home page, to show smartphones grid list
         GoRoute(
           path: RoutePath.smartphonesGridList.path,
           name: RoutePath.smartphonesGridList.name,
@@ -90,6 +94,47 @@ final router = GoRouter(
             ),
           ],
         ),
+
+        // root page is Home page, to show transactions history
+        GoRoute(
+          path: RoutePath.transHistory.path,
+          name: RoutePath.transHistory.name,
+          builder: (context, state) => const TransHistoryView(),
+          routes: [
+            GoRoute(
+                path: RoutePath.transHistoryDetails.path,
+                name: RoutePath.transHistoryDetails.name,
+                builder: (context, state) {
+                  return const OrderDetailPage();
+                },
+                routes: [
+                  GoRoute(
+                    path: RoutePath.cancelOrderTH.path,
+                    name: RoutePath.cancelOrderTH.name,
+                    builder: (context, state) => const CancellingOrder(),
+                  ),
+                  GoRoute(
+                    path: RoutePath.receiveScanTH.path,
+                    name: RoutePath.receiveScanTH.name,
+                    builder: (context, state) => const ReceiveScan(),
+                  ),
+                  GoRoute(
+                    path: RoutePath.receiveOrderTH.path,
+                    name: RoutePath.receiveOrderTH.name,
+                    builder: (context, state) => const ReceivingOrder(),
+                  ),
+                ],
+              ),
+
+          ]
+        ),
+
+        // root page is Home page, to show profile details
+        GoRoute(
+          path: RoutePath.profile.path,
+          name: RoutePath.profile.name,
+          builder: (context, state) => const ProfileView(),
+        ),
       ],
     ),
   ],
@@ -109,6 +154,11 @@ enum RoutePath {
   receiveScan(path: 'receive-scan'),
   receiveOrder(path: 'receive-order'),
   cancelOrder(path: 'cancel-order'),
+  transHistory(path: 'transactions-history'),
+  transHistoryDetails(path: 'transHistory-details'),
+    receiveScanTH(path: 'receive-scan-TH'),
+  receiveOrderTH(path: 'receive-order-TH'),
+  cancelOrderTH(path: 'cancel-order-TH'),
   profile(path: 'profile'),
   ;
 

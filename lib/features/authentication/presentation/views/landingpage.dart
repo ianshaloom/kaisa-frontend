@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/custom_filled_btn.dart';
 import '../../../../core/widgets/custom_outllined_btn.dart';
 import '../../../../router/route_names.dart';
@@ -21,9 +22,19 @@ class LandingPage extends StatelessWidget {
       ),
       body: Column(
         children: [
-          const SizedBox(
+          SizedBox(
             height: 500,
-            child: Center(),
+            child: Center(
+              child: Text(
+                company,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w900,
+                  color: colorScheme.primary,
+                ),
+              ),
+            ),
           ),
           const Spacer(),
           Container(

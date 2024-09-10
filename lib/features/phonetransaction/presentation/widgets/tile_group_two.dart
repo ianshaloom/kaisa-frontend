@@ -11,7 +11,7 @@ class TileGroupTwo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final font = Theme.of(context).textTheme;
-    final bodyDft = bodyDefault(font);
+    final bodyDft = bodyMedium(font);
 
     final color = Theme.of(context).colorScheme;
     return Container(

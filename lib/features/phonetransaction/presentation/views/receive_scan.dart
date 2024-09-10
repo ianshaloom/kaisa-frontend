@@ -67,6 +67,7 @@ class ReceiveScan extends StatelessWidget {
 
   Future<void> _toReceivingOrder(BuildContext context) async {
     Navigator.of(context).pop();
+    _ctrl.actionFromTH ? context.go(AppNamedRoutes.toReceivingOrderTH) :
     context.go(AppNamedRoutes.toReceivingOrder);
   }
 
@@ -91,7 +92,9 @@ class ReceiveScan extends StatelessWidget {
         processedBy: transaction.receiverName,
       );
 
-      await _ctrl.completePhoneTransaction(transaction: order).then((value) {
+      _ctrl.beingCompleted = order;
+
+      await _ctrl.completePhoneTransaction().then((value) {
         _ctrl.fetchPhoneTransactions();
       });
     });

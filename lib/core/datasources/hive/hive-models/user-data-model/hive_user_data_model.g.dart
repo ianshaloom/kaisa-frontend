@@ -20,28 +20,33 @@ class UserDataHiveAdapter extends TypeAdapter<UserDataHive> {
       uuid: fields[0] as String,
       fullName: fields[1] as String,
       email: fields[2] as String,
+      phoneNumber: fields[6] as String,
       address: fields[3] as String,
       isEmailVerified: fields[4] as bool,
       role: fields[5] as String,
-    );
+    )..profileImgUrl = fields[7] as String;
   }
 
   @override
   void write(BinaryWriter writer, UserDataHive obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.uuid)
       ..writeByte(1)
       ..write(obj.fullName)
       ..writeByte(2)
       ..write(obj.email)
+      ..writeByte(6)
+      ..write(obj.phoneNumber)
       ..writeByte(3)
       ..write(obj.address)
       ..writeByte(4)
       ..write(obj.isEmailVerified)
       ..writeByte(5)
-      ..write(obj.role);
+      ..write(obj.role)
+      ..writeByte(7)
+      ..write(obj.profileImgUrl);
   }
 
   @override

@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../../../../../theme/text_scheme.dart';
 
-// SECTION: AUTH PAGE Components
-/* -------------------------------------------------------------------------- */
-
 // Component: Email Text Form Field
 class EmailTextFormField extends StatefulWidget {
   const EmailTextFormField({
@@ -37,7 +34,7 @@ class _EmailTextFormFieldState extends State<EmailTextFormField> {
       decoration: InputDecoration(
         prefixIcon: const Icon(Icons.email_outlined),
         labelText: 'Email',
-        labelStyle: bodyDefault(textTheme).copyWith(
+        labelStyle: bodyMedium(textTheme).copyWith(
           fontSize: 13,
         ),
         border: OutlineInputBorder(
@@ -100,7 +97,7 @@ class _PassWordTextFormFieldState extends State<PassWordTextFormField> {
           onPressed: () => _togglePasswordVisibility(),
         ),
         labelText: 'Password',
-        labelStyle: bodyDefault(textTheme).copyWith(
+        labelStyle: bodyMedium(textTheme).copyWith(
           fontSize: 13,
         ),
         border: OutlineInputBorder(
@@ -114,6 +111,55 @@ class _PassWordTextFormFieldState extends State<PassWordTextFormField> {
         }
         if (password.length < 8) {
           return 'Password must be at least 8 characters long';
+        }
+        return null;
+      },
+    );
+  }
+}
+
+// Component: Confirm Phone Number Text Form Field
+class ActivateTextFormField extends StatefulWidget {
+  const ActivateTextFormField({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
+
+  final TextEditingController controller;
+
+  @override
+  State<ActivateTextFormField> createState() => _ActivateTextFormFieldState();
+}
+
+class _ActivateTextFormFieldState extends State<ActivateTextFormField> {
+  @override
+  void dispose() {
+    widget.controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return TextFormField(
+      autocorrect: false,
+      textInputAction: TextInputAction.next,
+      controller: widget.controller,
+      keyboardType: TextInputType.number,
+      decoration: InputDecoration(
+        prefixIcon: const Icon(Icons.code),
+        labelText: 'Activation Code',
+        labelStyle: bodyMedium(textTheme).copyWith(
+          fontSize: 13,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+      validator: (phone) {
+        if (phone == null || phone.isEmpty) {
+          return 'Please enter activation code';
         }
         return null;
       },
@@ -142,7 +188,6 @@ class NormalTextFormField extends StatefulWidget {
 }
 
 class _NormalTextFormFieldState extends State<NormalTextFormField> {
-  
   @override
   void dispose() {
     widget.controller.dispose();
@@ -161,7 +206,7 @@ class _NormalTextFormFieldState extends State<NormalTextFormField> {
       decoration: InputDecoration(
         prefixIcon: widget.prefixIcon,
         labelText: widget.labelText,
-        labelStyle: bodyDefault(textTheme).copyWith(
+        labelStyle: bodyMedium(textTheme).copyWith(
           fontSize: 13,
         ),
         border: OutlineInputBorder(
@@ -180,5 +225,51 @@ class _NormalTextFormFieldState extends State<NormalTextFormField> {
   }
 }
 
-/* -------------------------------------------------------------------------- */
-// !SECTION: Components
+// Component: Confirm Phone Number Text Form Field
+class TelTextFormField extends StatefulWidget {
+  const TelTextFormField({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
+
+  final TextEditingController controller;
+
+  @override
+  State<TelTextFormField> createState() => _TelTextFormFieldState();
+}
+
+class _TelTextFormFieldState extends State<TelTextFormField> {
+  @override
+  void dispose() {
+    widget.controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return TextFormField(
+      autocorrect: false,
+      textInputAction: TextInputAction.next,
+      controller: widget.controller,
+      keyboardType: TextInputType.phone,
+      decoration: InputDecoration(
+        prefixIcon: const Icon(Icons.phone_outlined),
+        labelText: 'Phone Number',
+        labelStyle: bodyMedium(textTheme).copyWith(
+          fontSize: 13,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+      validator: (phone) {
+        if (phone == null || phone.isEmpty) {
+          return 'Please enter phone number';
+        }
+        return null;
+      },
+    );
+  }
+}

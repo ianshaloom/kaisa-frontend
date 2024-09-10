@@ -4,7 +4,6 @@ import '../../../../../../theme/text_scheme.dart';
 import '../../../../core/constants/network_const.dart';
 import '../../../../core/datasources/firestore/models/phone-transaction/phone_transaction.dart';
 
-
 class TileGroupOne extends StatelessWidget {
   final PhoneTransaction phoneTrans;
   const TileGroupOne({super.key, required this.phoneTrans});
@@ -31,7 +30,7 @@ class TileGroupOne extends StatelessWidget {
                 phoneTrans.phoneName,
                 // overflow: TextOverflow.ellipsis,
                 softWrap: true,
-                style: bodyDefaultBold(textTheme).copyWith(
+                style: bodyBold(textTheme).copyWith(
                   fontSize: 23,
                   fontWeight: FontWeight.w700,
                 ),
@@ -49,8 +48,7 @@ class TileGroupOne extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: NetworkImage(
-                  '$kBaseUrlShop${phoneTrans.imgUrl}'),
+              image: NetworkImage('$kBaseUrlImages${phoneTrans.imgUrl}'),
               fit: BoxFit.fitHeight,
             ),
           ),

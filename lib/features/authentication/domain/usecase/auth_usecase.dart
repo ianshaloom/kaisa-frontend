@@ -8,6 +8,10 @@ import '../repository/auth_repo.dart';
 class AuthUC {
   final AuthRepository _authRepository;
 
+  Future<Either<Failure, bool>> checkQualification(int code) async {
+    return await _authRepository.checkQualification(code);
+  }
+
   AuthUC(this._authRepository);
 
   AuthUser get currentUser => _authRepository.currentUser;
@@ -24,12 +28,14 @@ class AuthUC {
     required String fullName,
     required String address,
     required String email,
+    required String phoneNumber,
     required String password,
   }) async {
     return await _authRepository.createUser(
       fullName: fullName,
       address: address,
       email: email,
+      phoneNumber: phoneNumber,
       password: password,
     );
   }

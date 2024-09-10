@@ -9,7 +9,6 @@ class AuthRepoBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<AuthUC>(() => AuthUC(AuthRepoImpl(FirebaseAuthentification())));
-    Get.lazyPut<AuthRepoController>(
-        () => AuthRepoController(Get.find<AuthUC>()));
+    Get.lazyPut<AuthController>(() => AuthController(Get.find<AuthUC>()));
   }
 }

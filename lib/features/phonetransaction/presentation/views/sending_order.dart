@@ -5,10 +5,11 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../../../core/constants/image_path_const.dart';
 import '../../../../core/widgets/custom_filled_btn.dart';
+import '../../../../core/widgets/custom_outllined_btn.dart';
 import '../../../../theme/text_scheme.dart';
 import '../controller/phone_transaction_ctrl.dart';
 
-final _phoneTransactionCtrl = Get.find<PhoneTransactionCtrl>();
+final _ctrl = Get.find<PhoneTransactionCtrl>();
 
 class SendingOrder extends StatelessWidget {
   const SendingOrder({super.key});
@@ -22,20 +23,17 @@ class SendingOrder extends StatelessWidget {
       appBar: AppBar(
         toolbarHeight: 50,
         elevation: 0,
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back_ios_new),
-        ),
+        automaticallyImplyLeading: false,
         centerTitle: true,
         title: Text(
-          'To ${_phoneTransactionCtrl.selectedShopAddress.value}',
-          style: bodyDefaultBold(textTheme).copyWith(
-            fontSize: 16,
+          'To ${_ctrl.selectedShopAddress.value}',
+          style: bodyMedium(textTheme).copyWith(
+            fontSize: 14,
           ),
         ),
       ),
       body: Obx(
-        () => _phoneTransactionCtrl.processingRequestOne.value
+        () => _ctrl.processingRequestOne.value
             ? Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -57,7 +55,7 @@ class SendingOrder extends StatelessWidget {
                 ),
               )
             : Builder(builder: (context) {
-                return _phoneTransactionCtrl.requestFailure.isNotEmpty
+                return (_ctrl.newFailure != null)
                     ? Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -69,15 +67,14 @@ class SendingOrder extends StatelessWidget {
                             const SizedBox(height: 34),
                             Text(
                               'Error From Server',
-                              style: bodyLarge(textTheme).copyWith(
+                              style: bodyMedium(textTheme).copyWith(
                                 color: color.error,
                               ),
                             ),
                             const SizedBox(height: 20),
                             Text(
-                              _phoneTransactionCtrl
-                                  .requestFailure.first.errorMessage,
-                              style: bodyDefault(textTheme),
+                              _ctrl.newFailure!.errorMessage,
+                              style: bodyRegular(textTheme),
                               textAlign: TextAlign.center,
                             ),
                           ],
@@ -96,7 +93,7 @@ class SendingOrder extends StatelessWidget {
                                   SvgPicture.asset(
                                     receivedOrder,
                                     height: 100,
-                                    colorFilter:  ColorFilter.mode(
+                                    colorFilter: ColorFilter.mode(
                                       color.primary,
                                       BlendMode.srcIn,
                                     ),
@@ -122,10 +119,6 @@ class SendingOrder extends StatelessWidget {
       bottomNavigationBar: const CustomerBasketBottomBar(),
     );
   }
-
-  Future backToHome(BuildContext context) async {
-    Navigator.of(context).popUntil((route) => route.isFirst);
-  }
 }
 
 class CustomerBasketBottomBar extends StatelessWidget {
@@ -135,21 +128,34 @@ class CustomerBasketBottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       child: Obx(
-        () => _phoneTransactionCtrl.processingRequestOne.value
+        () => _ctrl.processingRequestOne.value
             ? const SizedBox()
             : Builder(
                 builder: (context) {
-                  return _phoneTransactionCtrl.requestFailure.isNotEmpty
-                      ? CustomFilledBtn(
-                          title: 'Try Again',
-                          onPressed: () {},
-                          pad: 8,
+                  return (_ctrl.newFailure != null)
+                      ? Row(
+                          children: [
+                            Expanded(
+                              child: CustomOutlinedBtn(
+                                title: 'Close',
+                                onPressed: () => backToHome(context),
+                                pad: 8,
+                              ),
+                            ),
+                            Expanded(
+                              child: CustomFilledBtn(
+                                title: 'Try Again',
+                                onPressed: () {
+                                  _ctrl.newPhoneTransaction();
+                                },
+                                pad: 8,
+                              ),
+                            ),
+                          ],
                         )
                       : CustomFilledBtn(
                           title: 'Done',
-                          onPressed: () => backToHome(context).then(
-                            (value) {},
-                          ),
+                          onPressed: () => backToHome(context),
                           pad: 8,
                         );
                 },

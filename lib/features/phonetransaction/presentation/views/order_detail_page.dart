@@ -45,7 +45,7 @@ class OrderDetailPage extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Text(
                 'RAM ${transaction.ram} ~ ${transaction.storage}',
-                style: bodyDefaultBold(font),
+                style: bodyBold(font),
               ),
             ),
             const SizedBox(height: 20),
@@ -94,11 +94,15 @@ class OrderDetailPage extends StatelessWidget {
   }
 
   Future<void> toCancellingOrder(BuildContext context) async {
-    context.go(AppNamedRoutes.toCancellingOrder);
+    _ctrl.actionFromTH
+        ? context.go(AppNamedRoutes.toCancellingOrderTH)
+        : context.go(AppNamedRoutes.toCancellingOrder);
   }
 
   Future<void> toReceiveScan(BuildContext context) async {
-    context.go(AppNamedRoutes.toReceiveScan);
+    _ctrl.actionFromTH
+        ? context.go(AppNamedRoutes.toReceiveScanTH)
+        : context.go(AppNamedRoutes.toReceiveScan);
   }
 
   Future<void> cancelOrder(
@@ -124,7 +128,9 @@ class OrderDetailPage extends StatelessWidget {
         processedBy: transaction.processedBy,
       );
 
-      await _ctrl.cancelPhoneTransaction(transaction: order).then((value) {
+      _ctrl.beingCancelled = order;
+
+      await _ctrl.cancelPhoneTransaction().then((value) {
         _ctrl.fetchPhoneTransactions();
       });
     });

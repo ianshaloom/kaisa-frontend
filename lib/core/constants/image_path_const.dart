@@ -12,4 +12,6 @@ const String receivedOrder = 'assets/icons/received-order.svg';
 const String cancelledOrder = 'assets/icons/cancelled-order.svg';
 const String scanOrder = 'assets/icons/scan-order.svg';
 const String location = 'assets/icons/location.svg';
+const String filter = 'assets/icons/filter.svg';
+const String stock = 'assets/icons/stock.svg';
 

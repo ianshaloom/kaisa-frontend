@@ -4,15 +4,55 @@ import '../../../../core/errors/failure_n_success.dart';
 import '../../domain/entity/auth_user.dart';
 import '../../domain/usecase/auth_usecase.dart';
 
-class AuthRepoController extends GetxController {
+class AuthController extends GetxController {
   final AuthUC authUC;
 
-  AuthRepoController(this.authUC);
+  AuthController(this.authUC);
 
   // user data
   var fullName = '';
   var email = '';
   var address = '';
+  var phoneNumber = '';
+  var password = '';
+  var code = 0;
+
+  // switch between pages
+  var pageIndex = 0.obs;
+  void switchPage(int newPage) {
+    pageIndex.value = newPage;
+  }
+
+  // temporarily save user data
+  void saveDataPage1({
+    required String fullName,
+    required String address,
+    required String phoneNumber,
+  }) {
+    this.fullName = fullName;
+    this.address = address;
+    this.phoneNumber = phoneNumber;
+  }
+
+  void saveDataPage2({
+    required String email,
+    required int code,
+    required String password,
+  }) {
+    this.email = email;
+    this.code = code;
+    this.password = password;
+  }
+
+  void cleanUp() {
+    fullName = '';
+    email = '';
+    address = '';
+    phoneNumber = '';
+    password = '';
+    code = 0;
+    pageIndex.value = 0;
+  }
 
   // current user
   AuthUser get currentUser => authUC.currentUser;
@@ -51,27 +91,20 @@ class AuthRepoController extends GetxController {
 // create user
   var createdUser = <AuthUser>[].obs;
   var createdUserFailure = <Failure>[].obs;
-  Future<void> createUser({
-    required String fullName,
-    required String address,
-    required String email,
-    required String password,
-  }) async {
+  Future<void> createUser() async {
     isSigningUp.value = true;
 
     final userOrFailure = await authUC.createUser(
       fullName: fullName,
       address: address,
+      phoneNumber: phoneNumber,
       email: email,
       password: password,
     );
 
     userOrFailure.fold(
       (failure) => createdUserFailure.add(failure),
-      (user) async {
-        createdUser.add(user);
-        // await saveIsarUser(user, false);
-      },
+      (user) => createdUser.add(user),
     );
 
     isSigningUp.value = false;
@@ -123,6 +156,19 @@ class AuthRepoController extends GetxController {
     );
   }
 
-  deleteUser() {}
+  var isQualified = false.obs;
+  var isCheckingQualification = false.obs;
+  var qualificationCheckFailure = <Failure>[].obs;
+  //  check if number qualify for registration
+  Future<void> checkQualification() async {
+    isCheckingQualification.value = true;
+    final successOrFailure = await authUC.checkQualification(code);
 
+    successOrFailure.fold(
+      (failure) => qualificationCheckFailure.add(failure),
+      (success) => isQualified.value = success,
+    );
+
+    isCheckingQualification.value = false;
+  }
 }

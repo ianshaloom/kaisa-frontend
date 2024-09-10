@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shimmer/shimmer.dart';
 
-import '../../../../core/constants/network_const.dart';
+import '../../../../core/utils/utility_methods.dart';
 import '../../../../router/route_names.dart';
 import '../../../../theme/text_scheme.dart';
 import '../../domain/entity/smartphone_entity.dart';
@@ -48,12 +50,20 @@ class SmartphoneGridTile extends StatelessWidget {
                         ),
                 ),
                 child: Center(
-                    child: Hero(
-                  tag: smartphone.id,
-                  child: Image(
-                      image:
-                          NetworkImage('$kBaseUrlShop${smartphone.imageUrl}')),
-                )),
+                  child: Hero(
+                    tag: smartphone.id,
+                    child: CachedNetworkImage(
+                      imageUrl: generateImageUrl(smartphone.imageUrl),
+                      placeholder: (context, url) => Shimmer.fromColors(
+                        baseColor: colorScheme.primary.withOpacity(0.1),
+                        highlightColor: colorScheme.primary.withOpacity(0.2),
+                        child: Container(
+                          color: colorScheme.primary.withOpacity(0.1),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
             Container(
@@ -72,7 +82,7 @@ class SmartphoneGridTile extends StatelessWidget {
                   ),
                   Text(
                     smartphone.name,
-                    style: bodyDefault(textTheme).copyWith(
+                    style: bodyMedium(textTheme).copyWith(
                       fontWeight: FontWeight.w600,
                       fontSize: 11,
                     ),

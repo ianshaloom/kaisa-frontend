@@ -12,7 +12,7 @@ class Zleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<AuthRepoController>();
+    final controller = Get.find<AuthController>();
 
     return Obx(
       () => controller.emailVerified.value

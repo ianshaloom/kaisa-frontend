@@ -20,13 +20,14 @@ class PhoneTransactionRepoImpl implements PhoneTransactionRepo {
 
   @override
   Future<Either<Failure, void>> cancelPhoneTransaction(
-      {required PhoneTransaction phoneTransaction}) async{
-
-        final bool isConnected = await NetworkInfo.connectionChecker.hasConnection;
+      {required PhoneTransaction phoneTransaction}) async {
+    final bool isConnected = await NetworkInfo.connectionChecker.hasConnection;
 
     if (!isConnected) {
       return Left(
-          PhoneTransactionFailure(errorMessage: 'No internet connection'));
+        PhoneTransactionFailure(
+            errorMessage: 'You have no internet connection 🚩'),
+      );
     }
 
     try {
@@ -36,13 +37,12 @@ class PhoneTransactionRepoImpl implements PhoneTransactionRepo {
       return const Right(null);
     } on CouldNotUpdateTrans catch (e) {
       return Left(PhoneTransactionFailure(errorMessage: e.message));
-    }    
-    
+    }
   }
 
   @override
-  Future<Either<Failure, List<PhoneTransaction>>> fetchPhoneTransactions() async{
-
+  Future<Either<Failure, List<PhoneTransaction>>>
+      fetchPhoneTransactions() async {
     try {
       final phoneTransactions =
           await _firestorePhoneTransactionDs.getPhoneTransactionsById();
@@ -51,7 +51,6 @@ class PhoneTransactionRepoImpl implements PhoneTransactionRepo {
     } on CouldNotFetchTrans catch (e) {
       return Left(PhoneTransactionFailure(errorMessage: e.message));
     }
-    
   }
 
   @override
@@ -60,7 +59,7 @@ class PhoneTransactionRepoImpl implements PhoneTransactionRepo {
       final users = await FirestoreUsersDs.fetchUsers();
 
       return Right(users);
-    }  catch (e) {
+    } catch (e) {
       return Left(PhoneTransactionFailure(errorMessage: e.toString()));
     }
   }
@@ -72,7 +71,9 @@ class PhoneTransactionRepoImpl implements PhoneTransactionRepo {
 
     if (!isConnected) {
       return Left(
-          PhoneTransactionFailure(errorMessage: 'No internet connection'));
+        PhoneTransactionFailure(
+            errorMessage: 'You have no internet connection 🚩'),
+      );
     }
 
     try {
@@ -86,13 +87,15 @@ class PhoneTransactionRepoImpl implements PhoneTransactionRepo {
   }
 
   @override
- Future<Either<Failure, void>> completePhoneTransaction(
+  Future<Either<Failure, void>> completePhoneTransaction(
       {required PhoneTransaction phoneTransaction}) async {
     final bool isConnected = await NetworkInfo.connectionChecker.hasConnection;
 
     if (!isConnected) {
       return Left(
-          PhoneTransactionFailure(errorMessage: 'No internet connection'));
+        PhoneTransactionFailure(
+            errorMessage: 'You have no internet connection 🚩'),
+      );
     }
 
     try {
@@ -104,5 +107,4 @@ class PhoneTransactionRepoImpl implements PhoneTransactionRepo {
       return Left(PhoneTransactionFailure(errorMessage: e.message));
     }
   }
-
 }

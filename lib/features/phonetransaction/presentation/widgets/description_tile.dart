@@ -21,7 +21,7 @@ class DescriptionTile extends StatelessWidget {
       ),
       title: Text(
         description,
-        style: bodyDefaultBold(textTheme).copyWith(
+        style: bodyBold(textTheme).copyWith(
           fontSize: 12,
           color: color.onSurface.withOpacity(0.8),
         ),

@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kaisa/theme/text_scheme.dart';
 
 import '../../../../core/constants/image_path_const.dart';
+import '../../../../core/widgets/snacks.dart';
 import '../../../../router/route_names.dart';
+import '../../../phonetransaction/data/provider/network/firestore_smartphone_ds.dart';
+
+final Snack _instance = Snack();
 
 class HomeMenu extends StatelessWidget {
   const HomeMenu({super.key});
@@ -11,13 +16,12 @@ class HomeMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 130,
+      height: 100,
       child: GridView(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 1.5,
-          crossAxisSpacing: 15,
+          crossAxisCount: 3,
+          childAspectRatio: 1.2,
         ),
         children: [
           MenuTile(
@@ -30,6 +34,11 @@ class HomeMenu extends StatelessWidget {
             title: 'Post Receipt',
             svg: receipt,
           ),
+          MenuTile(
+            onTap: _changePage,
+            title: 'Your Stock',
+            svg: stock,
+          ),
         ],
       ),
     );
@@ -39,7 +48,14 @@ class HomeMenu extends StatelessWidget {
     context.go(AppNamedRoutes.toSmartPhonesGrid);
   }
 
-  void _changePage() {}
+  void _changePage(BuildContext context) async {
+    final FirestoreSmartPhoneDs smartPhoneDs = FirestoreSmartPhoneDs();
+    await smartPhoneDs.createSmartPhone(smartps[0]).then((value) {
+      _instance.showSnackBar(context: context, message: 'Smartphone added');
+    }).catchError((error) {
+      _instance.showSnackBar(context: context, message: 'Error: $error');
+    });
+  }
 }
 
 class MenuTile extends StatelessWidget {
@@ -52,36 +68,28 @@ class MenuTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return InkWell(
       onTap: () => onTap(context),
       splashColor: color.primary.withOpacity(0.1),
       borderRadius: BorderRadius.circular(20),
-      child: Container(
-        height: 130,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: color.primary.withOpacity(0.1),
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            CircleAvatar(
-                radius: 30,
-                backgroundColor: color.primary.withOpacity(0.05),
-                child: SvgPicture.asset(
-                  svg,
-                  height: 40,
-                  colorFilter: ColorFilter.mode(color.primary, BlendMode.srcIn),
-                )),
-            Text(
-              title,
-              style: Theme.of(context).textTheme.labelMedium,
-            )
-          ],
-        ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          CircleAvatar(
+              radius: 30,
+              backgroundColor: color.primary.withOpacity(0.05),
+              child: SvgPicture.asset(
+                svg,
+                height: 40,
+                colorFilter: ColorFilter.mode(color.primary, BlendMode.srcIn),
+              )),
+          Text(
+            title,
+            style: bodyMedium(textTheme),
+          )
+        ],
       ),
     );
   }

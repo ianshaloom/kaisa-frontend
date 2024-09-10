@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import '../../../../../core/datasources/firestore/crud/kaisa_users_ds.dart';
 import '../../../../../core/datasources/firestore/models/kaisa-user/kaisa_user.dart';
 import '../../../../../core/datasources/hive/hive-models/user-data-model/hive_user_data_model.dart';
+import '../../../../../core/datasources/kaisa-backend/crud/kaisa_backend_users_ds.dart';
 import '../../../core/errors/exception.dart';
 import '../../../domain/entity/auth_user.dart';
 import '../../../../../core/datasources/hive/hive-crud/hive_user_crud.dart';
@@ -10,6 +11,12 @@ import '../../../../../core/datasources/hive/hive-crud/hive_user_crud.dart';
 class FirebaseAuthentification {
   final firebase_auth.FirebaseAuth _firebaseAuth;
   final hiveUserDataCrud = HiveUserDataCrud();
+  final KBUsers kbUsers = KBUsers();
+
+  // ckeck if user is qualified
+  Future<bool> checkQualification(int code) async {
+    return await kbUsers.checkQualification(code);
+  }
 
   AuthUser get currentUser {
     final user = firebase_auth.FirebaseAuth.instance.currentUser;
@@ -67,6 +74,7 @@ class FirebaseAuthentification {
     required String fullName,
     required String address,
     required String email,
+    required String phoneNumber,
     required String password,
   }) async {
     try {
@@ -85,6 +93,7 @@ class FirebaseAuthentification {
         uuid: credential.user!.uid,
         fullName: fullName,
         email: email,
+        phoneNumber: phoneNumber,
         address: address,
         isEmailVerified: false,
         role: 'user',

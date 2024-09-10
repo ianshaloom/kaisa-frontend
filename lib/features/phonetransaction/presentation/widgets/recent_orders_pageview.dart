@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -6,8 +7,8 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../../core/constants/image_path_const.dart';
-import '../../../../core/constants/network_const.dart';
 import '../../../../core/datasources/firestore/models/phone-transaction/phone_transaction.dart';
+import '../../../../core/utils/utility_methods.dart';
 import '../../../../router/route_names.dart';
 import '../../../../theme/text_scheme.dart';
 import '../controller/phone_transaction_ctrl.dart';
@@ -102,6 +103,7 @@ class RecentsPageTile extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
+        _ctrl.actionFromTH = false;
         _ctrl.selectedTransaction = transaction;
         context.go(AppNamedRoutes.toOrderDetails);
       },
@@ -117,14 +119,15 @@ class RecentsPageTile extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(10),
         ),
-        height: 160,
+        height: 130,
         margin: const EdgeInsets.all(5),
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 30, bottom: 30),
+              padding: const EdgeInsets.only(top: 20, bottom: 12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -169,7 +172,7 @@ class RecentsPageTile extends StatelessWidget {
                       ),
                     ],
                   ),
-                  // const Spacer(),
+                  const Spacer(),
                   Container(
                     height: 30,
                     width: 105,
@@ -199,7 +202,7 @@ class RecentsPageTile extends StatelessWidget {
                         const SizedBox(width: 10),
                         Text(
                           transaction.status,
-                          style: bodyDefault(textTheme),
+                          style: bodyMedium(textTheme),
                         ),
                       ],
                     ),
@@ -208,28 +211,16 @@ class RecentsPageTile extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            Container(
-              height: 120,
-              width: 90,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage('$kBaseUrlShop${transaction.imgUrl}'),
-                  fit: BoxFit.cover,
-                ),
+            SizedBox(
+              width: 110,
+              child: CachedNetworkImage(
+                imageUrl: generateImageUrl(transaction.imgUrl),
               ),
             )
           ],
         ),
       ),
     );
-  }
-
-  bool isDelivered() {
-    return transaction.status == 'Delivered';
-  }
-
-  bool isCancelled() {
-    return transaction.status == 'Cancelled';
   }
 
   Color statusColorBlur(ColorScheme color) {

@@ -4,20 +4,21 @@ import 'package:kaisa/core/utils/extension_methods.dart';
 import '../../../../core/datasources/firestore/models/kaisa-user/kaisa_user.dart';
 import '../../../../core/datasources/firestore/models/phone-transaction/phone_transaction.dart';
 import '../../../../core/errors/failure_n_success.dart';
-import '../../../homepage/presentation/controller/homepagectrl.dart';
 import '../../domain/entity/smartphone_entity.dart';
 import '../../domain/usecase/phone_transaction_usecase.dart';
-
-final _homePageCtrl = Get.find<HomePageCtrl>();
 
 class PhoneTransactionCtrl extends GetxController {
   final PhoneTransactionUsecase _phoneTransactionUseCase;
   PhoneTransactionCtrl(this._phoneTransactionUseCase);
 
+  KaisaUser userData = KaisaUser.empty;
+
   var processingRequestOne = false.obs;
   var processingRequestTwo = false.obs; // used in [fetchPhoneTransactions]
+  var actionFromTH = false;
 
-  var requestFailure = <Failure>[].obs;
+  var requestFailure = <Failure>[];
+
   var kaisaShopsList = <KaisaUser>[].obs;
   var phoneTransaction = <PhoneTransaction>[].obs;
   var todaysTranscs = <PhoneTransaction>[].obs;
@@ -47,13 +48,7 @@ class PhoneTransactionCtrl extends GetxController {
     selectedPhone = smartphone;
   }
 
-  KaisaUser get getMyProfile {
-    final id = _homePageCtrl.userData.uuid;
-    return kaisaShopsList.firstWhere((element) => element.uuid == id);
-  }
-
   // get my profile details
-
   Future<void> fetchUsers() async {
     requestFailure.clear();
     processingRequestOne.value = true;
@@ -69,57 +64,60 @@ class PhoneTransactionCtrl extends GetxController {
   }
 
   //  new phone transaction
-  Future<void> newPhoneTransaction(
-      {required PhoneTransaction transaction}) async {
-    requestFailure.clear();
+  Failure? newFailure;
+  PhoneTransaction beingAdded = PhoneTransaction.empty;
+  Future<void> newPhoneTransaction() async {
+    newFailure = null;
     processingRequestOne.value = true;
 
     final phoneTransactionOrFailure =
         await _phoneTransactionUseCase.newPhoneTransaction(
-      phoneTransaction: transaction,
+      phoneTransaction: beingAdded,
     );
 
     phoneTransactionOrFailure.fold(
-      (failure) => requestFailure.add(failure),
-      (phoneTransaction) {},
+      (failure) => newFailure = failure,
+      (phoneTransaction) => fetchPhoneTransactions(),
     );
 
     processingRequestOne.value = false;
   }
 
   // complete phone transaction
-  Future<void> completePhoneTransaction(
-      {required PhoneTransaction transaction}) async {
-    requestFailure.clear();
+  Failure? completedFailure;
+  PhoneTransaction beingCompleted = PhoneTransaction.empty;
+  Future<void> completePhoneTransaction() async {
+    completedFailure = null;
     processingRequestOne.value = true;
 
     final phoneTransactionOrFailure =
         await _phoneTransactionUseCase.completePhoneTransaction(
-      phoneTransaction: transaction,
+      phoneTransaction: beingCompleted,
     );
 
     phoneTransactionOrFailure.fold(
-      (failure) => requestFailure.add(failure),
-      (phoneTransaction) {},
+      (failure) => completedFailure = failure,
+      (phoneTransaction) => fetchPhoneTransactions(),
     );
 
     processingRequestOne.value = false;
   }
 
   // cancel phone transaction
-  Future<void> cancelPhoneTransaction(
-      {required PhoneTransaction transaction}) async {
-    requestFailure.clear();
+  Failure? cancelFailure;
+  PhoneTransaction beingCancelled = PhoneTransaction.empty;
+  Future<void> cancelPhoneTransaction() async {
+    cancelFailure = null;
     processingRequestOne.value = true;
 
     final phoneTransactionOrFailure =
         await _phoneTransactionUseCase.cancelPhoneTransaction(
-      phoneTransaction: transaction,
+      phoneTransaction: beingCancelled,
     );
 
     phoneTransactionOrFailure.fold(
-      (failure) => requestFailure.add(failure),
-      (phoneTransaction) {},
+      (failure) => cancelFailure = failure,
+      (phoneTransaction)=> fetchPhoneTransactions(),
     );
 
     processingRequestOne.value = false;
@@ -137,7 +135,7 @@ class PhoneTransactionCtrl extends GetxController {
       (failure) => requestFailure.add(failure),
       (phoneTransactions) {
         phoneTransactions.sort((b, a) => a.createdAt.compareTo(b.createdAt));
-        
+
         var trans = phoneTransactions.todaysPhoneTransactions();
         todaysTranscs.assignAll(trans);
 

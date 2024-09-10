@@ -36,11 +36,13 @@ class ShopsListDialog extends StatelessWidget {
             children: [
               Text(
                 'Select Shop',
-                style: bodyDefaultBold(textTheme).copyWith(fontSize: 16),
+                style: bodyBold(textTheme).copyWith(fontSize: 16),
               ),
               const Spacer(),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pop(context);
+                },
                 icon: const Icon(Icons.close),
               ),
             ],
@@ -60,6 +62,7 @@ class ShopsListDialog extends StatelessWidget {
                   ),
                 );
               }
+
               return ListView.builder(
                 itemCount: _ptCtrl.kaisaShopsList.length,
                 itemBuilder: (context, index) {
@@ -80,11 +83,11 @@ class ShopsListDialog extends StatelessWidget {
                     ),
                     title: Text(
                       user.address.toUpperCase(),
-                      style: bodyDefaultBold(textTheme),
+                      style: bodyBold(textTheme),
                     ),
                     subtitle: Text(
                       user.fullName,
-                      style: bodyDefault(textTheme),
+                      style: bodyMedium(textTheme),
                     ),
                     onTap: () {
                       _ptCtrl.setSelectedShopDetails = user;

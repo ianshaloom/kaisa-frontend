@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../router/route_names.dart';
 import '../../../../theme/text_scheme.dart';
 import '../../../phonetransaction/presentation/controller/phone_transaction_ctrl.dart';
 import '../../../phonetransaction/presentation/widgets/recent_orders_pageview.dart';
@@ -22,7 +24,7 @@ class HomePage extends StatelessWidget {
     _ctrl.fetchPhoneTransactions();
 
     return Scaffold(
-      appBar: AppBar(
+      /*  appBar: AppBar(
         centerTitle: true,
         // toolbarHeight: 50,
         scrolledUnderElevation: 0,
@@ -30,58 +32,84 @@ class HomePage extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.menu),
-            onPressed: () {},
+            onPressed: () {
+              _instance.showSnackBar(
+                  context: context,
+                  message: 'Feature not available, Coming soon');
+            },
           ),
         ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+      ), */
+      appBar: AppBar(toolbarHeight: 0),
+      body: RefreshIndicator(
+        onRefresh: () => _ctrl.fetchPhoneTransactions(),
+        displacement: 0,
+        strokeWidth: 1.5,
+        backgroundColor: color.primary.withOpacity(0),
         child: Column(
           children: [
-            const SizedBox(height: 10),
-            RecentOrdersPageView(),
-            const SizedBox(height: 5),
-            const HomeMenu(),
-            Row(
-              children: [
-                Text(
-                  "Transaction History",
-                  style: bodyDefaultBold(textTheme).copyWith(
-                    fontSize: 13,
-                  ),
-                ),
-                const Spacer(),
-                TextButton(
-                  onPressed: () {
-                    //  => context.go(AppNamedRoutes.toPurchaseLists)
-                  },
-                  child: Text(
-                    "View All",
-                    style: bodyDefault(textTheme).copyWith(
-                        color: color.primary, fontWeight: FontWeight.w500),
-                  ),
-                )
-              ],
-            ),
-            Expanded(child: Obx(() {
-              if (_ctrl.phoneTransaction.isEmpty) {
-                return Center(
-                  child: Text(
-                    'No transaction history',
-                    style: bodyDefault(textTheme).copyWith(
-                      color: color.onSurface.withOpacity(0.5),
+            const ProfilePreveiw(),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 10),
+                    RecentOrdersPageView(),
+                    const SizedBox(height: 5),
+                    const HomeMenu(),
+                    Row(
+                      children: [
+                        Text(
+                          "Transaction History",
+                          style: bodyBold(textTheme).copyWith(
+                            fontSize: 13,
+                          ),
+                        ),
+                        const Spacer(),
+                        TextButton(
+                          onPressed: () {
+                            context.go(AppNamedRoutes.toTransHistory);
+                            /* _instance.showSnackBar(
+                          context: context,
+                          message: 'Feature not available, Coming soon'); */
+                          },
+                          child: Text(
+                            "View All",
+                            style: bodyMedium(textTheme).copyWith(
+                                color: color.primary,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        )
+                      ],
                     ),
-                  ),
-                );
-              }
-              return ListView.builder(
-                itemCount: _ctrl.phoneTransaction.length,
-                itemBuilder: (context, index) {
-                  final order = _ctrl.phoneTransaction[index];
-                  return OrderTile(order: order);
-                },
-              );
-            })),
+                    Expanded(
+                      child: Obx(
+                        () {
+                          if (_ctrl.phoneTransaction.isEmpty) {
+                            return Center(
+                              child: Text(
+                                'No transaction history',
+                                style: bodyMedium(textTheme).copyWith(
+                                  color: color.onSurface.withOpacity(0.5),
+                                ),
+                              ),
+                            );
+                          }
+                          return ListView.builder(
+                            itemCount: _ctrl.phoneTransaction.length,
+                            itemBuilder: (context, index) {
+                              final order = _ctrl.phoneTransaction[index];
+                              return OrderTile(order: order);
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
           ],
         ),
       ),
@@ -183,7 +211,7 @@ class SquareTile extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               title,
-              style: bodyDefault(textTheme).copyWith(fontSize: 11),
+              style: bodyMedium(textTheme).copyWith(fontSize: 11),
               textAlign: TextAlign.center,
             ),
           ],

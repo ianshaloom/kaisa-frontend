@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kaisa/theme/text_scheme.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../../core/constants/image_path_const.dart';
 import '../../../../core/utils/utility_methods.dart';
@@ -44,7 +46,7 @@ class SmartphoneDetailPage extends StatelessWidget {
                 _ptCtrl.isShopEmpty
                     ? 'Select Shop'
                     : _ptCtrl.selectedShopAddress.value,
-                style: bodyDefaultBold(textTheme).copyWith(
+                style: bodyBold(textTheme).copyWith(
                   fontSize: 12,
                   color: color.primary,
                 ),
@@ -58,14 +60,23 @@ class SmartphoneDetailPage extends StatelessWidget {
           Expanded(
             flex: 11,
             child: Container(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(40),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
               ),
               child: Hero(
-                  tag: smartphone.id,
-                  child: Image(
-                      image: NetworkImage(imageUrl(smartphone.imageUrl)))),
+                tag: smartphone.id,
+                child: CachedNetworkImage(
+                  imageUrl: generateImageUrl(smartphone.imageUrl),
+                  placeholder: (context, url) => Shimmer.fromColors(
+                    baseColor: color.primary.withOpacity(0.1),
+                    highlightColor: color.primary.withOpacity(0.2),
+                    child: Container(
+                      color: color.primary.withOpacity(0.1),
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
           Expanded(
@@ -85,7 +96,7 @@ class SmartphoneDetailPage extends StatelessWidget {
                     children: [
                       Text(
                         smartphone.name,
-                        style: bodyDefaultBold(textTheme).copyWith(
+                        style: bodyBold(textTheme).copyWith(
                           fontSize: 14,
                           color: color.primary,
                         ),
@@ -128,7 +139,7 @@ class SmartphoneDetailPage extends StatelessWidget {
                               _ptCtrl.barcode.value.isEmpty
                                   ? 'Scan Barcode to get IMEI'
                                   : _ptCtrl.barcode.value,
-                              style: bodyDefaultBold(textTheme).copyWith(
+                              style: bodyBold(textTheme).copyWith(
                                 fontSize: 12,
                                 color: color.primary,
                               ),

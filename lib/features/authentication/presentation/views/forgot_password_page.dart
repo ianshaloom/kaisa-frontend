@@ -48,7 +48,7 @@ class ForgotPasswordPage extends StatelessWidget {
                 child: Text(
                   'No problem at all, enter your email '
                   'address to receive a password reset link',
-                  style: bodyDefault(textTheme).copyWith(
+                  style: bodyMedium(textTheme).copyWith(
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
                   ),
@@ -103,7 +103,7 @@ class ForgotPasswordPage extends StatelessWidget {
 
   Future<void> _sendPasswordResetLink(
       String email, BuildContext context) async {
-    final controller = Get.find<AuthRepoController>();
+    final controller = Get.find<AuthController>();
 
     showDialog(
       context: context,

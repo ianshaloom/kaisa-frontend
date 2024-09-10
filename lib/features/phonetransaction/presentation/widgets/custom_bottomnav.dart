@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../../../core/datasources/firestore/models/phone-transaction/phone_transaction.dart';
 import '../../../../core/widgets/custom_filled_btn.dart';
@@ -32,7 +31,7 @@ class CustomBottomNavBar extends StatelessWidget {
         children: [
           Expanded(
             child: CustomFilledBtn(
-              title: 'Place Order',
+              title: 'Send Order',
               onPressed: () {
                 if (validateOrder(context)) {
                   placeOrder(context, _ptCtrl.selectedPhone.id);
@@ -64,7 +63,7 @@ class CustomBottomNavBar extends StatelessWidget {
 
   void placeOrder(BuildContext context, String id) async {
     final transferId = _ptCtrl.barcode.value;
-    final sender = _ptCtrl.getMyProfile;
+    final sender = _ptCtrl.userData;
     final smartphone = _ptCtrl.selectedPhone;
 
     final exchangesId = '${sender.uuid}-${_ptCtrl.selectedShopId.value}';
@@ -90,12 +89,14 @@ class CustomBottomNavBar extends StatelessWidget {
       participants: [sender.uuid, _ptCtrl.selectedShopId.value],
     );
 
-    await toSendOrder(context, id).then((value) {
-      _ptCtrl.newPhoneTransaction(transaction: order);
+    _ptCtrl.beingAdded = order;
+
+    await toSendOrder(context).then((value) {
+      _ptCtrl.newPhoneTransaction();
     });
   }
 
-  Future<void> toSendOrder(BuildContext context, String id) async {
+  Future<void> toSendOrder(BuildContext context) async {
     context.go(AppNamedRoutes.toSendingOrder);
   }
 }

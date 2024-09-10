@@ -17,7 +17,7 @@ String elapsedTime(DateTime pdate, String time) {
   final difference = now.difference(DateTime.parse(finalDate));
 
   if (difference.inDays > 0) {
-    return _customDate(pdate);
+    return customDate(pdate);
   } else if (difference.inHours > 0) {
     return '${difference.inHours}h ago';
   } else if (difference.inMinutes > 0) {
@@ -32,7 +32,7 @@ String customTime(DateTime date) {
   return DateFormat.Hms().format(date);
 }
 
-String _customDate(DateTime date) {
+String customDate(DateTime date) {
   String day = DateFormat.d().format(date);
   String month = DateFormat.MMM().format(date);
   return '$day $month';
@@ -63,6 +63,11 @@ String greetingMessage() {
 }
 
 // return a string of url for the image
-String imageUrl(String imageUrl) {
-  return '$kBaseUrlShop$imageUrl';
+String generateImageUrl(String imageUrl) {
+  return '$kBaseUrlImages$imageUrl';
+}
+
+// return a string of smart phone name, ram and storage
+String phoneName(String name, String ram, String storage) {
+  return '$name ($ram - $storage)';
 }

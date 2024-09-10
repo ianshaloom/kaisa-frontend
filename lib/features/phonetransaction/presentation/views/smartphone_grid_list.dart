@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
+import '../../../../core/constants/image_path_const.dart';
 import '../../../../theme/text_scheme.dart';
+// import '../../data/provider/network/firestore_smartphone_ds.dart';
 import '../controller/smartphones_ctrl.dart';
 import '../widgets/smartphone_gridtile.dart';
 
@@ -27,6 +30,21 @@ class SmartphonesGridList extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
           icon: const Icon(CupertinoIcons.back),
         ),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              /* final FirestoreSmartPhoneDs firestoreSmartPhoneDs =
+                  FirestoreSmartPhoneDs();
+
+              for (var smart in smartps) {
+                await firestoreSmartPhoneDs.createSmartPhone(smart);
+              }
+
+              _ctrl.fetchSmartphones(); */
+            },
+            icon: SvgPicture.asset(filter),
+          )
+        ],
         // scrolledUnderElevation: 0,
 
         bottom: PreferredSize(
@@ -42,14 +60,15 @@ class SmartphonesGridList extends StatelessWidget {
             child: Row(
               children: [
                 const Icon(CupertinoIcons.search),
-                const SizedBox(
-                  width: 10,
-                ),
+                const SizedBox(width: 5),
                 Expanded(
                   child: TextField(
+                    onChanged: (value) {
+                      _ctrl.searchSmartphones(value);
+                    },
                     decoration: InputDecoration(
                       hintText: ' Search',
-                      hintStyle: bodyDefault(textTheme),
+                      hintStyle: bodyMedium(textTheme),
                       border: InputBorder.none,
                     ),
                   ),
@@ -77,11 +96,11 @@ class SmartphonesGridList extends StatelessWidget {
               mainAxisSpacing: 2,
               crossAxisSpacing: 5,
             ),
-            itemCount: _ctrl.smartPhones.length,
+            itemCount: _ctrl.searchResult.length,
             padding: const EdgeInsets.only(top: 8),
             itemBuilder: (context, index) {
               return SmartphoneGridTile(
-                smartphone: _ctrl.smartPhones[index],
+                smartphone: _ctrl.searchResult[index],
                 index: index,
               );
             },
