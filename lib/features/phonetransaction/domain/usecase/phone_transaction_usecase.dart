@@ -39,5 +39,15 @@ class PhoneTransactionUsecase {
     return await _phoneTransactionRepo.fetchPhoneTransactions();
   }
 
+  // stream phone transactions by id
+  Stream<List<PhoneTransaction>> streamKOrderTranscById(String userId) {
+    return _phoneTransactionRepo.streamKOrderTranscById(userId);
+  }
+
+  // stream a single phone transaction by id
+  Stream<PhoneTransaction> streamSingleKOrderTransc(String uuid) {
+    return _phoneTransactionRepo.streamSingleKOrderTransc(uuid);
+  }
+
 
 }

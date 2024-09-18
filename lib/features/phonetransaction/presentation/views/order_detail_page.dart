@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../../../theme/text_scheme.dart';
 import '../../../../core/constants/image_path_const.dart';
 import '../../../../core/datasources/firestore/models/phone-transaction/phone_transaction.dart';
+import '../../../../core/utils/utility_methods.dart';
 import '../../../../router/route_names.dart';
 import '../controller/phone_transaction_ctrl.dart';
 import '../widgets/tile_group_two.dart';
@@ -100,6 +101,7 @@ class OrderDetailPage extends StatelessWidget {
   }
 
   Future<void> toReceiveScan(BuildContext context) async {
+    _ctrl.isValidated = false;
     _ctrl.actionFromTH
         ? context.go(AppNamedRoutes.toReceiveScanTH)
         : context.go(AppNamedRoutes.toReceiveScan);
@@ -111,21 +113,8 @@ class OrderDetailPage extends StatelessWidget {
       context,
     ).then((value) async {
       final order = transaction.copyWith(
-        transferId: transaction.transferId,
         status: 'Cancelled',
-        senderId: transaction.senderId,
-        senderName: transaction.senderName,
-        senderAddress: transaction.senderAddress,
-        receivedAt: DateTime.now(),
-        receiverId: transaction.receiverId,
-        receiverName: transaction.receiverName,
-        receiverAddress: transaction.receiverAddress,
-        phoneName: transaction.phoneName,
-        ram: transaction.ram,
-        storage: transaction.storage,
-        createdAt: transaction.createdAt,
-        participants: transaction.participants,
-        processedBy: transaction.processedBy,
+        receivedAt: todayDateFormatted(),
       );
 
       _ctrl.beingCancelled = order;

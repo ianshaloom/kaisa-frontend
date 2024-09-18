@@ -35,27 +35,6 @@ class KaisaUser {
         isEmailVerified: true,
       );
 
-  KaisaUser copyWith({
-    String? uuid,
-    String? fullName,
-    String? email,
-    String? phoneNumber,
-    String? address,
-    String? role,
-    bool? isEmailVerified,
-    String? profileImgUrl,
-  }) {
-    return KaisaUser(
-      uuid: uuid ?? this.uuid,
-      fullName: fullName ?? this.fullName,
-      email: email ?? this.email,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-      address: address ?? this.address,
-      role: role ?? this.role,
-      isEmailVerified: isEmailVerified ?? this.isEmailVerified,
-    );
-  }
-
   KaisaUser.fromUserHiveData({required UserDataHive userDataHive})
       : uuid = userDataHive.uuid,
         fullName = userDataHive.fullName,
@@ -67,16 +46,6 @@ class KaisaUser {
 
   KaisaUser.fromQuerySnapshot(
       {required QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot})
-      : uuid = documentSnapshot.id,
-        fullName = documentSnapshot['fullName'],
-        email = documentSnapshot['email'],
-        phoneNumber = documentSnapshot['phoneNumber'],
-        address = documentSnapshot['address'],
-        role = documentSnapshot['role'],
-        isEmailVerified = documentSnapshot['isEmailVerified'];
-
-  KaisaUser.fromDocSnapshot(
-      {required DocumentSnapshot<Map<String, dynamic>> documentSnapshot})
       : uuid = documentSnapshot.id,
         fullName = documentSnapshot['fullName'],
         email = documentSnapshot['email'],

@@ -23,14 +23,15 @@ class PhoneTransitBind extends Bindings {
     Get.lazyPut<PhoneTransactionCtrl>(
       () => PhoneTransactionCtrl(
         PhoneTransactionUsecase(
-          PhoneTransactionRepoImpl(FirestorePhoneTransactionDs()),
+          PhoneTransactionRepoImpl(FirestoreKOrderTransc()),
         ),
       ),
     );
 
     Get.lazyPut<TransacHistoryCtrl>(
-      () => TransacHistoryCtrl( PhoneTransactionUsecase(
-          PhoneTransactionRepoImpl(FirestorePhoneTransactionDs()),
+      () => TransacHistoryCtrl(
+        PhoneTransactionUsecase(
+          PhoneTransactionRepoImpl(FirestoreKOrderTransc()),
         ),
       ),
     );

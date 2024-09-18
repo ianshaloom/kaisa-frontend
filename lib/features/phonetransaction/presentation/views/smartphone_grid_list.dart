@@ -89,6 +89,24 @@ class SmartphonesGridList extends StatelessWidget {
             );
           }
 
+          if (_ctrl.requestFailure.isNotEmpty) {
+            return Center(
+              child: Text(
+                _ctrl.requestFailure.first.errorMessage,
+                style: bodyMedium(textTheme),
+              ),
+            );
+          }
+
+          if (_ctrl.searchResult.isEmpty) {
+            return Center(
+              child: Text(
+                'Oops, No smartphone(s) found',
+                style: bodyMedium(textTheme),
+              ),
+            );
+          }
+
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,

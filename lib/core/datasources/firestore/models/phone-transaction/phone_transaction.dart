@@ -8,8 +8,28 @@ part 'phone_transaction.g.dart';
 
 @JsonSerializable()
 class PhoneTransaction {
-  final String transferId;
-  final String exchangesId;
+  PhoneTransaction({
+    required this.uuid,
+    required this.senderId,
+    required this.senderName,
+    required this.senderAddress,
+    required this.receiverId,
+    required this.receiverName,
+    required this.receiverAddress,
+    required this.deviceName,
+    required this.model,
+    required this.imgUrl,
+    required this.ram,
+    required this.storage,
+    required this.imei,
+    required this.status,
+    required this.createdAt,
+    required this.receivedAt,
+    required this.dateTime,
+    required this.participants,
+  });
+
+  final String uuid;
 
   // sender details
   final String senderId;
@@ -22,21 +42,20 @@ class PhoneTransaction {
   final String receiverAddress;
 
   //  phone details
-  final String phoneName;
+  final String deviceName;
+  final String model;
   final String imgUrl;
   final String ram;
   final String storage;
-  final String imeis;
+  final String imei;
 
   //  order status - pending, processing, received, cancelled
   final String status;
 
   //  order dates
-  final DateTime createdAt;
-  final DateTime receivedAt;
-
-  // processed by
-  final String processedBy;
+  final String createdAt;
+  final String receivedAt;
+  final DateTime dateTime;
   final List<String> participants;
 
   // getters
@@ -49,201 +68,113 @@ class PhoneTransaction {
   }
 
   static PhoneTransaction empty = PhoneTransaction(
-    transferId: '',
-    exchangesId: '',
+    uuid: '',
     senderId: '',
     senderName: '',
     senderAddress: '',
     receiverId: '',
     receiverName: '',
     receiverAddress: '',
-    phoneName: '',
+    deviceName: '',
+    model: '',
     imgUrl: '',
     ram: '',
     storage: '',
-    imeis: '',
+    imei: '',
     status: '',
-    createdAt: DateTime.now(),
-    receivedAt: DateTime.now(),
-    processedBy: '',
+    createdAt: '',
+    receivedAt: '',
+    dateTime: DateTime.now(),
     participants: [],
   );
 
-  PhoneTransaction({
-    required this.transferId,
-    required this.exchangesId,
-    required this.senderId,
-    required this.senderName,
-    required this.senderAddress,
-    required this.receiverId,
-    required this.receiverName,
-    required this.receiverAddress,
-    required this.phoneName,
-    required this.imgUrl,
-    required this.ram,
-    required this.storage,
-    required this.imeis,
-    required this.status,
-    required this.createdAt,
-    required this.receivedAt,
-    required this.processedBy,
-    required this.participants,
-  });
+  PhoneTransaction.fromQuerySnapshot(
+      {required QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot})
+      : uuid = documentSnapshot.id,
+        senderId = documentSnapshot['senderId'],
+        senderName = documentSnapshot['senderName'],
+        senderAddress = documentSnapshot['senderAddress'],
+        receiverId = documentSnapshot['receiverId'],
+        receiverName = documentSnapshot['receiverName'],
+        receiverAddress = documentSnapshot['receiverAddress'],
+        deviceName = documentSnapshot['deviceName'],
+        model = documentSnapshot['model'],
+        imgUrl = documentSnapshot['imgUrl'],
+        ram = documentSnapshot['ram'],
+        storage = documentSnapshot['storage'],
+        imei = documentSnapshot['imei'],
+        status = documentSnapshot['status'],
+        createdAt = documentSnapshot['createdAt'],
+        receivedAt = documentSnapshot['receivedAt'],
+        dateTime = DateTime.parse(documentSnapshot['dateTime']),
+        participants = documentSnapshot['participants'].cast<String>();
 
+  PhoneTransaction.fromDocSnapshot(
+      {required DocumentSnapshot<Map<String, dynamic>> documentSnapshot})
+      : uuid = documentSnapshot.id,
+        senderId = documentSnapshot['senderId'],
+        senderName = documentSnapshot['senderName'],
+        senderAddress = documentSnapshot['senderAddress'],
+        receiverId = documentSnapshot['receiverId'],
+        receiverName = documentSnapshot['receiverName'],
+        receiverAddress = documentSnapshot['receiverAddress'],
+        deviceName = documentSnapshot['deviceName'],
+        model = documentSnapshot['model'],
+        imgUrl = documentSnapshot['imgUrl'],
+        ram = documentSnapshot['ram'],
+        storage = documentSnapshot['storage'],
+        imei = documentSnapshot['imei'],
+        status = documentSnapshot['status'],
+        createdAt = documentSnapshot['createdAt'],
+        receivedAt = documentSnapshot['receivedAt'],
+        dateTime = DateTime.parse(documentSnapshot['dateTime']),
+        participants = documentSnapshot['participants'].cast<String>();
+
+  factory PhoneTransaction.fromJson(Map<String, dynamic> json) =>
+      _$PhoneTransactionFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PhoneTransactionToJson(this);
+
+  // this is a copy with method
   PhoneTransaction copyWith({
-    String? transferId,
-    String? exchangesId,
+    String? uuid,
     String? senderId,
     String? senderName,
     String? senderAddress,
     String? receiverId,
     String? receiverName,
     String? receiverAddress,
-    String? phoneName,
+    String? deviceName,
+    String? model,
     String? imgUrl,
     String? ram,
     String? storage,
-    String? imeis,
+    String? imei,
     String? status,
-    DateTime? createdAt,
-    DateTime? receivedAt,
-    String? processedBy,
+    String? createdAt,
+    String? receivedAt,
+    DateTime? dateTime,
     List<String>? participants,
   }) {
     return PhoneTransaction(
-      transferId: transferId ?? this.transferId,
-      exchangesId: exchangesId ?? this.exchangesId,
+      uuid: uuid ?? this.uuid,
       senderId: senderId ?? this.senderId,
       senderName: senderName ?? this.senderName,
       senderAddress: senderAddress ?? this.senderAddress,
       receiverId: receiverId ?? this.receiverId,
       receiverName: receiverName ?? this.receiverName,
       receiverAddress: receiverAddress ?? this.receiverAddress,
-      phoneName: phoneName ?? this.phoneName,
+      deviceName: deviceName ?? this.deviceName,
+      model: model ?? this.model,
       imgUrl: imgUrl ?? this.imgUrl,
       ram: ram ?? this.ram,
       storage: storage ?? this.storage,
-      imeis: imeis ?? this.imeis,
+      imei: imei ?? this.imei,
       status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
       receivedAt: receivedAt ?? this.receivedAt,
-      processedBy: processedBy ?? this.processedBy,
+      dateTime: dateTime ?? this.dateTime,
       participants: participants ?? this.participants,
     );
   }
-
-  PhoneTransaction.fromQuerySnapshot(
-      {required QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot})
-      : transferId = documentSnapshot.id,
-        exchangesId = documentSnapshot['exchangesId'],
-        senderId = documentSnapshot['senderId'],
-        senderName = documentSnapshot['senderName'],
-        senderAddress = documentSnapshot['senderAddress'],
-        receiverId = documentSnapshot['receiverId'],
-        receiverName = documentSnapshot['receiverName'],
-        receiverAddress = documentSnapshot['receiverAddress'],
-        phoneName = documentSnapshot['phoneName'],
-        imgUrl = documentSnapshot['model'],
-        ram = documentSnapshot['ram'],
-        storage = documentSnapshot['storage'],
-        imeis = documentSnapshot['imeis'],
-        status = documentSnapshot['status'],
-        createdAt = documentSnapshot['createdAt'],
-        receivedAt = documentSnapshot['receivedAt'],
-        processedBy = documentSnapshot['processedBy'],
-        participants = documentSnapshot['participants'];
-
-  PhoneTransaction.fromDocSnapshot(
-      {required DocumentSnapshot<Map<String, dynamic>> documentSnapshot})
-      : transferId = documentSnapshot.id,
-        exchangesId = documentSnapshot['exchangesId'],
-        senderId = documentSnapshot['senderId'],
-        senderName = documentSnapshot['senderName'],
-        senderAddress = documentSnapshot['senderAddress'],
-        receiverId = documentSnapshot['receiverId'],
-        receiverName = documentSnapshot['receiverName'],
-        receiverAddress = documentSnapshot['receiverAddress'],
-        phoneName = documentSnapshot['phoneName'],
-        imgUrl = documentSnapshot['model'],
-        ram = documentSnapshot['ram'],
-        storage = documentSnapshot['storage'],
-        imeis = documentSnapshot['imeis'],
-        status = documentSnapshot['status'],
-        createdAt = documentSnapshot['createdAt'],
-        receivedAt = documentSnapshot['receivedAt'],
-        processedBy = documentSnapshot['processedBy'],
-        participants = documentSnapshot['participants'];
-
-  factory PhoneTransaction.fromJson(Map<String, dynamic> json) =>
-      _$PhoneTransactionFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PhoneTransactionToJson(this);
 }
-
-/* List<PhoneTransaction> orders = [
-  PhoneTransaction(
-    transferId: '1',
-    receiverId: '1',
-    receiverName: 'John Doe',
-    shopAddress: '123, Main Street, Lagos',
-    phoneName: 'Samsung',
-    model: 'A057F/DS',
-    ram: '8GB',
-    storage: '128GB',
-    quantity: '1',
-    imeis: '123456789012345',
-    status: 'pending',
-    createdAt: DateTime.now(),
-    receivedAt: DateTime.now(),
-    processedBy: 'Admin',
-  ),
-  PhoneTransaction(
-    transferId: '2',
-    receiverId: '2',
-    receiverName: 'Jane Doe',
-    shopAddress: '123, Main Street, Lagos',
-    phoneName: 'Samsung',
-    model: 'A057F/DS',
-    ram: '8GB',
-    storage: '128GB',
-    quantity: '1',
-    imeis: '123456789012345',
-    status: 'processing',
-    createdAt: DateTime.now(),
-    receivedAt: DateTime.now(),
-    processedBy: 'Admin',
-  ),
-  PhoneTransaction(
-    transferId: '3',
-    receiverId: '3',
-    receiverName: 'John Doe',
-    shopAddress: '123, Main Street, Lagos',
-    phoneName: 'Samsung',
-    model: 'A057F/DS',
-    ram: '8GB',
-    storage: '128GB',
-    quantity: '1',
-    imeis: '123456789012345',
-    status: 'received',
-    createdAt: DateTime.now(),
-    receivedAt: DateTime.now(),
-    processedBy: 'Admin',
-  ),
-  PhoneTransaction(
-    transferId: '4',
-    receiverId: '4',
-    receiverName: 'Jane Doe',
-    shopAddress: '123, Main Street, Lagos',
-    phoneName: 'Samsung',
-    model: 'A057F/DS',
-    ram: '8GB',
-    storage: '128GB',
-    quantity: '1',
-    imeis: '123456789012345',
-    status: 'cancelled',
-    createdAt: DateTime.now(),
-    receivedAt: DateTime.now(),
-    processedBy: 'Admin',
-  ),
-];
- */

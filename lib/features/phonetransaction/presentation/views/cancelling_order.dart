@@ -26,7 +26,7 @@ class CancellingOrder extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          _ctrl.selectedTransaction.phoneName,
+          _ctrl.selectedTransaction.deviceName,
           style: bodyMedium(textTheme).copyWith(
             fontSize: 14,
           ),

@@ -9,7 +9,7 @@ import '../../../phonetransaction/presentation/controller/phone_transaction_ctrl
 import '../../../phonetransaction/presentation/widgets/recent_orders_pageview.dart';
 import '../widgets/avatar_n_name.dart';
 import '../widgets/homepage_menu.dart';
-import '../widgets/order_tile.dart';
+import '../../../phonetransaction/presentation/widgets/order_tile.dart';
 
 final _ctrl = Get.find<PhoneTransactionCtrl>();
 
@@ -24,94 +24,69 @@ class HomePage extends StatelessWidget {
     _ctrl.fetchPhoneTransactions();
 
     return Scaffold(
-      /*  appBar: AppBar(
-        centerTitle: true,
-        // toolbarHeight: 50,
-        scrolledUnderElevation: 0,
-        title: const ProfilePreveiw(),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () {
-              _instance.showSnackBar(
-                  context: context,
-                  message: 'Feature not available, Coming soon');
-            },
-          ),
-        ],
-      ), */
       appBar: AppBar(toolbarHeight: 0),
-      body: RefreshIndicator(
-        onRefresh: () => _ctrl.fetchPhoneTransactions(),
-        displacement: 0,
-        strokeWidth: 1.5,
-        backgroundColor: color.primary.withOpacity(0),
-        child: Column(
-          children: [
-            const ProfilePreveiw(),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 10),
-                    RecentOrdersPageView(),
-                    const SizedBox(height: 5),
-                    const HomeMenu(),
-                    Row(
-                      children: [
-                        Text(
-                          "Transaction History",
-                          style: bodyBold(textTheme).copyWith(
-                            fontSize: 13,
-                          ),
+      body: Column(
+        children: [
+          const ProfilePreveiw(),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                children: [
+                  const SizedBox(height: 10),
+                  RecentOrdersPageView(),
+                  const SizedBox(height: 5),
+                  const HomeMenu(),
+                  Row(
+                    children: [
+                      Text(
+                        "Transaction History",
+                        style: bodyBold(textTheme).copyWith(
+                          fontSize: 13,
                         ),
-                        const Spacer(),
-                        TextButton(
-                          onPressed: () {
-                            context.go(AppNamedRoutes.toTransHistory);
-                            /* _instance.showSnackBar(
-                          context: context,
-                          message: 'Feature not available, Coming soon'); */
-                          },
-                          child: Text(
-                            "View All",
-                            style: bodyMedium(textTheme).copyWith(
-                                color: color.primary,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        )
-                      ],
-                    ),
-                    Expanded(
-                      child: Obx(
-                        () {
-                          if (_ctrl.phoneTransaction.isEmpty) {
-                            return Center(
-                              child: Text(
-                                'No transaction history',
-                                style: bodyMedium(textTheme).copyWith(
-                                  color: color.onSurface.withOpacity(0.5),
-                                ),
-                              ),
-                            );
-                          }
-                          return ListView.builder(
-                            itemCount: _ctrl.phoneTransaction.length,
-                            itemBuilder: (context, index) {
-                              final order = _ctrl.phoneTransaction[index];
-                              return OrderTile(order: order);
-                            },
-                          );
-                        },
                       ),
+                      const Spacer(),
+                      TextButton(
+                        onPressed: () {
+                          context.go(AppNamedRoutes.toTransHistory);
+                        },
+                        child: Text(
+                          "View All",
+                          style: bodyMedium(textTheme).copyWith(
+                              color: color.primary,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      )
+                    ],
+                  ),
+                  Expanded(
+                    child: Obx(
+                      () {
+                        if (_ctrl.phoneTransaction.isEmpty) {
+                          return Center(
+                            child: Text(
+                              'No transaction history',
+                              style: bodyMedium(textTheme).copyWith(
+                                color: color.onSurface.withOpacity(0.5),
+                              ),
+                            ),
+                          );
+                        }
+                        return ListView.builder(
+                          itemCount: _ctrl.phoneTransaction.length,
+                          itemBuilder: (context, index) {
+                            final order = _ctrl.phoneTransaction[index];
+                            return OrderTile(order: order);
+                          },
+                        );
+                      },
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            )
-          ],
-        ),
+            ),
+          )
+        ],
       ),
     );
   }

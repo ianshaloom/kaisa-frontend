@@ -27,7 +27,7 @@ class TileGroupOne extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text(
-                phoneTrans.phoneName,
+                phoneTrans.deviceName,
                 // overflow: TextOverflow.ellipsis,
                 softWrap: true,
                 style: bodyBold(textTheme).copyWith(

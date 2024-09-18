@@ -40,8 +40,8 @@ class CouldNotDeleteTrans extends PhoneTransException {
 
 // GenericCloudException
 
-class GenericCloudTrans extends PhoneTransException {
-  GenericCloudTrans(String? message)
+class GenericCloudException extends PhoneTransException {
+  GenericCloudException(String? message)
       : super(
           message: "Something went wrong",
         );

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/datasources/firestore/models/phone-transaction/phone_transaction.dart';
+import '../../../../core/utils/utility_methods.dart';
 import '../../../../core/widgets/snacks.dart';
 import '../../../../router/route_names.dart';
 import '../controller/phone_transaction_ctrl.dart';
@@ -27,21 +28,16 @@ class ReceiveScan extends StatelessWidget {
         borderWidth: 10,
         borderRadius: 17,
         borderColor: color.primary,
+        errorColor: color.error,
         onDispose: () {
           debugPrint("Barcode scanner disposed!");
         },
         controller: MobileScannerController(
-          detectionSpeed: DetectionSpeed.noDuplicates,
+          detectionSpeed: DetectionSpeed.normal,
+          cameraResolution: const Size(1920, 1080),
+          formats: [BarcodeFormat.code128],
+          detectionTimeoutMs: 0,
         ),
-        onDetect: (BarcodeCapture capture) {
-          /// The row string scanned barcode value
-          final String? scannedValue = capture.barcodes.first.rawValue;
-
-          if (scannedValue == null) {
-            _popAndShowError(context, 'Invalid IMEI');
-            return;
-          }
-        },
         validator: (value) {
           if (value.barcodes.isEmpty) {
             return false;
@@ -52,13 +48,17 @@ class ReceiveScan extends StatelessWidget {
           }
 
           // check if the scanned value matches the selected phone imei
-          if (value.barcodes.first.rawValue !=
-              _ctrl.selectedTransaction.imeis) {
-            _popAndShowError(context, 'Invalid IMEI');
+          if ((value.barcodes.first.rawValue !=
+                  _ctrl.selectedTransaction.imei) &&
+              !_ctrl.isValidated) {
+            _ctrl.isValidated = true;
+            _popAndShowError(context, "IMEI's do not match, try again");
             return false;
           }
 
-          receiveOrder(context, _ctrl.selectedTransaction);
+          _ctrl.isValidated
+              ? null
+              : receiveOrder(context, _ctrl.selectedTransaction);
           return true;
         },
       ),
@@ -67,29 +67,19 @@ class ReceiveScan extends StatelessWidget {
 
   Future<void> _toReceivingOrder(BuildContext context) async {
     Navigator.of(context).pop();
-    _ctrl.actionFromTH ? context.go(AppNamedRoutes.toReceivingOrderTH) :
-    context.go(AppNamedRoutes.toReceivingOrder);
+    _ctrl.actionFromTH
+        ? context.go(AppNamedRoutes.toReceivingOrderTH)
+        : context.go(AppNamedRoutes.toReceivingOrder);
   }
 
   Future<void> receiveOrder(
       BuildContext context, PhoneTransaction transaction) async {
     await _toReceivingOrder(context).then((value) async {
+      _ctrl.isValidated = true;
+
       final order = transaction.copyWith(
-        transferId: transaction.transferId,
         status: 'Delivered',
-        senderId: transaction.senderId,
-        senderName: transaction.senderName,
-        senderAddress: transaction.senderAddress,
-        receivedAt: DateTime.now(),
-        receiverId: transaction.receiverId,
-        receiverName: transaction.receiverName,
-        receiverAddress: transaction.receiverAddress,
-        phoneName: transaction.phoneName,
-        ram: transaction.ram,
-        storage: transaction.storage,
-        createdAt: transaction.createdAt,
-        participants: transaction.participants,
-        processedBy: transaction.receiverName,
+        receivedAt: todayDateFormatted(),
       );
 
       _ctrl.beingCompleted = order;

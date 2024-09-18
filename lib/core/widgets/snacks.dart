@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kaisa/theme/text_scheme.dart';
 
 class Snack {
 // factory constructor
@@ -147,24 +148,22 @@ class Snack {
     required BuildContext context,
     required String message,
   }) {
+    final textTheme = Theme.of(context).textTheme;
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         elevation: 1,
         content: Text(
           message,
           textAlign: TextAlign.center,
+          style: bodyMedium(textTheme).copyWith(
+            color: Theme.of(context).colorScheme.onError,
+          ),
         ),
-        duration: const Duration(milliseconds: 1500),
-        width: MediaQuery.of(context).size.width * 0.9,
-        padding: const EdgeInsets.symmetric(
-          horizontal: 8.0,
-          vertical: 15, // Inner padding for SnackBar content.
-        ),
+        duration: const Duration(seconds: 1),
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-      ),
+      ), 
     );
   }
 }

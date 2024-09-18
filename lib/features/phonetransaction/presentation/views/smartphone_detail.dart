@@ -182,6 +182,7 @@ class SmartphoneDetailPage extends StatelessWidget {
   }
 
   Future<void> toSendingScan(BuildContext context) async {
+    _ptCtrl.isValidated = false;
     context.go(AppNamedRoutes.toSendScan);
   }
 }

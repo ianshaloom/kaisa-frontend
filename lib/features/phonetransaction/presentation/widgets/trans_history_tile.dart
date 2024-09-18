@@ -53,7 +53,7 @@ class TransHistoryTile extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            phoneTransaction.phoneName.toUpperCase(),
+                            phoneTransaction.deviceName.toUpperCase(),
                             style: bodyMedium(textTheme).copyWith(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
@@ -136,21 +136,16 @@ class TransHistoryTile extends StatelessWidget {
             text: ' ${phoneTransaction.storage}',
             style: bolded,
           ),
-          phoneTransaction.isSender
-              ? TextSpan(
-                  text:
-                      '\nTo ${phoneTransaction.receiverAddress} on ${customDate(phoneTransaction.createdAt)}',
-                )
-              : TextSpan(
-                  text:
-                      '\nFrom ${phoneTransaction.senderAddress} on ${customDate(phoneTransaction.createdAt)} ',
-                ),
+          TextSpan(
+            text:
+                '\n${phoneTransaction.senderAddress} to ${phoneTransaction.receiverAddress} ',
+          ),
           const TextSpan(
             text: ' \nIMEI ',
             style: TextStyle(fontSize: 10),
           ),
           TextSpan(
-            text: ' ${phoneTransaction.imeis}',
+            text: ' ${phoneTransaction.imei}',
             style: bolded,
           ),
         ],

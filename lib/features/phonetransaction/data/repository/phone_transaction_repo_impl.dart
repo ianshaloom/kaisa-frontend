@@ -14,7 +14,7 @@ import '../core/errors/smartphone_success_n_failures.dart';
 import '../provider/network/firestore_phone_transaction_ds.dart';
 
 class PhoneTransactionRepoImpl implements PhoneTransactionRepo {
-  final FirestorePhoneTransactionDs _firestorePhoneTransactionDs;
+  final FirestoreKOrderTransc _firestorePhoneTransactionDs;
 
   PhoneTransactionRepoImpl(this._firestorePhoneTransactionDs);
 
@@ -31,7 +31,7 @@ class PhoneTransactionRepoImpl implements PhoneTransactionRepo {
     }
 
     try {
-      await _firestorePhoneTransactionDs.cancelPhoneTransaction(
+      await _firestorePhoneTransactionDs.cancelKOrderTransc(
           phoneTransaction: phoneTransaction);
 
       return const Right(null);
@@ -45,7 +45,7 @@ class PhoneTransactionRepoImpl implements PhoneTransactionRepo {
       fetchPhoneTransactions() async {
     try {
       final phoneTransactions =
-          await _firestorePhoneTransactionDs.getPhoneTransactionsById();
+          await _firestorePhoneTransactionDs.fetchKOrderTranscById();
 
       return Right(phoneTransactions);
     } on CouldNotFetchTrans catch (e) {
@@ -77,7 +77,7 @@ class PhoneTransactionRepoImpl implements PhoneTransactionRepo {
     }
 
     try {
-      await _firestorePhoneTransactionDs.newPhoneTransaction(
+      await _firestorePhoneTransactionDs.setKOrderTransc(
           phoneTransaction: phoneTransaction);
 
       return const Right(null);
@@ -99,12 +99,22 @@ class PhoneTransactionRepoImpl implements PhoneTransactionRepo {
     }
 
     try {
-      await _firestorePhoneTransactionDs.completePhoneTransaction(
+      await _firestorePhoneTransactionDs.receiveKOrderTransc(
           phoneTransaction: phoneTransaction);
 
       return const Right(null);
     } on CouldNotUpdateTrans catch (e) {
       return Left(PhoneTransactionFailure(errorMessage: e.message));
     }
+  }
+
+  @override
+  Stream<PhoneTransaction> streamSingleKOrderTransc(String uuid) {
+    return _firestorePhoneTransactionDs.streamSingleKOrderTransc(uuid);
+  }
+
+  @override
+  Stream<List<PhoneTransaction>> streamKOrderTranscById(String userId) {
+    return _firestorePhoneTransactionDs.streamKOrderTranscById(userId);
   }
 }

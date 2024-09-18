@@ -32,7 +32,7 @@ class TileGroupThree extends StatelessWidget {
             children: [
               Text('IMEI', style: bodyDft),
               const Spacer(),
-              Text(phoneTrans.imeis, style: bodyDft),
+              Text(phoneTrans.imei, style: bodyDft),
             ],
           ),
           const SizedBox(height: height),

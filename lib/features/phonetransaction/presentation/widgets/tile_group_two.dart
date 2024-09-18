@@ -80,7 +80,7 @@ class TileGroupTwo extends StatelessWidget {
             children: [
               Text('Sent On', style: bodyDft),
               const Spacer(),
-              Text(newDate(phoneTrans.createdAt), style: bodyDft),
+              Text(customDateFromString(phoneTrans.createdAt), style: bodyDft),
             ],
           ),
         ],

@@ -8,39 +8,48 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.8
 
   # authentication
   firebase_auth: ^5.1.4
   firebase_core: ^3.3.0
   firebase_messaging: ^15.0.4
-  google_sign_in: ^6.2.1
+  firebase_storage: ^12.3.0
+  cloud_firestore: ^5.2.1
 
   # database and files
   path_provider: ^2.1.4
-  shared_preferences: ^2.3.2
+  hive_flutter: ^1.1.0
+  hive: ^2.2.3
 
   # state management & routing
   go_router: ^14.2.3
   get: ^4.6.6
+
+  # data, helpers and generators
   dartz: ^0.10.1
-  intl: ^0.19.0
-  email_validator: ^3.0.0
-  flutter_svg: ^2.0.10+1
-  loading_animation_widget: ^1.2.1
-  cloud_firestore: ^5.2.1
   json_annotation: ^4.9.0
   json_serializable: ^6.8.0
-  hive_flutter: ^1.1.0
-  hive: ^2.2.3
-  shimmer: ^3.0.0
-  smooth_page_indicator: ^1.2.0+3
+  intl: ^0.19.0
   uuid: ^4.4.2
-  internet_connection_checker: ^2.0.0
-  ai_barcode_scanner: ^5.1.1+2
-  cached_network_image: ^3.4.0
-  dio: ^5.7.0
   equatable: ^2.0.5
+  email_validator: ^3.0.0
+
+  # widgets
+  cupertino_icons: ^1.0.8
+  smooth_page_indicator: ^1.2.0+3
+  loading_animation_widget: ^1.2.1
+  shimmer: ^3.0.0
+
+  #  network
+  dio: ^5.7.0
+  internet_connection_checker: ^2.0.0
+
+  #  image dependencies
+  flutter_svg: ^2.0.10+1
+  flutter_image_compress: ^2.3.0
+  cached_network_image: ^3.4.0
+  ai_barcode_scanner: ^5.1.1+2
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:

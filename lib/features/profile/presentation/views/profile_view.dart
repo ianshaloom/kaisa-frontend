@@ -22,6 +22,7 @@ class ProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final color = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(
@@ -70,9 +71,9 @@ class ProfileView extends StatelessWidget {
                         alignment: Alignment.center,
                         child: CircleAvatar(
                           radius: 51.5,
+                          backgroundColor: color.primary,
                           child: CircleAvatar(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.surface,
+                            backgroundColor: color.surface,
                             radius: 50,
                             child: CachedNetworkImage(
                               imageUrl: userData.profileImgUrl,

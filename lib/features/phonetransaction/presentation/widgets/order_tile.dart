@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/image_path_const.dart';
 import '../../../../core/datasources/firestore/models/phone-transaction/phone_transaction.dart';
 import '../../../../core/utils/utility_methods.dart';
+import '../../../../router/route_names.dart';
 import '../../../../theme/text_scheme.dart';
+import '../controller/phone_transaction_ctrl.dart';
+
+final _ctrl = Get.find<PhoneTransactionCtrl>();
 
 class OrderTile extends StatelessWidget {
   final PhoneTransaction order;
@@ -20,11 +26,9 @@ class OrderTile extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
-          /*  fromHome(page)
-              ? context.go(
-                  '${AppNamedRoutes.fromHomeToPurchaseDetail}/${purchase.rno}')
-              : context
-                  .go('${AppNamedRoutes.toPurchaseDetail}/${purchase.rno}'); */
+          _ctrl.actionFromTH = false;
+          _ctrl.selectedTransaction = order;
+          context.go(AppNamedRoutes.toOrderDetails);
         },
         child: Stack(
           children: [
@@ -32,7 +36,7 @@ class OrderTile extends StatelessWidget {
               right: 0,
               top: 0,
               child: Text(
-                elapsedTime(order.createdAt, customTime(order.createdAt)),
+                elapsedTime(order.dateTime),
                 style: bodyMedium(font).copyWith(
                   color: color.onSurface.withOpacity(0.3),
                   fontSize: 11,
@@ -65,7 +69,7 @@ class OrderTile extends StatelessWidget {
                   ),
                 ),
                 subtitle: Text(
-                  order.phoneName,
+                  order.deviceName,
                   style: bodyMedium(font).copyWith(
                     fontWeight: FontWeight.w400,
                     color: color.onSurface,

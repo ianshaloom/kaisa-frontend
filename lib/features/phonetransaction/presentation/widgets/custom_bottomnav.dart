@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../../core/datasources/firestore/models/phone-transaction/phone_transaction.dart';
+import '../../../../core/utils/utility_methods.dart';
 import '../../../../core/widgets/custom_filled_btn.dart';
 import '../../../../core/widgets/snacks.dart';
 import '../../../../router/route_names.dart';
@@ -62,31 +64,28 @@ class CustomBottomNavBar extends StatelessWidget {
   }
 
   void placeOrder(BuildContext context, String id) async {
-    final transferId = _ptCtrl.barcode.value;
     final sender = _ptCtrl.userData;
     final smartphone = _ptCtrl.selectedPhone;
 
-    final exchangesId = '${sender.uuid}-${_ptCtrl.selectedShopId.value}';
-
     final order = PhoneTransaction(
-      transferId: transferId,
-      exchangesId: exchangesId,
+      uuid: const Uuid().v4(),
       senderId: sender.uuid,
       senderName: sender.fullName,
       senderAddress: sender.address,
       receiverId: _ptCtrl.selectedShopId.value,
       receiverName: _ptCtrl.selectedShopName.value,
       receiverAddress: _ptCtrl.selectedShopAddress.value,
-      phoneName: smartphone.name,
+      deviceName: smartphone.name,
       imgUrl: smartphone.imageUrl,
       ram: smartphone.ram,
       storage: smartphone.storage,
-      imeis: _ptCtrl.barcode.value,
+      imei: _ptCtrl.barcode.value,
+      model: smartphone.model,
       status: 'Pending',
-      createdAt: DateTime.now(),
-      receivedAt: DateTime.now(),
-      processedBy: '',
+      createdAt: todayDateFormatted(),
+      receivedAt: todayDateFormatted(),
       participants: [sender.uuid, _ptCtrl.selectedShopId.value],
+      dateTime: DateTime.now(),
     );
 
     _ptCtrl.beingAdded = order;

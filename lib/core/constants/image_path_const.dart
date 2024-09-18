@@ -1,5 +1,3 @@
-const String defaultProfilePicture = 'assets/images/profile1.png';
-
 // svg image path
 const String serverError = 'assets/images/server-error.svg';
 const String recentOrders = 'assets/images/recent-orders.svg';

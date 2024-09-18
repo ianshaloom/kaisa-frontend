@@ -4,11 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:kaisa/theme/text_scheme.dart';
 
 import '../../../../core/constants/image_path_const.dart';
-import '../../../../core/widgets/snacks.dart';
 import '../../../../router/route_names.dart';
-import '../../../phonetransaction/data/provider/network/firestore_smartphone_ds.dart';
-
-final Snack _instance = Snack();
 
 class HomeMenu extends StatelessWidget {
   const HomeMenu({super.key});
@@ -49,12 +45,7 @@ class HomeMenu extends StatelessWidget {
   }
 
   void _changePage(BuildContext context) async {
-    final FirestoreSmartPhoneDs smartPhoneDs = FirestoreSmartPhoneDs();
-    await smartPhoneDs.createSmartPhone(smartps[0]).then((value) {
-      _instance.showSnackBar(context: context, message: 'Smartphone added');
-    }).catchError((error) {
-      _instance.showSnackBar(context: context, message: 'Error: $error');
-    });
+    
   }
 }
 

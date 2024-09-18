@@ -20,8 +20,16 @@ abstract class PhoneTransactionRepo {
   // fetch Phone Transactions
   Future<Either<Failure, List<PhoneTransaction>>> fetchPhoneTransactions();
 
+  // stream Phone Transactions by id
+  Stream<List<PhoneTransaction>> streamKOrderTranscById(String userId);
+
+  // stream a single Phone Transaction by id
+  Stream<PhoneTransaction> streamSingleKOrderTransc(String uuid);
+
 
   // fetch Users
   Future<Either<Failure, List<KaisaUser>>> fetchUsers();
+
+  
 
 }

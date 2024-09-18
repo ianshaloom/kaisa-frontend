@@ -1,19 +1,36 @@
 class CloudStorageException implements Exception {
-  const CloudStorageException();
+  final String message;
+  CloudStorageException(
+      {this.message =
+          'An error occurred while trying to interact with the cloud storage'});
+  @override
+  String toString() => message;
 }
 
 // C in CRUD
-class CouldNotCreateException extends CloudStorageException {}
+class CouldNotCreateException extends CloudStorageException {
+  final String eMessage;
+  CouldNotCreateException({this.eMessage = 'Unable to create record'})
+      : super(message: 'Unable to create record');
+}
 
 // R in CRUD
-class CouldNotFetchException extends CloudStorageException {}
+class CouldNotFetchException extends CloudStorageException {
+  final String eMessage;
+  CouldNotFetchException({this.eMessage = 'Unable to fetch record(s)'})
+      : super(message: 'Unable to fetch record(s)');
+}
 
 // U in CRUD
-class CouldNotUpdateException extends CloudStorageException {}
+class CouldNotUpdateException extends CloudStorageException {
+  final String eMessage;
+  CouldNotUpdateException({this.eMessage = 'Unable to update record'})
+      : super(message: 'Unable to update record');
+}
 
 // D in CRUD
-class CouldNotDeleteException extends CloudStorageException {}
-
-// GenericCloudException
-
-class GenericCloudException extends CloudStorageException {}
+class CouldNotDeleteException extends CloudStorageException {
+  final String eMessage;
+  CouldNotDeleteException({this.eMessage = 'Unable to delete record'})
+      : super(message: 'Unable to delete record');
+}

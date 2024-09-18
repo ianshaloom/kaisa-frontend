@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:kaisa/core/utils/extension_methods.dart';
 
 import '../../../../core/datasources/firestore/models/kaisa-user/kaisa_user.dart';
 import '../../../../core/datasources/firestore/models/phone-transaction/phone_transaction.dart';
@@ -21,7 +20,6 @@ class PhoneTransactionCtrl extends GetxController {
 
   var kaisaShopsList = <KaisaUser>[].obs;
   var phoneTransaction = <PhoneTransaction>[].obs;
-  var todaysTranscs = <PhoneTransaction>[].obs;
 
   // selected objects
   SmartphoneEntity selectedPhone = SmartphoneEntity.empty;
@@ -55,10 +53,11 @@ class PhoneTransactionCtrl extends GetxController {
 
     final usersOrFailure = await _phoneTransactionUseCase.fetchUsers();
 
-    usersOrFailure.fold(
-      (failure) => requestFailure.add(failure),
-      (users) => kaisaShopsList.assignAll(users),
-    );
+    usersOrFailure.fold((failure) => requestFailure.add(failure), (users) {
+      users.removeWhere((user) => user.address == userData.address);
+      users.sort((a, b) => a.address.compareTo(b.address));
+      kaisaShopsList.assignAll(users);
+    });
 
     processingRequestOne.value = false;
   }
@@ -77,7 +76,7 @@ class PhoneTransactionCtrl extends GetxController {
 
     phoneTransactionOrFailure.fold(
       (failure) => newFailure = failure,
-      (phoneTransaction) => fetchPhoneTransactions(),
+      (phoneTransaction) => null,
     );
 
     processingRequestOne.value = false;
@@ -97,7 +96,7 @@ class PhoneTransactionCtrl extends GetxController {
 
     phoneTransactionOrFailure.fold(
       (failure) => completedFailure = failure,
-      (phoneTransaction) => fetchPhoneTransactions(),
+      (phoneTransaction) => null,
     );
 
     processingRequestOne.value = false;
@@ -117,7 +116,7 @@ class PhoneTransactionCtrl extends GetxController {
 
     phoneTransactionOrFailure.fold(
       (failure) => cancelFailure = failure,
-      (phoneTransaction)=> fetchPhoneTransactions(),
+      (phoneTransaction) => null,
     );
 
     processingRequestOne.value = false;
@@ -134,11 +133,7 @@ class PhoneTransactionCtrl extends GetxController {
     phoneTransactionsOrFailure.fold(
       (failure) => requestFailure.add(failure),
       (phoneTransactions) {
-        phoneTransactions.sort((b, a) => a.createdAt.compareTo(b.createdAt));
-
-        var trans = phoneTransactions.todaysPhoneTransactions();
-        todaysTranscs.assignAll(trans);
-
+        phoneTransactions.sort((b, a) => a.dateTime.compareTo(b.dateTime));
         phoneTransaction.assignAll(phoneTransactions);
       },
     );
@@ -146,6 +141,23 @@ class PhoneTransactionCtrl extends GetxController {
     processingRequestTwo.value = false;
   }
 
+  // stream phone transactions by id
+  Stream<List<PhoneTransaction>> streamKOrderTranscById() {
+    return _phoneTransactionUseCase.streamKOrderTranscById(userData.uuid);
+  }
+
+  // stream a single phone transaction by id
+  Stream<PhoneTransaction> streamSingleKOrderTransc() {
+    return _phoneTransactionUseCase.streamSingleKOrderTransc(userData.uuid);
+  }
+
+  //  dellay 2 seconds
+  Future<void> delayTwoSeconds(List<PhoneTransaction> data) async {
+    await Future.delayed(const Duration(seconds: 3));
+    phoneTransaction.assignAll(data);
+  }
+
 // scan barcode
   var barcode = ''.obs;
+  var isValidated = false;
 }

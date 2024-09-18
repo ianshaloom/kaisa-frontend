@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kaisa/core/utils/extension_methods.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -25,23 +26,28 @@ class RecentOrdersPageView extends StatelessWidget {
     final color = Theme.of(context).colorScheme;
     return SizedBox(
       height: 200,
-      child: Obx(
-        () {
-          if (_ctrl.processingRequestTwo.value) {
+      child: StreamBuilder<List<PhoneTransaction>>(
+        stream: _ctrl.streamKOrderTranscById(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
             return Center(
-              child: LoadingAnimationWidget.fourRotatingDots(
-                color: color.primary,
-                size: 50,
+              child: Text(
+                'Error: ${snapshot.error}',
+                style: bodyMedium(Theme.of(context).textTheme),
               ),
             );
           }
 
-          final trans = _ctrl.todaysTranscs;
+          if (snapshot.hasData) {
+            var data = snapshot.data as List<PhoneTransaction>;
+            data = data.todaysPhoneTransactions();
+            data.sort((a, b) => b.dateTime.compareTo(a.dateTime));
 
-          return Column(
-            children: [
+            _ctrl.delayTwoSeconds(data);
+
+            return Column(children: [
               Expanded(
-                child: trans.isEmpty
+                child: data.isEmpty
                     ? Container(
                         height: 160,
                         padding: const EdgeInsets.all(30),
@@ -64,19 +70,19 @@ class RecentOrdersPageView extends StatelessWidget {
                     : PageView.builder(
                         controller: controller,
                         scrollDirection: Axis.horizontal,
-                        itemCount: trans.length,
+                        itemCount: data.length,
                         itemBuilder: (context, index) {
-                          final transaction = trans[index];
+                          final transaction = data[index];
 
                           return RecentsPageTile(transaction: transaction);
                         },
                       ),
               ),
-              trans.isEmpty
-                  ? const Center()
+              data.isEmpty
+                  ? const SizedBox()
                   : SmoothPageIndicator(
                       controller: controller,
-                      count: trans.length,
+                      count: data.length,
                       effect: WormEffect(
                         dotWidth: 5,
                         dotHeight: 5,
@@ -84,8 +90,15 @@ class RecentOrdersPageView extends StatelessWidget {
                         dotColor: color.onSurface.withOpacity(0.5),
                       ),
                     ),
-            ],
-          );
+            ]);
+          } else {
+            return Center(
+              child: LoadingAnimationWidget.fourRotatingDots(
+                color: color.primary,
+                size: 50,
+              ),
+            );
+          }
         },
       ),
     );
@@ -137,7 +150,7 @@ class RecentsPageTile extends StatelessWidget {
                     children: [
                       const SizedBox(height: 5),
                       Text(
-                        transaction.phoneName,
+                        transaction.deviceName,
                         style: bodyLarge(textTheme).copyWith(
                             color: color.onSurface,
                             fontWeight: FontWeight.bold,
@@ -163,9 +176,7 @@ class RecentsPageTile extends StatelessWidget {
                       ),
                       const SizedBox(height: 7),
                       Text(
-                        transaction.isSender
-                            ? 'To ${transaction.receiverAddress}'
-                            : 'From ${transaction.senderAddress}',
+                        'From ${transaction.senderAddress} \n to ${transaction.receiverAddress}',
                         style: bodyLarge(textTheme).copyWith(
                             color: color.onSurface.withOpacity(0.5),
                             fontSize: 12),

@@ -14,18 +14,21 @@ class FirestoreUsersDs {
 
     try {
       await users.doc(docId).set(document);
-    } catch (e) {
-      throw CouldNotCreateException();
+    } on FirebaseException catch (e) {
+      throw CouldNotCreateException(eMessage: e.message ?? 'No Error message');
     }
   }
 
   static Future<List<KaisaUser>> fetchUsers() async {
-    final snapShot = await users.get();
-    final fetchedUsers = snapShot.docs
-        .map((doc) => KaisaUser.fromQuerySnapshot(documentSnapshot: doc))
-        .toList();
+    try {
+      final fetchedUsers = await users.get();
 
-    return fetchedUsers;
+      return fetchedUsers.docs
+          .map((doc) => KaisaUser.fromQuerySnapshot(documentSnapshot: doc))
+          .toList();
+    } on FirebaseException catch (e) {
+      throw CouldNotFetchException(eMessage: e.message ?? 'No Error message');
+    }
   }
 
   // get a future of a single user by id fromdocsnapshot
@@ -38,21 +41,12 @@ class FirestoreUsersDs {
       } else {
         return KaisaUser.empty;
       }
-    } catch (e) {
-      throw GenericCloudException();
+    } on FirebaseException catch (e) {
+      throw CouldNotFetchException(eMessage: e.message ?? 'No Error message');
     }
   }
 
-  // stream a single user by id
-  static Stream singleUserStream({required String documentId}) {
-    return users
-        .doc(documentId)
-        .snapshots()
-        .map((event) => KaisaUser.fromDocSnapshot(documentSnapshot: event));
-  }
-
   FirestoreUsersDs._sharedInstance();
-
   static final FirestoreUsersDs _shared = FirestoreUsersDs._sharedInstance();
   factory FirestoreUsersDs() => _shared;
 }

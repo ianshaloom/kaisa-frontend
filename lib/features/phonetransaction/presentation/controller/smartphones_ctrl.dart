@@ -25,6 +25,8 @@ class SmartphonesCtrl {
     phonesOrFailure.fold(
       (failure) => requestFailure.add(failure),
       (phones) async {
+        phones.sort((a, b) => a.name.compareTo(b.name));
+
         smartPhones.assignAll(phones);
         searchResult.assignAll(phones);
       },
