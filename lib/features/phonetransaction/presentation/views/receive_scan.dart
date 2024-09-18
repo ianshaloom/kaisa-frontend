@@ -84,9 +84,7 @@ class ReceiveScan extends StatelessWidget {
 
       _ctrl.beingCompleted = order;
 
-      await _ctrl.completePhoneTransaction().then((value) {
-        _ctrl.fetchPhoneTransactions();
-      });
+      await _ctrl.completePhoneTransaction();
     });
   }
 

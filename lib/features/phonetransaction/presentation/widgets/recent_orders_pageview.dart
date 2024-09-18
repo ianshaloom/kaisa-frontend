@@ -40,10 +40,10 @@ class RecentOrdersPageView extends StatelessWidget {
 
           if (snapshot.hasData) {
             var data = snapshot.data as List<PhoneTransaction>;
-            data = data.todaysPhoneTransactions();
             data.sort((a, b) => b.dateTime.compareTo(a.dateTime));
-
             _ctrl.delayTwoSeconds(data);
+
+            data = data.todaysPhoneTransactions();
 
             return Column(children: [
               Expanded(

@@ -119,9 +119,7 @@ class OrderDetailPage extends StatelessWidget {
 
       _ctrl.beingCancelled = order;
 
-      await _ctrl.cancelPhoneTransaction().then((value) {
-        _ctrl.fetchPhoneTransactions();
-      });
+      await _ctrl.cancelPhoneTransaction();
     });
   }
 }

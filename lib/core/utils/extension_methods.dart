@@ -11,3 +11,9 @@ extension PFilters on List<PhoneTransaction> {
     return where((purchase) => purchase.status == requiredStatus).toList();
   }
 }
+
+extension Last24Hours on List<PhoneTransaction> {
+  List<PhoneTransaction> last24Hours() {
+    return where((element) => DateTime.now().difference(element.dateTime).inHours <= 24).toList();
+  }
+}

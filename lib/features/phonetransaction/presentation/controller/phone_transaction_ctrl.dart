@@ -122,25 +122,6 @@ class PhoneTransactionCtrl extends GetxController {
     processingRequestOne.value = false;
   }
 
-  // get all phone transactions
-  Future<void> fetchPhoneTransactions() async {
-    requestFailure.clear();
-    processingRequestTwo.value = true;
-
-    final phoneTransactionsOrFailure =
-        await _phoneTransactionUseCase.fetchPhoneTransactions();
-
-    phoneTransactionsOrFailure.fold(
-      (failure) => requestFailure.add(failure),
-      (phoneTransactions) {
-        phoneTransactions.sort((b, a) => a.dateTime.compareTo(b.dateTime));
-        phoneTransaction.assignAll(phoneTransactions);
-      },
-    );
-
-    processingRequestTwo.value = false;
-  }
-
   // stream phone transactions by id
   Stream<List<PhoneTransaction>> streamKOrderTranscById() {
     return _phoneTransactionUseCase.streamKOrderTranscById(userData.uuid);
@@ -152,9 +133,9 @@ class PhoneTransactionCtrl extends GetxController {
   }
 
   //  dellay 2 seconds
-  Future<void> delayTwoSeconds(List<PhoneTransaction> data) async {
+  Future<void> delayTwoSeconds(List<PhoneTransaction> trans) async {
     await Future.delayed(const Duration(seconds: 3));
-    phoneTransaction.assignAll(data);
+    phoneTransaction.assignAll(trans);
   }
 
 // scan barcode

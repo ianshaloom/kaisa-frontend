@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kaisa/core/utils/extension_methods.dart';
 
 import '../../../../router/route_names.dart';
 import '../../../../theme/text_scheme.dart';
@@ -20,8 +21,6 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-
-    _ctrl.fetchPhoneTransactions();
 
     return Scaffold(
       appBar: AppBar(toolbarHeight: 0),
@@ -72,10 +71,13 @@ class HomePage extends StatelessWidget {
                             ),
                           );
                         }
+
+                        final trans = _ctrl.phoneTransaction.last24Hours();
+
                         return ListView.builder(
-                          itemCount: _ctrl.phoneTransaction.length,
+                          itemCount: trans.length,
                           itemBuilder: (context, index) {
-                            final order = _ctrl.phoneTransaction[index];
+                            final order = trans[index];
                             return OrderTile(order: order);
                           },
                         );
