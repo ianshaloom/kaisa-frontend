@@ -50,14 +50,18 @@ class FirestoreKOrderTransc {
   // fetch all transactions by participant id
   Future<List<PhoneTransaction>> fetchKOrderTranscById() async {
     try {
-      final snapshot = await trans.get();
+           final user = await hiveUser.getUser();
+      final userId = user.uuid;
 
-      final phoneTrans = snapshot.docs
-          .map((doc) =>
-              PhoneTransaction.fromQuerySnapshot(documentSnapshot: doc))
+      final snapshot =
+          await trans.where('participants', arrayContains: userId).get();
+
+      final transactions = snapshot.docs
+          .map((doc) => PhoneTransaction.fromDocSnapshot(documentSnapshot: doc))
           .toList();
 
-      return phoneTrans;
+      return transactions;
+      
     } on FirebaseException catch (e) {
       throw CouldNotFetchTrans(e.message);
     }
@@ -65,7 +69,7 @@ class FirestoreKOrderTransc {
 
   // Stream of all transactions by participant id
   Stream<List<PhoneTransaction>> streamKOrderTranscById(String userId) {
-    /* final snapshot =
+    final snapshot =
         trans.where('participants', arrayContains: userId).snapshots().map(
               (event) => event.docs
                   .map(
@@ -73,13 +77,7 @@ class FirestoreKOrderTransc {
                         PhoneTransaction.fromDocSnapshot(documentSnapshot: doc),
                   )
                   .toList(),
-            ); */
-
-    final snapshot = trans.snapshots().map(
-          (event) => event.docs.map((doc) {
-            return PhoneTransaction.fromDocSnapshot(documentSnapshot: doc);
-          }).toList(),
-        );
+            );
 
     return snapshot;
   }
