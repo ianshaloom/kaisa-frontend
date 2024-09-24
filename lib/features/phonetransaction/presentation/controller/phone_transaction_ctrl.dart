@@ -46,42 +46,6 @@ class PhoneTransactionCtrl extends GetxController {
     selectedPhone = smartphone;
   }
 
-  // get my profile details
-  Future<void> fetchUsers() async {
-    requestFailure.clear();
-    processingRequestOne.value = true;
-
-    final usersOrFailure = await _phoneTransactionUseCase.fetchUsers();
-
-    usersOrFailure.fold((failure) => requestFailure.add(failure), (users) {
-      users.removeWhere((user) => user.address == userData.address);
-      users.sort((a, b) => a.address.compareTo(b.address));
-      kaisaShopsList.assignAll(users);
-    });
-
-    processingRequestOne.value = false;
-  }
-
-  //  new phone transaction
-  Failure? newFailure;
-  PhoneTransaction beingAdded = PhoneTransaction.empty;
-  Future<void> newPhoneTransaction() async {
-    newFailure = null;
-    processingRequestOne.value = true;
-
-    final phoneTransactionOrFailure =
-        await _phoneTransactionUseCase.newPhoneTransaction(
-      phoneTransaction: beingAdded,
-    );
-
-    phoneTransactionOrFailure.fold(
-      (failure) => newFailure = failure,
-      (phoneTransaction) => null,
-    );
-
-    processingRequestOne.value = false;
-  }
-
   // complete phone transaction
   Failure? completedFailure;
   PhoneTransaction beingCompleted = PhoneTransaction.empty;

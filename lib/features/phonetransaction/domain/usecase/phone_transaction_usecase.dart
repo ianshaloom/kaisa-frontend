@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../../core/datasources/firestore/models/kaisa-user/kaisa_user.dart';
 import '../../../../core/datasources/firestore/models/phone-transaction/phone_transaction.dart';
 import '../repository/phone_transaction_repo.dart';
 import '../../../../core/errors/failure_n_success.dart';
@@ -9,18 +8,6 @@ class PhoneTransactionUsecase {
   final PhoneTransactionRepo _phoneTransactionRepo;
 
   PhoneTransactionUsecase(this._phoneTransactionRepo);
-
-
-  // fetch users
-  Future<Either<Failure, List<KaisaUser>>> fetchUsers() async {
-    return await _phoneTransactionRepo.fetchUsers();
-  }
-
-  // new phone transaction
-  Future<Either<Failure, void>> newPhoneTransaction(
-      {required PhoneTransaction phoneTransaction}) async {
-    return await _phoneTransactionRepo.newPhoneTransaction(phoneTransaction: phoneTransaction);
-  }
 
   // complete phone transaction
   Future<Either<Failure, void>> completePhoneTransaction(

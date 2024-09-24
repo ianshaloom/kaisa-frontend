@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kaisa/core/utils/extension_methods.dart';
 
+import '../../../../core/constants/image_path_const.dart';
 import '../../../../router/route_names.dart';
 import '../../../../theme/text_scheme.dart';
 import '../../../phonetransaction/presentation/controller/phone_transaction_ctrl.dart';
@@ -90,11 +91,14 @@ class HomePage extends StatelessWidget {
           )
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+          onPressed: () => context.go(AppNamedRoutes.toShop),
+          child: SvgPicture.asset(
+            shop,
+            height: 40,
+            colorFilter: ColorFilter.mode(color.primary, BlendMode.srcIn),
+          )),
     );
-  }
-
-  void ontap(BuildContext context) {
-    Navigator.of(context).pushNamed('/non-posted');
   }
 }
 

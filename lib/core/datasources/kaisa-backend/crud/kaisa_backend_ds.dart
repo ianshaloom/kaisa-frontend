@@ -30,7 +30,7 @@ class KaisaBackendDS {
   // Post Phone Transaction
   Future<void> receiveKOrderTransc(Map<String, dynamic> data) async {
     try {
-      Response response = await dio.post(phoneTrans, data: data);
+      Response response = await dio.post(order, data: data);
 
       if (response.statusCode != 200) {
         throw FetchDataException(response.data['message']);
@@ -50,6 +50,32 @@ class KaisaBackendDS {
       }
     } on DioException catch (e) {
       throw PostDataException(e.message);
+    }
+  }
+
+  // sEND oRDER
+  Future<void> sendOrder(Map<String, dynamic> data) async {
+    try {
+      Response response = await dio.post(orderTrans, data: data);
+
+      if (response.statusCode != 200) {
+        throw FetchDataException(response.data['message']);
+      }
+    } on DioException catch (e) {
+      throw PostDataException(e.message);
+    }
+  }
+
+// cANCEL oRDER
+  Future<void> cancelOrder(Map<String, dynamic> data) async {
+    try {
+      Response response = await dio.patch(orderTrans, data: data);
+
+      if (response.statusCode != 200) {
+        throw FetchDataException(response.data['message']);
+      }
+    } on DioException catch (e) {
+      throw PatchDataException(e.message);
     }
   }
 }

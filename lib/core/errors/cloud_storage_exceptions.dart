@@ -34,3 +34,10 @@ class CouldNotDeleteException extends CloudStorageException {
   CouldNotDeleteException({this.eMessage = 'Unable to delete record'})
       : super(message: 'Unable to delete record');
 }
+
+class GenericException extends CloudStorageException {
+  GenericException(String? message)
+      : super(
+          message: "Something went wrong",
+        );
+}

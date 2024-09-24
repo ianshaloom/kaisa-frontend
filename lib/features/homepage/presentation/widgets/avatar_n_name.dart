@@ -11,8 +11,10 @@ import '../../../../core/utils/utility_methods.dart';
 import '../../../../router/route_names.dart';
 import '../../../../theme/text_scheme.dart';
 import '../../../phonetransaction/presentation/controller/phone_transaction_ctrl.dart';
+import '../../../shared/presentation/controller/shared_ctrl.dart';
 
 final _pCtrl = Get.find<PhoneTransactionCtrl>();
+final _sCtrl = Get.find<SharedCtrl>();
 
 class ProfilePreveiw extends StatelessWidget {
   const ProfilePreveiw({super.key});
@@ -80,7 +82,7 @@ class ProfilePreveiw extends StatelessWidget {
           );
         } else {
           final userData = box.values.first;
-          _pCtrl.userData = KaisaUser.fromUserHiveData(userDataHive: userData);
+          assignUserData(userData);
 
           return Padding(
             padding: const EdgeInsets.only(top: 12, bottom: 10),
@@ -127,5 +129,10 @@ class ProfilePreveiw extends StatelessWidget {
         }
       },
     );
+  }
+
+  void assignUserData(userData) {
+    _pCtrl.userData = KaisaUser.fromUserHiveData(userDataHive: userData);
+    _sCtrl.userData = KaisaUser.fromUserHiveData(userDataHive: userData);
   }
 }

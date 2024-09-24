@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kaisa/theme/text_scheme.dart';
 
 import '../../../../core/constants/image_path_const.dart';
 import '../../../../router/route_names.dart';
+import '../../../receipt/presentation/controller/receipt_ctrl.dart';
+import '../../../stock/presentation/controller/stock_ctrl.dart';
+
+final _sCtrl = Get.find<StockCtrl>();
+final _rCtrl = Get.find<ReceiptCtrl>();
 
 class HomeMenu extends StatelessWidget {
   const HomeMenu({super.key});
@@ -21,31 +27,37 @@ class HomeMenu extends StatelessWidget {
         ),
         children: [
           MenuTile(
-            onTap: _toProductsGridList,
-            title: 'Send Order',
-            svg: newOder,
+            onTap: _toStock,
+            title: 'Stock',
+            svg: stock,
           ),
           MenuTile(
-            onTap: _changePage,
-            title: 'Post Receipt',
+            onTap: _toReceipt,
+            title: 'Receipts',
             svg: receipt,
           ),
           MenuTile(
-            onTap: _changePage,
-            title: 'Your Stock',
-            svg: stock,
+            onTap: _toShop,
+            title: 'Browse',
+            svg: search,
           ),
         ],
       ),
     );
   }
 
-  void _toProductsGridList(BuildContext context) {
-    context.go(AppNamedRoutes.toSmartPhonesGrid);
+  void _toStock(BuildContext context) {
+    _sCtrl.fetchStockItems();
+    context.go(AppNamedRoutes.toStock);
   }
 
-  void _changePage(BuildContext context) async {
-    
+  void _toReceipt(BuildContext context) {
+    _rCtrl.fetchReceipts();
+    context.go(AppNamedRoutes.toReceipt);
+  }
+
+  void _toShop(BuildContext context) {
+    context.go(AppNamedRoutes.toSmartPhonesGrid);
   }
 }
 

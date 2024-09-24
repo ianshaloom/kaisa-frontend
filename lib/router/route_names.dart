@@ -12,6 +12,9 @@ class AppNamedRoutes {
   static String toOrderDetails = '${root}order-details';
   static String toTransHistory = '${root}transactions-history';
   static String toProfile = '${root}profile';
+  static String toStock = '${root}stock';
+  static String toReceipt = '${root}receipt';
+  static String toShop = '${root}shop';
 
 
   // from order details

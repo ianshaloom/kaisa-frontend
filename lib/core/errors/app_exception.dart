@@ -31,6 +31,15 @@ class PostDataException extends AppException {
         );
 }
 
+class PatchDataException extends AppException {
+  PatchDataException(String? details)
+      : super(
+          code: "post-data",
+          message: "Error During Posting Data",
+          details: details,
+        );
+}
+
 class TimeOutException extends AppException {
   TimeOutException(String? details)
       : super(

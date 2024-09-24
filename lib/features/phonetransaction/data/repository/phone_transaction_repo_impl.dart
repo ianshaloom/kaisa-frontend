@@ -1,13 +1,8 @@
 import 'package:dartz/dartz.dart';
 
-import 'package:kaisa/core/datasources/firestore/models/kaisa-user/kaisa_user.dart';
-
-import 'package:kaisa/core/datasources/firestore/models/phone-transaction/phone_transaction.dart';
-
-import 'package:kaisa/core/errors/failure_n_success.dart';
-
 import '../../../../core/connection/network_info.dart';
-import '../../../../core/datasources/firestore/crud/kaisa_users_ds.dart';
+import '../../../../core/datasources/firestore/models/phone-transaction/phone_transaction.dart';
+import '../../../../core/errors/failure_n_success.dart';
 import '../../domain/repository/phone_transaction_repo.dart';
 import '../core/errors/phone_transactions_exception.dart';
 import '../core/errors/smartphone_success_n_failures.dart';
@@ -18,27 +13,16 @@ class PhoneTransactionRepoImpl implements PhoneTransactionRepo {
 
   PhoneTransactionRepoImpl(this._firestorePhoneTransactionDs);
 
-  @override
-  Future<Either<Failure, void>> cancelPhoneTransaction(
-      {required PhoneTransaction phoneTransaction}) async {
-    final bool isConnected = await NetworkInfo.connectionChecker.hasConnection;
-
-    if (!isConnected) {
-      return Left(
-        PhoneTransactionFailure(
-            errorMessage: 'You have no internet connection 🚩'),
-      );
-    }
-
-    try {
-      await _firestorePhoneTransactionDs.cancelKOrderTransc(
-          phoneTransaction: phoneTransaction);
-
-      return const Right(null);
-    } on CouldNotUpdateTrans catch (e) {
-      return Left(PhoneTransactionFailure(errorMessage: e.message));
-    }
+   @override
+  Stream<PhoneTransaction> streamSingleKOrderTransc(String uuid) {
+    return _firestorePhoneTransactionDs.streamSingleKOrderTransc(uuid);
   }
+
+  @override
+  Stream<List<PhoneTransaction>> streamKOrderTranscById(String userId) {
+    return _firestorePhoneTransactionDs.streamKOrderTranscById(userId);
+  }
+
 
   @override
   Future<Either<Failure, List<PhoneTransaction>>>
@@ -53,19 +37,9 @@ class PhoneTransactionRepoImpl implements PhoneTransactionRepo {
     }
   }
 
-  @override
-  Future<Either<Failure, List<KaisaUser>>> fetchUsers() async {
-    try {
-      final users = await FirestoreUsersDs.fetchUsers();
-
-      return Right(users);
-    } catch (e) {
-      return Left(PhoneTransactionFailure(errorMessage: e.toString()));
-    }
-  }
 
   @override
-  Future<Either<Failure, void>> newPhoneTransaction(
+  Future<Either<Failure, void>> cancelPhoneTransaction(
       {required PhoneTransaction phoneTransaction}) async {
     final bool isConnected = await NetworkInfo.connectionChecker.hasConnection;
 
@@ -77,11 +51,11 @@ class PhoneTransactionRepoImpl implements PhoneTransactionRepo {
     }
 
     try {
-      await _firestorePhoneTransactionDs.setKOrderTransc(
-          phoneTransaction: phoneTransaction);
+      await _firestorePhoneTransactionDs
+          .cancelKOrderTransc(phoneTransaction.toJson());
 
       return const Right(null);
-    } on CouldNotCreateTrans catch (e) {
+    } on CouldNotUpdateTrans catch (e) {
       return Left(PhoneTransactionFailure(errorMessage: e.message));
     }
   }
@@ -108,13 +82,5 @@ class PhoneTransactionRepoImpl implements PhoneTransactionRepo {
     }
   }
 
-  @override
-  Stream<PhoneTransaction> streamSingleKOrderTransc(String uuid) {
-    return _firestorePhoneTransactionDs.streamSingleKOrderTransc(uuid);
-  }
-
-  @override
-  Stream<List<PhoneTransaction>> streamKOrderTranscById(String userId) {
-    return _firestorePhoneTransactionDs.streamKOrderTranscById(userId);
-  }
+ 
 }

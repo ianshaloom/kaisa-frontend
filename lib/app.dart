@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'router/router.dart';
 import 'theme/color_schemes.dart';
 
-class Intercess extends StatelessWidget {
-  const Intercess({super.key});
+class KaisaApp extends StatelessWidget {
+  const KaisaApp({super.key});
 
   @override
   Widget build(BuildContext context) {

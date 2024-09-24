@@ -20,8 +20,7 @@ class PhoneTransitBind extends Bindings {
         ),
       ),
     );
-    Get.lazyPut<PhoneTransactionCtrl>(
-      () => PhoneTransactionCtrl(
+    Get.put(PhoneTransactionCtrl(
         PhoneTransactionUsecase(
           PhoneTransactionRepoImpl(FirestoreKOrderTransc()),
         ),

@@ -8,4 +8,4 @@ const String waveIcon = '👋';
 // firestore collections
 const String usersCollection = 'kaisa-users';
 const String smartPhonesCollection = 'kaisa-products';
-const String kaisaShopsCollection = 'kaisa-shops';
+const String kaisaShopsCollection = 'production-shops';

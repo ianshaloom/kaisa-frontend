@@ -11,22 +11,22 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-    // device orientation
+  // device orientation
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
 
-  // initialize dependencies
-  await init();
+  final appDocumentDir = await path_provider.getApplicationDocumentsDirectory();
+  await DatabaseInit.registerAdapters();
+  await DatabaseInit.initFlutter(appDocumentDir.path);
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  final appDocumentDir = await path_provider.getApplicationDocumentsDirectory();
-  await DatabaseInit.registerAdapters();
-  await DatabaseInit.initFlutter(appDocumentDir.path);
+  // initialize dependencies
+  await init();
 
-  runApp(const Intercess());
+  runApp(const KaisaApp());
 }
