@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 
 const String kBaseUrlImages =
     'https://ianshaloom.fugitechnologies.com/assets/img/kaisa/';
-const String kBaseUrlBackend = 'https://kaisa-backend-mey1hq9-moolsha-nai.globeapp.dev';
+const String kBaseUrlBackend = 'https://kaisa-backend-klik5ce-moolsha-nai.globeapp.dev/';
 // http://localhost:8080
 
 // end points

@@ -9,6 +9,7 @@ part of 'phone_transaction.dart';
 PhoneTransaction _$PhoneTransactionFromJson(Map<String, dynamic> json) =>
     PhoneTransaction(
       uuid: json['uuid'] as String,
+      smUuid: json['smUuid'] as String,
       senderId: json['senderId'] as String,
       senderName: json['senderName'] as String,
       senderAddress: json['senderAddress'] as String,
@@ -33,6 +34,7 @@ PhoneTransaction _$PhoneTransactionFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$PhoneTransactionToJson(PhoneTransaction instance) =>
     <String, dynamic>{
       'uuid': instance.uuid,
+      'smUuid': instance.smUuid,
       'senderId': instance.senderId,
       'senderName': instance.senderName,
       'senderAddress': instance.senderAddress,

@@ -63,11 +63,13 @@ class CustomBottomNavBar extends StatelessWidget {
     return true;
   }
 
+
   void placeOrder(BuildContext context, String id) async {
     final sender = _ptCtrl.userData;
     final smartphone = _ptCtrl.selectedPhone;
 
     final order = PhoneTransaction(
+      smUuid: smartphone.id,
       uuid: const Uuid().v4(),
       senderId: sender.uuid,
       senderName: sender.fullName,

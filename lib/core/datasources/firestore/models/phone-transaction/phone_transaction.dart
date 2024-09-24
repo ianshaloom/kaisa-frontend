@@ -10,6 +10,7 @@ part 'phone_transaction.g.dart';
 class PhoneTransaction {
   PhoneTransaction({
     required this.uuid,
+    required this.smUuid,
     required this.senderId,
     required this.senderName,
     required this.senderAddress,
@@ -30,6 +31,7 @@ class PhoneTransaction {
   });
 
   final String uuid;
+  final String smUuid;
 
   // sender details
   final String senderId;
@@ -69,6 +71,7 @@ class PhoneTransaction {
 
   static PhoneTransaction empty = PhoneTransaction(
     uuid: '',
+    smUuid: '',
     senderId: '',
     senderName: '',
     senderAddress: '',
@@ -91,6 +94,7 @@ class PhoneTransaction {
   PhoneTransaction.fromQuerySnapshot(
       {required QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot})
       : uuid = documentSnapshot.id,
+        smUuid = documentSnapshot['smUuid'],
         senderId = documentSnapshot['senderId'],
         senderName = documentSnapshot['senderName'],
         senderAddress = documentSnapshot['senderAddress'],
@@ -112,6 +116,7 @@ class PhoneTransaction {
   PhoneTransaction.fromDocSnapshot(
       {required DocumentSnapshot<Map<String, dynamic>> documentSnapshot})
       : uuid = documentSnapshot.id,
+        smUuid = documentSnapshot['smUuid'],
         senderId = documentSnapshot['senderId'],
         senderName = documentSnapshot['senderName'],
         senderAddress = documentSnapshot['senderAddress'],
@@ -138,6 +143,7 @@ class PhoneTransaction {
   // this is a copy with method
   PhoneTransaction copyWith({
     String? uuid,
+    String? smUuid,
     String? senderId,
     String? senderName,
     String? senderAddress,
@@ -158,6 +164,7 @@ class PhoneTransaction {
   }) {
     return PhoneTransaction(
       uuid: uuid ?? this.uuid,
+      smUuid: smUuid ?? this.smUuid,
       senderId: senderId ?? this.senderId,
       senderName: senderName ?? this.senderName,
       senderAddress: senderAddress ?? this.senderAddress,

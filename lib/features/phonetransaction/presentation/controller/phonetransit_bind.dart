@@ -13,7 +13,7 @@ import 'transac_history_ctrl.dart';
 class PhoneTransitBind extends Bindings {
   @override
   void dependencies() {
-    Get.put(
+    Get.lazyPut(
       () => PhoneTransactionCtrl(
         PhoneTransactionUsecase(
           PhoneTransactionRepoImpl(FirestoreKOrderTransc()),
