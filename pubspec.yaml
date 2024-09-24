@@ -42,7 +42,7 @@ dependencies:
 
   #  network
   dio: ^5.7.0
-  internet_connection_checker: ^2.0.0
+  internet_connection_checker: ^1.0.0+1
 
   #  image dependencies
   flutter_svg: ^2.0.10+1
