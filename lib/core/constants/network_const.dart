@@ -2,11 +2,10 @@ import 'package:dio/dio.dart';
 
 const String kBaseUrlImages =
     'https://ianshaloom.fugitechnologies.com/assets/img/kaisa/';
-// const String kBaseUrlBackend = 'https://kaisa-backend-mey1hq9-moolsha-nai.globeapp.dev';
 const String kBaseUrlBackend =
-    'http://192.168.0.114:8080';
+    'https://kaisa-backend-klik5ce-moolsha-nai.globeapp.dev';
+// const String kBaseUrlBackend = 'http://192.168.0.114:8080';
 // http://192.168.0.114:8080
-
 
 // end points
 const String activCode = '/kcode';
