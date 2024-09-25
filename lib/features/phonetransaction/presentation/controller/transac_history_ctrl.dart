@@ -17,6 +17,7 @@ class TransacHistoryCtrl extends GetxController {
 
   void navOnPressed(int i, String status) {
     navIndex.value = i;
+    allPhoneTransactions.sort((a, b) => b.dateTime.compareTo(a.dateTime));
     filteredPurchases.assignAll(allPhoneTransactions.filterByStatus(status));
   }
 

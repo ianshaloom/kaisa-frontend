@@ -14,7 +14,7 @@ class PhoneTransitBind extends Bindings {
   @override
   void dependencies() {
     Get.put(
-      () => PhoneTransactionCtrl(
+       PhoneTransactionCtrl(
         PhoneTransactionUsecase(
           PhoneTransactionRepoImpl(FirestoreKOrderTransc()),
         ),
@@ -28,15 +28,6 @@ class PhoneTransitBind extends Bindings {
         ),
       ),
     );
-<<<<<<< HEAD
-    Get.put(PhoneTransactionCtrl(
-        PhoneTransactionUsecase(
-          PhoneTransactionRepoImpl(FirestoreKOrderTransc()),
-        ),
-      ),
-    );
-=======
->>>>>>> 1c08faa7ec51334f59eb77602936fcf718e18280
 
     Get.lazyPut<TransacHistoryCtrl>(
       () => TransacHistoryCtrl(

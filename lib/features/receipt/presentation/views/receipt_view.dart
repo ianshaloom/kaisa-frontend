@@ -128,6 +128,9 @@ class ReceiptView extends StatelessWidget {
     for (final date in dates) {
       final receiptsByDate =
           receipts.where((receipt) => receipt.addeOn.day == date).toList();
+
+      receiptsByDate.sort((a, b) => b.addeOn.compareTo(a.addeOn));
+
       groupedReceipts[receiptsByDate.first.addeOn] = receiptsByDate;
     }
 
@@ -207,7 +210,6 @@ class ReceiptTile extends StatelessWidget {
       ),
     );
   }
-
 
 /*   ColorFilter colorFilter(ColorScheme color) {
     if (order.isCancelled) {

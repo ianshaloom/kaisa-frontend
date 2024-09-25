@@ -105,7 +105,7 @@ class ReceiptCtrl extends GetxController {
   void reset2() {
     imeiz.value = '';
     deviceDetailsz.value = '';
-    
+
     receiptNo = '';
     customerName = '';
     customerPhoneNo = '';
@@ -120,7 +120,15 @@ class ReceiptCtrl extends GetxController {
     requestFailure = null;
     requestInProgress1.value = true;
 
-    final result = await receiptUsecase.uploadImage(images, imei);
+    String leading;
+
+    if(actionFromReceiptList){
+      leading = imeiz.value;
+    } else {
+      leading = imei;
+    }
+
+    final result = await receiptUsecase.uploadImage(images, leading);
 
     result.fold(
       (failure) => requestFailure = failure,

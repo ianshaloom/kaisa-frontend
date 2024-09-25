@@ -295,19 +295,27 @@ class ReceiptForm extends StatelessWidget {
 
       final customerName = _cusNameCtrl.text.trim().toUpperCase();
 
+      final imei = int.parse(_rCtrl.imeiz.value);
+      final deviceDetails = _rCtrl.deviceDetailsz.value;
+      final downloadUrls = _rCtrl.downloadUrls;
+      final shopId = _rCtrl.shopId;
+      final receiptDate = _rCtrl.date.value;
+      final smUuid = _rCtrl.smUuid;
+      final org = _rCtrl.organisation;
+
       ReceiptEntity receipt = ReceiptEntity(
-        imei: int.parse(_rCtrl.imeiz.value),
+        imei: imei,
         receiptNo: receiptNo,
         customerName: customerName,
         customerPhoneNo: customerPhoneNo,
-        deviceDatails: _rCtrl.deviceDetails,
+        deviceDatails: deviceDetails,
         cashPrice: cashPrice,
-        receiptImgUrl: _rCtrl.downloadUrls,
-        shopId: _rCtrl.shopId,
-        receiptDate: _rCtrl.date.value,
+        receiptImgUrl: downloadUrls,
+        shopId: shopId,
+        receiptDate: receiptDate,
         addeOn: DateTime.now(),
-        smUuid: _rCtrl.smUuid,
-        org: _rCtrl.organisation,
+        smUuid: smUuid,
+        org: org,
       );
 
       _rCtrl.tReceipt = receipt;
