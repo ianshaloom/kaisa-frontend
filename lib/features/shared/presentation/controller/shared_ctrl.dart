@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:kaisa/core/datasources/hive/hive-crud/hive_user_crud.dart';
 import 'package:kaisa/core/errors/failure_n_success.dart';
 
 import '../../../../core/datasources/firestore/models/kaisa-user/kaisa_user.dart';
@@ -8,8 +9,7 @@ class SharedCtrl extends GetxController {
   final SharedUsecase stockUsecase;
   SharedCtrl(this.stockUsecase);
 
-
-                       //  STRICTLY FOR KAISA USER AND SHOPS
+  //  STRICTLY FOR KAISA USER AND SHOPS
   /* -------------------------------------------------------------------------- */
 
   KaisaUser userData = KaisaUser.empty;
@@ -60,5 +60,18 @@ class SharedCtrl extends GetxController {
     selectedShopId.value = '';
     selectedShopName.value = '';
     selectedShopAddress.value = '';
+  }
+
+  // fetch user profile data
+  Future<void> fetchUserProfile() async {
+    final user = await HiveUserDataCrud().getUser();
+
+    userData = KaisaUser.fromUserHiveData(userDataHive: user);
+  }
+
+  @override
+  void onInit() {
+    fetchUserProfile();
+    super.onInit();
   }
 }

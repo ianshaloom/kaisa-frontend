@@ -37,7 +37,7 @@ class TileGroupTwo extends StatelessWidget {
                       ? Colors.blue
                       : phoneTrans.status == 'Delivered'
                           ? Colors.green
-                          : Colors.black54,
+                          : const Color(0xffB1BCAE),
                 ),
               )
             ],

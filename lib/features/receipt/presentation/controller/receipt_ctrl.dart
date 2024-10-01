@@ -1,9 +1,8 @@
-import 'dart:io';
-
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 
+import '../../../../core/datasources/kaisa-backend/crud/kaisa_backend_ds.dart';
 import '../../../../core/errors/failure_n_success.dart';
+import '../../domain/entity/daily_sales.dart';
 import '../../domain/entity/receipt_entity.dart';
 import '../../domain/usecase/receipt_usecase.dart';
 
@@ -50,30 +49,6 @@ class ReceiptCtrl extends GetxController {
   var org = Org.none.obs;
   var downloadUrls = <String>[];
 
-  var images = <File>[].obs;
-// Pick an image.
-  void pickImage() async {
-    ImagePicker picker = ImagePicker();
-    XFile? i =
-        await picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
-
-    if (i != null) {
-      images.add(File(i.path));
-    }
-
-    i = null;
-  }
-
-  void removeImage(int index) async {
-    final File image = images[index];
-
-    // remove image from images list
-    images.removeAt(index);
-
-    // remove image from storage/memory
-    await image.delete();
-  }
-
   List<String> get downloadUrlsList => _selReceipt.receiptImgUrl;
   String get organisation {
     switch (org.value) {
@@ -98,7 +73,6 @@ class ReceiptCtrl extends GetxController {
 
     date.value = DateTime.now();
     org.value = Org.none;
-    images.clear();
     downloadUrls.clear();
   }
 
@@ -112,87 +86,7 @@ class ReceiptCtrl extends GetxController {
     cashPrice = 0;
     date.value = DateTime.now();
     org.value = Org.none;
-    images.clear();
     downloadUrls.clear();
-  }
-
-  Future<void> uploadImages() async {
-    requestFailure = null;
-    requestInProgress1.value = true;
-
-    String leading;
-
-    if(actionFromReceiptList){
-      leading = imeiz.value;
-    } else {
-      leading = imei;
-    }
-
-    final result = await receiptUsecase.uploadImage(images, leading);
-
-    result.fold(
-      (failure) => requestFailure = failure,
-      (urls) => downloadUrls.assignAll(urls),
-    );
-
-    requestInProgress1.value = false;
-  }
-
-  void createReceipt(ReceiptEntity receipt) async {
-    requestFailure = null;
-    requestInProgress1.value = true;
-
-    final result = await receiptUsecase.createReceipt(receipt);
-
-    result.fold(
-      (failure) => requestFailure = failure,
-      (_) => fetchReceipts(),
-    );
-
-    requestInProgress1.value = false;
-  }
-
-  Future<String> postReceipt() async {
-    requestFailure = null;
-
-    if (downloadUrls.isEmpty) {
-      // update progress status
-      progressStatus.value = 'Uploading images...';
-      await uploadImages();
-
-      if (requestFailure != null) {
-        return 'fail upload';
-      }
-
-      // continue to post receipt
-      final r = _toBeUploaded.copyWith(receiptImgUrl: downloadUrls);
-
-      // update progress status
-      progressStatus.value = 'Posting receipt...';
-
-      // post receipt
-      createReceipt(r);
-
-      if (requestFailure != null) {
-        return 'fail post';
-      }
-
-      return 'success';
-    }
-
-    // continue to post receipt
-    final r = _toBeUploaded.copyWith(receiptImgUrl: downloadUrls);
-
-    // update progress status
-    progressStatus.value = 'Posting Receipt...';
-
-    // post receipt
-    createReceipt(r);
-
-    if (requestFailure != null) {
-      return 'fail post';
-    }
-    return 'success';
   }
 
   // RECEIPT CRUD
@@ -223,4 +117,186 @@ class ReceiptCtrl extends GetxController {
 
     requestInProgress1.value = false;
   }
+
+  /* -------------------------------------------------------------------------- */
+  KaisaBackendDS kaisaBackendDS = KaisaBackendDS();
+
+  var isProcessingRequest = false.obs;
+
+  var pageIndex = 0.obs;
+  void swipeToPage(int i) {
+    pageIndex.value = i;
+  }
+
+  var allOrgSales = <String, Map<String, List<Map<String, dynamic>>>>{}.obs;
+
+  // getters
+  Map<String, List<Map<String, dynamic>>> get watuSales => allOrgSales['Watu']!;
+  Map<String, List<Map<String, dynamic>>> get mkopaSales =>
+      allOrgSales['M-Kopa']!;
+  Map<String, List<Map<String, dynamic>>> get onfonSales =>
+      allOrgSales['Onfon']!;
+
+  int get totalWatWeeklySales {
+    int total = 0;
+    watuSales.forEach((key, value) {
+      total += value.length;
+    });
+    return total;
+  }
+
+  int get totalMkopaWeeklySales {
+    int total = 0;
+    mkopaSales.forEach((key, value) {
+      total += value.length;
+    });
+    return total;
+  }
+
+  int get totalOnfonWeeklySales {
+    int total = 0;
+    onfonSales.forEach((key, value) {
+      total += value.length;
+    });
+    return total;
+  }
+
+  int get totalWeeklySales {
+    int total =
+        totalMkopaWeeklySales + totalOnfonWeeklySales + totalWatWeeklySales;
+    return total;
+  }
+
+  List<DailySales> get dailyNumberOfSalesWatu {
+    List<DailySales> sales = [];
+    watuSales.forEach((key, value) {
+      final aSale = DailySales(totalSales: value.length, dayOfTheWeek: key);
+      sales.add(aSale);
+    });
+    return sales;
+  }
+
+  int get watuTotalSalesInAmount {
+    int total = 0;
+    watuSales.forEach((key, value) {
+      for (var element in value) {
+        total += element['cashPrice'] as int;
+      }
+    });
+    return total;
+  }
+
+  List<DailySales> get dailyNumberOfSalesMkopa {
+    List<DailySales> sales = [];
+    mkopaSales.forEach((key, value) {
+      final aSale = DailySales(totalSales: value.length, dayOfTheWeek: key);
+      sales.add(aSale);
+    });
+    return sales;
+  }
+
+  List<DailySales> get dailyNumberOfSalesOnfon {
+    List<DailySales> sales = [];
+    onfonSales.forEach((key, value) {
+      final aSale = DailySales(totalSales: value.length, dayOfTheWeek: key);
+      sales.add(aSale);
+    });
+    return sales;
+  }
+
+  // get sales
+  void getSales() async {
+    isProcessingRequest.value = true;
+    allOrgSales.clear();
+
+    final date = getFirstDayOfTheWeek();
+
+    await kaisaBackendDS.fetchWeeklySales(date).then((value) {
+      allOrgSales.value = groupReceiptsByOrgAndDate(value, date);
+    });
+
+    isProcessingRequest.value = false;
+  }
+
+  // return string of date e.g. 2024-09-23 from computing the first day of the week
+  String getFirstDayOfTheWeek() {
+    final now = DateTime.now();
+    final firstDayOfTheWeek = now.subtract(Duration(days: now.weekday - 1));
+    return firstDayOfTheWeek.toString().substring(0, 10);
+  }
+}
+
+// group receipts by org and date
+
+Map<String, Map<String, List<Map<String, dynamic>>>> groupReceiptsByOrgAndDate(
+    List<Map<String, dynamic>> receipts, String startDate) {
+  //  create a map of the orgs
+  final Map<String, Map<String, List<Map<String, dynamic>>>> groupedReceipts = {
+    'Watu': {},
+    'Onfon': {},
+    'M-Kopa': {},
+    'Other': {},
+  };
+
+  groupedReceipts.map(
+    (key, value) {
+      Map<String, List<Map<String, dynamic>>> dailySalez = {
+        'mon': [],
+        'tue': [],
+        'wed': [],
+        'thu': [],
+        'fri': [],
+        'sat': [],
+        'sun': [],
+      };
+
+      List<String> exactDates = [];
+
+      // create a list of the receipts for each day of the week
+      for (var i = 0; i < 7; i++) {
+        final date = DateTime.parse(startDate)
+            .add(Duration(days: i))
+            .toIso8601String()
+            .split('T')[0];
+
+        exactDates.add(date);
+      }
+
+      // group the receipts by org and date
+      for (final receipt in receipts) {
+        if (receipt['org'] == key) {
+          final date = receipt['receiptDate'];
+
+          // get index of the date
+          final index = exactDates.indexOf(date);
+
+          if (index != -1) {
+            final day = getDayOfWeek(index);
+            dailySalez[day]!.add(receipt);
+          }
+        }
+      }
+
+      groupedReceipts[key] = dailySalez;
+      return MapEntry(key, dailySalez);
+    },
+  );
+
+  return groupedReceipts;
+}
+
+//  days of the week
+const List<String> daysOfWeek = [
+  'mon',
+  'tue',
+  'wed',
+  'thu',
+  'fri',
+  'sat',
+  'sun',
+];
+
+// return day of the week from index
+String getDayOfWeek(int index) {
+  return daysOfWeek[index];
 }

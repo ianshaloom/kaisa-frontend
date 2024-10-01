@@ -51,6 +51,7 @@ dependencies:
   ai_barcode_scanner: ^5.1.1+2
   image_picker: ^1.1.2
   collection: ^1.18.0
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:

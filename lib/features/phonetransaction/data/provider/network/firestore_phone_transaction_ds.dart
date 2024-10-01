@@ -4,7 +4,6 @@ import '../../../../../core/datasources/firestore/models/phone-transaction/phone
 import '../../../../../core/datasources/hive/hive-crud/hive_user_crud.dart';
 import '../../../../../core/datasources/kaisa-backend/crud/kaisa_backend_ds.dart';
 import '../../../../../core/errors/app_exception.dart';
-import '../../../../../core/errors/cloud_storage_exceptions.dart';
 import '../../core/constants/phone_transaction_const.dart';
 import '../../core/errors/phone_transactions_exception.dart';
 
@@ -14,16 +13,12 @@ class FirestoreKOrderTransc {
   final KaisaBackendDS kbDS = KaisaBackendDS();
 
   // Stream of all transactions by participant id
-  Stream<List<PhoneTransaction>> streamKOrderTranscById(String userId) {
-    final snapshot =
-        trans.where('participants', arrayContains: userId).snapshots().map(
-              (event) => event.docs
-                  .map(
-                    (doc) =>
-                        PhoneTransaction.fromDocSnapshot(documentSnapshot: doc),
-                  )
-                  .toList(),
-            );
+  Stream<List<PhoneTransaction>> streamKOrderTransc() {
+    final snapshot = trans.snapshots().map(
+          (event) => event.docs.map((doc) {
+            return PhoneTransaction.fromDocSnapshot(documentSnapshot: doc);
+          }).toList(),
+        );
 
     return snapshot;
   }
@@ -39,17 +34,14 @@ class FirestoreKOrderTransc {
   // fetch all transactions by participant id
   Future<List<PhoneTransaction>> fetchKOrderTranscById() async {
     try {
-      final user = await hiveUser.getUser();
-      final userId = user.uuid;
+      final snapshot = await trans.get();
 
-      final snapshot =
-          await trans.where('participants', arrayContains: userId).get();
-
-      final transactions = snapshot.docs
-          .map((doc) => PhoneTransaction.fromDocSnapshot(documentSnapshot: doc))
+      final phoneTrans = snapshot.docs
+          .map((doc) =>
+              PhoneTransaction.fromQuerySnapshot(documentSnapshot: doc))
           .toList();
 
-      return transactions;
+      return phoneTrans;
     } on FirebaseException catch (e) {
       throw CouldNotFetchTrans(e.message);
     }
@@ -57,23 +49,23 @@ class FirestoreKOrderTransc {
 
   // send order
   Future<void> setKOrderTransc(Map<String, dynamic> data) async {
+    final documentId = data['uuid'];
+
     try {
-      await kbDS.sendOrder(data);
-    } on PostDataException catch (e) {
+      await trans.doc(documentId).set(data);
+    } on FirebaseException catch (e) {
       throw CouldNotCreateTrans(e.message);
-    } catch (e) {
-      throw GenericException(e.toString());
     }
   }
 
   // cancel order
   Future<void> cancelKOrderTransc(Map<String, dynamic> data) async {
     try {
-      await kbDS.cancelOrder(data);
-    } on PatchDataException catch (e) {
+      final documentId = data['uuid'];
+
+      await trans.doc(documentId).update(data);
+    } on FirebaseException catch (e) {
       throw CouldNotUpdateTrans(e.message);
-    } catch (e) {
-      throw GenericException(e.toString());
     }
   }
 

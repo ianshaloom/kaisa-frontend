@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 
 import '../../../constants/network_const.dart';
 import '../../../errors/app_exception.dart';
+import '../../hive/hive-crud/data_cache_crud.dart';
+import '../../hive/hive-models/datacache/data_cache_model.dart';
 
 class KaisaBackendDS {
   // fetch kaisa user activ code
@@ -76,6 +78,94 @@ class KaisaBackendDS {
       }
     } on DioException catch (e) {
       throw PatchDataException(e.message);
+    }
+  }
+
+  // fETCH wEEKLY sALES
+  Future<List<Map<String, dynamic>>> fetchWeeklySales(String startDate) async {
+    try {
+      List<Map<String, dynamic>> sales;
+
+      // check if data is cached
+      final cachedData = await DataCacheCRUD.getCachedData('weeklySales');
+
+      if (cachedData.id.isNotEmpty &&
+          DateTime.now().isBefore(cachedData.expiryDate)) {
+        //
+        sales = cachedData.value;
+      } else {
+        final response = await dio.get(
+          receipt,
+          queryParameters: {
+            'date': startDate,
+          },
+        );
+
+        if (response.statusCode != 200) {
+          throw FetchDataException(response.data['message']);
+        }
+
+        var salesList = response.data as List;
+
+        sales = salesList.map((e) => e as Map<String, dynamic>).toList();
+
+        // cache data
+        await DataCacheCRUD.cacheData(
+          DataCacheModel(
+            id: 'weeklySales',
+            value: sales,
+            expiryDate: DateTime.now().add(const Duration(minutes: 5)),
+          ),
+        );
+      }
+
+      return sales;
+    } on DioException catch (e) {
+      throw FetchDataException(e.message);
+    }
+  }
+
+  // fETCH aLL sTOCK iTEMS
+  Future<List<Map<String, dynamic>>> fetchUnSoldStock() async {
+    try {
+      List<Map<String, dynamic>> stockItems;
+
+      // check if data is cached
+      final cachedData = await DataCacheCRUD.getCachedData('stockItems');
+
+      if (cachedData.id.isNotEmpty &&
+          DateTime.now().isBefore(cachedData.expiryDate)) {
+        //
+        stockItems = cachedData.value;
+      } else {
+        final response = await dio.get(
+          stock,
+          queryParameters: {
+            'not-sold': true,
+          },
+        );
+
+        if (response.statusCode != 200) {
+          throw FetchDataException(response.data['message']);
+        }
+
+        var stockList = response.data as List;
+
+        stockItems = stockList.map((e) => e as Map<String, dynamic>).toList();
+
+        // cache data
+        await DataCacheCRUD.cacheData(
+          DataCacheModel(
+            id: 'stockItems',
+            value: stockItems,
+            expiryDate: DateTime.now().add(const Duration(minutes: 30)),
+          ),
+        );
+      }
+
+      return stockItems;
+    } on DioException catch (e) {
+      throw FetchDataException(e.message);
     }
   }
 }

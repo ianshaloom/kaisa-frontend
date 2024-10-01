@@ -6,7 +6,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../../core/utils/utility_methods.dart';
 import '../../../../theme/text_scheme.dart';
-import '../../../stock/domain/entity/stock_item_entity.dart';
+import '../../../../core/datasources/firestore/models/stock/stock_item_entity.dart';
 import '../../../stock/presentation/controller/stock_ctrl.dart';
 import '../controller/receipt_ctrl.dart';
 

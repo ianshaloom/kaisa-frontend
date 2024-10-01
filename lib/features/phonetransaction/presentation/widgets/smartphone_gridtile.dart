@@ -7,10 +7,12 @@ import 'package:shimmer/shimmer.dart';
 import '../../../../core/utils/utility_methods.dart';
 import '../../../../router/route_names.dart';
 import '../../../../theme/text_scheme.dart';
+import '../../../shared/presentation/controller/shared_ctrl.dart';
 import '../../domain/entity/smartphone_entity.dart';
 import '../controller/phone_transaction_ctrl.dart';
 
-final _phoneTransactionCtrl = Get.find<PhoneTransactionCtrl>();
+final _pCtrl = Get.find<PhoneTransactionCtrl>();
+final _shCtrl = Get.find<SharedCtrl>();
 
 class SmartphoneGridTile extends StatelessWidget {
   final SmartphoneEntity smartphone;
@@ -27,7 +29,9 @@ class SmartphoneGridTile extends StatelessWidget {
       onTap: () {
         FocusScope.of(context).unfocus();
         context.go(AppNamedRoutes.toSmartPhoneDetails);
-        _phoneTransactionCtrl.clearSelectedShop(smartphone);
+        _shCtrl.reset();
+        _pCtrl.clearCode();
+        _pCtrl.newPhone = smartphone;
       },
       child: SizedBox(
         height: 170,

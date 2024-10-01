@@ -1,5 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'stock_item_entity.g.dart';
+
+@JsonSerializable()
 class StockItemEntity {
   final String imei;
   final String smUuid;
@@ -55,4 +59,10 @@ class StockItemEntity {
         isSold = documentSnapshot['isSold'],
         addeOn = DateTime.parse(documentSnapshot['addeOn']),
         receiptId = documentSnapshot['receiptId'];
+
+
+  factory StockItemEntity.fromJson(Map<String, dynamic> json) =>
+      _$StockItemEntityFromJson(json);
+
+  Map<String, dynamic> toJson() => _$StockItemEntityToJson(this);
 }

@@ -7,13 +7,13 @@ import '../../../../core/datasources/firestore/models/phone-transaction/phone_tr
 import '../../../../core/utils/utility_methods.dart';
 import '../../../../router/route_names.dart';
 import '../../../../theme/text_scheme.dart';
-import '../controller/phone_transaction_ctrl.dart';
+import '../../../phonetransaction/presentation/controller/phone_transaction_ctrl.dart';
 
 final _ctrl = Get.find<PhoneTransactionCtrl>();
 
-class TransHistoryTile extends StatelessWidget {
+class RecentOrderListTile extends StatelessWidget {
   final PhoneTransaction phoneTransaction;
-  const TransHistoryTile({super.key, required this.phoneTransaction});
+  const RecentOrderListTile({super.key, required this.phoneTransaction});
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +22,9 @@ class TransHistoryTile extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        _ctrl.actionFromTH = true;
+        _ctrl.actionFromTH = false;
         _ctrl.selectedTransaction = phoneTransaction;
-        context.go(AppNamedRoutes.toTransHistoryDetails);
+        context.go(AppNamedRoutes.toOrderDetails);
       },
       child: Container(
         height: 100,

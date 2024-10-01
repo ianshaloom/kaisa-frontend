@@ -5,9 +5,6 @@ import '../../../../../core/datasources/hive/hive-crud/hive_user_crud.dart';
 import '../../../../../core/datasources/kaisa-backend/crud/kaisa_backend_ds.dart';
 import '../../../../../core/errors/app_exception.dart';
 import '../../../../../core/errors/cloud_storage_exceptions.dart';
-import '../../../../../core/utils/utility_methods.dart';
-import '../../../domain/entity/stock_item_entity.dart';
-import '../../core/constants.dart';
 
 class FirestoreStockDs {
   static final shop =
@@ -16,20 +13,12 @@ class FirestoreStockDs {
   final KaisaBackendDS kbDS = KaisaBackendDS();
 
   // get all stock items
-  Future<List<StockItemEntity>> fetchStock() async {
+  Future<List<Map<String, dynamic>>> fetchStock() async {
     try {
-      final user = await hiveUser.getUser();
-      final id = genShopId(user.address);
+      final stockItems = await kbDS.fetchUnSoldStock();
 
-      // doc reference
-      final docRef = shop.doc(id).collection(stockSubCollection);
-      final snapshot = await docRef.get();
-      List<StockItemEntity> toList = snapshot.docs
-          .map(
-              (doc) => StockItemEntity.fromQuerySnapshot(documentSnapshot: doc))
-          .toList();
-      return toList;
-    } on FirebaseException catch (e) {
+      return stockItems;
+    } on FetchDataException catch (e) {
       throw CouldNotFetchException(eMessage: e.message ?? 'Could not fetch');
     }
   }
@@ -39,7 +28,7 @@ class FirestoreStockDs {
     try {
       await kbDS.sendOrder(data);
     } on PostDataException catch (e) {
-        throw CouldNotCreateException(eMessage: e.message);
+      throw CouldNotCreateException(eMessage: e.message);
     } catch (e) {
       throw GenericException(e.toString());
     }

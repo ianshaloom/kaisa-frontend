@@ -9,32 +9,40 @@ class PhoneTransactionUsecase {
 
   PhoneTransactionUsecase(this._phoneTransactionRepo);
 
+  // new phone transaction
+  Future<Either<Failure, void>> sendKOrder(
+      {required PhoneTransaction phoneTransaction}) async {
+    return await _phoneTransactionRepo.sendKOrder(
+        phoneTransaction: phoneTransaction);
+  }
+
   // complete phone transaction
   Future<Either<Failure, void>> completePhoneTransaction(
       {required PhoneTransaction phoneTransaction}) async {
-    return await _phoneTransactionRepo.completePhoneTransaction(phoneTransaction: phoneTransaction);
+    return await _phoneTransactionRepo.receiveKOrder(
+        phoneTransaction: phoneTransaction);
   }
 
   // cancel phone transaction
-  Future<Either<Failure, void>> cancelPhoneTransaction(
+  Future<Either<Failure, void>> cancelKOrder(
       {required PhoneTransaction phoneTransaction}) async {
-    return await _phoneTransactionRepo.cancelPhoneTransaction(phoneTransaction: phoneTransaction);
+    return await _phoneTransactionRepo.cancelKOrder(
+        phoneTransaction: phoneTransaction);
   }
 
   // fetch phone transactions
-  Future<Either<Failure, List<PhoneTransaction>>> fetchPhoneTransactions() async {
+  Future<Either<Failure, List<PhoneTransaction>>>
+      fetchPhoneTransactions() async {
     return await _phoneTransactionRepo.fetchPhoneTransactions();
   }
 
   // stream phone transactions by id
-  Stream<List<PhoneTransaction>> streamKOrderTranscById(String userId) {
-    return _phoneTransactionRepo.streamKOrderTranscById(userId);
+  Stream<List<PhoneTransaction>> streamKOrderTransc() {
+    return _phoneTransactionRepo.streamKOrderTransc();
   }
 
   // stream a single phone transaction by id
   Stream<PhoneTransaction> streamSingleKOrderTransc(String uuid) {
     return _phoneTransactionRepo.streamSingleKOrderTransc(uuid);
   }
-
-
 }

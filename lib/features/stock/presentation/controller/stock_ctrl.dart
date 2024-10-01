@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:kaisa/core/errors/failure_n_success.dart';
 
 import '../../../../core/datasources/firestore/models/phone-transaction/phone_transaction.dart';
-import '../../domain/entity/stock_item_entity.dart';
+import '../../../../core/datasources/firestore/models/stock/stock_item_entity.dart';
 import '../../domain/usecase/stock_usecase.dart';
 
 class StockCtrl extends GetxController {
@@ -33,37 +33,11 @@ class StockCtrl extends GetxController {
 
     result.fold(
       (failure) => requestFailure = failure,
-      (stockItems) => this.stockItems = stockItems,
-    );
-
-    requestInProgress1.value = false;
-  }
-
-  /* -------------------------------------------------------------------------- */
-
-  Failure? sendOrderFailure;
-  Success? sendOrderSuccess;
-  Future<void> sendOrder() async {
-    sendOrderFailure = null;
-    requestInProgress2.value = true;
-
-    final successOrFailure =
-        await stockUsecase.sendOrder(phoneTransaction: phoneTransaction);
-
-    successOrFailure.fold(
-      (failure) => sendOrderFailure = failure,
-      (success) {
-        sendOrderSuccess = success;
-        _stockItems.removeWhere((element) => element == _selStockItem);
+      (stockItems) {
+        _stockItems.assignAll(stockItems);
       },
     );
 
-    requestInProgress2.value = false;
-  }
-
-  void reset1() {
-    phoneTransaction = PhoneTransaction.empty;
-    sendOrderSuccess = null;
-    sendOrderFailure = null;
+    requestInProgress1.value = false;
   }
 }

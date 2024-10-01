@@ -18,32 +18,37 @@ class PhoneTransactionCtrl extends GetxController {
 
   var requestFailure = <Failure>[];
 
-  var kaisaShopsList = <KaisaUser>[].obs;
   var phoneTransaction = <PhoneTransaction>[].obs;
 
   // selected objects
-  SmartphoneEntity selectedPhone = SmartphoneEntity.empty;
+  SmartphoneEntity _selectedPhone = SmartphoneEntity.empty;
+  SmartphoneEntity get selectedPhone => _selectedPhone;
+  set newPhone(SmartphoneEntity value) => _selectedPhone = value;
+
   PhoneTransaction selectedTransaction = PhoneTransaction.empty;
 
-  // selected shop details
-  var selectedShopId = ''.obs;
-  var selectedShopName = ''.obs;
-  var selectedShopAddress = ''.obs;
-  set setSelectedShopDetails(KaisaUser selectedShop) {
-    selectedShopId.value = selectedShop.uuid;
-    selectedShopName.value = selectedShop.fullName;
-    selectedShopAddress.value = selectedShop.address;
+  // actions performed on grid tile tap event
+  void clearCode() {
+    barcode.value = '';
   }
 
-  bool get isShopEmpty => selectedShopName.isEmpty;
+  //  new phone transaction
+  Failure? newFailure;
+  PhoneTransaction beingAdded = PhoneTransaction.empty;
+  Future<void> newPhoneTransaction() async {
+    newFailure = null;
+    processingRequestOne.value = true;
 
-  // actions performed on grid tile tap event
-  void clearSelectedShop(SmartphoneEntity smartphone) {
-    selectedShopId.value = '';
-    selectedShopName.value = '';
-    selectedShopAddress.value = '';
-    barcode.value = '';
-    selectedPhone = smartphone;
+    final phoneTransactionOrFailure = await _phoneTransactionUseCase.sendKOrder(
+      phoneTransaction: beingAdded,
+    );
+
+    phoneTransactionOrFailure.fold(
+      (failure) => newFailure = failure,
+      (phoneTransaction) => null,
+    );
+
+    processingRequestOne.value = false;
   }
 
   // complete phone transaction
@@ -74,7 +79,7 @@ class PhoneTransactionCtrl extends GetxController {
     processingRequestOne.value = true;
 
     final phoneTransactionOrFailure =
-        await _phoneTransactionUseCase.cancelPhoneTransaction(
+        await _phoneTransactionUseCase.cancelKOrder(
       phoneTransaction: beingCancelled,
     );
 
@@ -88,18 +93,12 @@ class PhoneTransactionCtrl extends GetxController {
 
   // stream phone transactions by id
   Stream<List<PhoneTransaction>> streamKOrderTranscById() {
-    return _phoneTransactionUseCase.streamKOrderTranscById(userData.uuid);
+    return _phoneTransactionUseCase.streamKOrderTransc();
   }
 
   // stream a single phone transaction by id
   Stream<PhoneTransaction> streamSingleKOrderTransc() {
     return _phoneTransactionUseCase.streamSingleKOrderTransc(userData.uuid);
-  }
-
-  //  dellay 2 seconds
-  Future<void> delayTwoSeconds(List<PhoneTransaction> trans) async {
-    await Future.delayed(const Duration(seconds: 3));
-    phoneTransaction.assignAll(trans);
   }
 
 // scan barcode

@@ -13,16 +13,15 @@ class PhoneTransactionRepoImpl implements PhoneTransactionRepo {
 
   PhoneTransactionRepoImpl(this._firestorePhoneTransactionDs);
 
-   @override
+  @override
   Stream<PhoneTransaction> streamSingleKOrderTransc(String uuid) {
     return _firestorePhoneTransactionDs.streamSingleKOrderTransc(uuid);
   }
 
   @override
-  Stream<List<PhoneTransaction>> streamKOrderTranscById(String userId) {
-    return _firestorePhoneTransactionDs.streamKOrderTranscById(userId);
+  Stream<List<PhoneTransaction>> streamKOrderTransc() {
+    return _firestorePhoneTransactionDs.streamKOrderTransc();
   }
-
 
   @override
   Future<Either<Failure, List<PhoneTransaction>>>
@@ -37,9 +36,29 @@ class PhoneTransactionRepoImpl implements PhoneTransactionRepo {
     }
   }
 
+    @override
+  Future<Either<Failure, void>> sendKOrder(
+      {required PhoneTransaction phoneTransaction}) async {
+    final bool isConnected = await NetworkInfo.connectionChecker.hasConnection;
+
+    if (!isConnected) {
+      return Left(
+        PhoneTransactionFailure(
+            errorMessage: 'You have no internet connection 🚩'),
+      );
+    }
+
+    try {
+      await _firestorePhoneTransactionDs.setKOrderTransc(phoneTransaction.toJson());
+
+      return const Right(null);
+    } on CouldNotCreateTrans catch (e) {
+      return Left(PhoneTransactionFailure(errorMessage: e.message));
+    }
+  }
 
   @override
-  Future<Either<Failure, void>> cancelPhoneTransaction(
+  Future<Either<Failure, void>> cancelKOrder(
       {required PhoneTransaction phoneTransaction}) async {
     final bool isConnected = await NetworkInfo.connectionChecker.hasConnection;
 
@@ -61,7 +80,7 @@ class PhoneTransactionRepoImpl implements PhoneTransactionRepo {
   }
 
   @override
-  Future<Either<Failure, void>> completePhoneTransaction(
+  Future<Either<Failure, void>> receiveKOrder(
       {required PhoneTransaction phoneTransaction}) async {
     final bool isConnected = await NetworkInfo.connectionChecker.hasConnection;
 
@@ -81,6 +100,4 @@ class PhoneTransactionRepoImpl implements PhoneTransactionRepo {
       return Left(PhoneTransactionFailure(errorMessage: e.message));
     }
   }
-
- 
 }

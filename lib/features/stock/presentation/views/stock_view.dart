@@ -1,19 +1,15 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:kaisa/features/stock/domain/entity/stock_item_entity.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:shimmer/shimmer.dart';
 
+import '../../../../core/constants/image_path_const.dart';
 import '../../../../core/utils/utility_methods.dart';
 import '../../../../theme/text_scheme.dart';
-import '../../../receipt/presentation/controller/receipt_ctrl.dart';
-import '../controller/stock_ctrl.dart';
-import '../widgets/mbs_menu.dart';
+import '../../../../core/datasources/firestore/models/stock/stock_item_entity.dart';
+import '../../../stock/presentation/controller/stock_ctrl.dart';
 
 final _sCtrl = Get.find<StockCtrl>();
-final _rCtrl = Get.find<ReceiptCtrl>();
 
 class StockView extends StatelessWidget {
   const StockView({super.key});
@@ -23,171 +19,186 @@ class StockView extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final color = Theme.of(context).colorScheme;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Stock',
-          style: bodyRegular(textTheme).copyWith(fontSize: 13),
-        ),
-        centerTitle: true,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: const Icon(CupertinoIcons.back),
-        ),
-      ),
-      body: Obx(
-        () {
-          if (_sCtrl.requestInProgress1.value) {
-            return Center(
-              child: LoadingAnimationWidget.fourRotatingDots(
-                color: color.primary,
-                size: 50,
-              ),
-            );
-          }
+    _sCtrl.fetchStockItems();
 
-          if (_sCtrl.requestFailure != null) {
-            return Center(
-              child: Text(
-                _sCtrl.requestFailure!.errorMessage,
-                style: bodyMedium(textTheme),
-              ),
-            );
-          }
-
-          return GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              childAspectRatio: 0.6,
-              mainAxisSpacing: 2,
-              crossAxisSpacing: 5,
+    return Obx(
+      () {
+        if (_sCtrl.requestInProgress1.value) {
+          return Center(
+            child: LoadingAnimationWidget.fourRotatingDots(
+              color: color.primary,
+              size: 50,
             ),
-            itemCount: _sCtrl.stockItems.length,
-            padding: const EdgeInsets.only(top: 12),
-            itemBuilder: (context, index) {
-              return StockItemGridTile(
-                stock: _sCtrl.stockItems[index],
-                index: index,
-              );
-            },
           );
-        },
-      ),
+        }
+
+        if (_sCtrl.requestFailure != null) {
+          return Center(
+            child: Text(
+              _sCtrl.requestFailure!.errorMessage,
+              textAlign: TextAlign.center,
+              style: bodyMedium(textTheme),
+            ),
+          );
+        }
+
+        return ListView.builder(
+          itemCount: groupByShop(_sCtrl.stockItems).length,
+          itemBuilder: (context, index) {
+            final shop = groupByShop(_sCtrl.stockItems).keys.elementAt(index);
+            final stockList = groupByShop(_sCtrl.stockItems)[shop]!;
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const SizedBox(width: 10),
+                    Text(
+                      shop,
+                      style: bodyMedium(textTheme).copyWith(
+                        color: color.onSurface.withOpacity(0.5),
+                        fontSize: 11,
+                      ),
+                    ),
+                    const Spacer(),
+                  ],
+                ),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: stockList.length,
+                  itemBuilder: (context, receiptIndex) {
+                    final stock = stockList[receiptIndex];
+                    return StockTile(stk: stock);
+                  },
+                ),
+                const SizedBox(height: 20),
+              ],
+            );
+          },
+        );
+      },
     );
+  }
+
+  // function to group stock items by shop
+  Map<String, List<StockItemEntity>> groupByShop(List<StockItemEntity> stock) {
+    // create a map to store the grouped stock items
+    final Map<String, List<StockItemEntity>> groupedStock = {};
+
+    // loop through the stock items, obtain shopIds in List
+    // dont repeat the shopId that is already in the list
+    List shopIds = [];
+    for (final item in stock) {
+      final shopId = item.shopId;
+      if (!shopIds.contains(shopId)) {
+        shopIds.add(shopId);
+      }
+    }
+
+    // loop through the shopIds and group the stock items by shop
+    for (final shopId in shopIds) {
+      final stockByShop = stock.where((item) => item.shopId == shopId).toList();
+
+      groupedStock[getShopName(stockByShop.first.shopId)] = stockByShop;
+    }
+
+    return groupedStock;
+  }
+
+//  my shop ids are shop name location having sentence case and joined
+//  for example 'Kisumu Kondele' will be 'KisumuKondele'
+// more example 'Nairobi Ngara East' will be 'NairobiNgaraEast'
+// return shopName from shopId
+  String getShopName(String shopId) {
+    // shopId has no spaces, so split it by uppercase letters
+    final shopName = shopId.splitMapJoin(
+      RegExp(r'(?=[A-Z])'),
+      onMatch: (m) => ' ',
+      onNonMatch: (m) => m,
+    );
+
+    return shopName;
   }
 }
 
-class StockItemGridTile extends StatelessWidget {
-  final StockItemEntity stock;
-  final int index;
-  const StockItemGridTile(
-      {super.key, required this.stock, required this.index});
+class StockTile extends StatelessWidget {
+  final StockItemEntity stk;
+  const StockTile({super.key, required this.stk});
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
+    final color = Theme.of(context).colorScheme;
+    final font = Theme.of(context).textTheme;
 
-    return GestureDetector(
-      onTap: () => onTap(context),
-      child: SizedBox(
-        height: 170,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(30),
-                decoration: BoxDecoration(
-                  color: stock.isSold
-                      ? colorScheme.onSurface.withOpacity(0.1)
-                      : colorScheme.primary.withOpacity(0.05),
-                  borderRadius: index.isEven
-                      ? const BorderRadius.only(
-                          topRight: Radius.circular(5),
-                          bottomRight: Radius.circular(5),
-                        )
-                      : const BorderRadius.only(
-                          topLeft: Radius.circular(5),
-                          bottomLeft: Radius.circular(5),
-                        ),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 0),
+      child: Stack(
+        children: [
+          Positioned(
+            right: 10,
+            top: 0,
+            child: Text(
+              customDate(stk.addeOn),
+              style: bodyMedium(font).copyWith(
+                color: color.onSurface.withOpacity(0.3),
+                fontSize: 10,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 70,
+            child: ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: CircleAvatar(
+                backgroundColor: color.onSurface.withOpacity(0.00),
+                radius: 30,
+                child: SvgPicture.asset(
+                  stock,
+                  height: 60,
+                  colorFilter: ColorFilter.mode(color.primary, BlendMode.srcIn),
                 ),
-                child: Center(
-                  child: Hero(
-                    tag: stock.imei,
-                    child: CachedNetworkImage(
-                      imageUrl: generateImageUrl(stock.imgUrl),
-                      placeholder: (context, url) => Shimmer.fromColors(
-                        baseColor: colorScheme.primary.withOpacity(0.1),
-                        highlightColor: colorScheme.primary.withOpacity(0.2),
-                        child: Container(
-                          color: colorScheme.primary.withOpacity(0.1),
-                        ),
-                      ),
-                    ),
-                  ),
+              ),
+              title: Text(
+                stk.phoneDetails,
+                style: bodyMedium(font).copyWith(
+                  fontWeight: FontWeight.w400,
+                  color: color.onSurface,
+                ),
+              ),
+              subtitle: Text(
+                stk.imei,
+                style: bodyMedium(font).copyWith(
+                  fontSize: 10,
                 ),
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 5, left: 5),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${stock.ram} ~ ${stock.storage}',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 9,
-                        ),
-                  ),
-                  Text(
-                    stock.model,
-                    style: bodyMedium(textTheme).copyWith(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 11,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 30),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  // this method shows the MbsMenuStockItem
-  void _showMbsMenuStockItem(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(10),
-          topRight: Radius.circular(10),
-        ),
-      ),
-      builder: (context) => MbsMenuStockItem(sold: stock.isSold),
-    );
-  }
+  //  to receipt detail view
+  // Future<void> _toReceiptDetailView(BuildContext context) async {}
 
-  void onTap(BuildContext context) {
-    // set stock item
-    _sCtrl.stockItem = stock;
-
-    // set receipt details
-    _rCtrl.imei = stock.imei;
-    _rCtrl.smUuid = stock.smUuid;
-    _rCtrl.shopId = stock.shopId;
-    _rCtrl.deviceDetails = stock.phoneDetails;
-
-    // show MbsMenuStockItem
-    _showMbsMenuStockItem(context);
-  }
+/*   ColorFilter colorFilter(ColorScheme color) {
+    if (order.isCancelled) {
+      return const ColorFilter.mode(
+        Colors.black,
+        BlendMode.srcIn,
+      );
+    } else if (order.isDelivered) {
+      return const ColorFilter.mode(
+        Colors.green,
+        BlendMode.srcIn,
+      );
+    } else {
+      return ColorFilter.mode(
+        color.primary,
+        BlendMode.srcIn,
+      );
+    }
+  } */
 }

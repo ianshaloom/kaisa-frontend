@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../../../core/constants/constants.dart';
 import '../../../../../core/datasources/hive/hive-crud/hive_user_crud.dart';
+import '../../../../../core/datasources/kaisa-backend/crud/kaisa_backend_ds.dart';
 import '../../../../../core/errors/cloud_storage_exceptions.dart';
 import '../../../../../core/utils/utility_methods.dart';
 import '../../../domain/entity/receipt_entity.dart';
@@ -10,6 +11,7 @@ import '../../core/constants.dart';
 class FirestoreReceiptDs {
   static final shop =
       FirebaseFirestore.instance.collection(kaisaShopsCollection);
+  KaisaBackendDS kaisaBackendDS = KaisaBackendDS();
   final HiveUserDataCrud hiveUser = HiveUserDataCrud();
 
   // get all receipts
@@ -27,7 +29,8 @@ class FirestoreReceiptDs {
           .map((doc) => ReceiptEntity.fromQuerySnapshot(documentSnapshot: doc))
           .toList();
     } on FirebaseException catch (e) {
-      throw CouldNotFetchException(eMessage: e.message ?? 'Unable to fetch receipts');
+      throw CouldNotFetchException(
+          eMessage: e.message ?? 'Unable to fetch receipts');
     }
   }
 
@@ -41,7 +44,8 @@ class FirestoreReceiptDs {
 
       return ReceiptEntity.fromDocSnapshot(documentSnapshot: fetchedReceipt);
     } on FirebaseException catch (e) {
-      throw CouldNotFetchException(eMessage: e.message ?? 'Unable to fetch receipt');
+      throw CouldNotFetchException(
+          eMessage: e.message ?? 'Unable to fetch receipt');
     }
   }
 
@@ -72,7 +76,10 @@ class FirestoreReceiptDs {
 
       await docRef.doc(docId).update(document);
     } on FirebaseException catch (e) {
-      throw CouldNotUpdateException(eMessage: e.message ?? 'Unable to update receipt');
+      throw CouldNotUpdateException(
+          eMessage: e.message ?? 'Unable to update receipt');
     }
   }
+
+
 }

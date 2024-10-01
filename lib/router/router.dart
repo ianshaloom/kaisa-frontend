@@ -7,6 +7,8 @@ import '../features/phonetransaction/presentation/views/order_detail_page.dart';
 import '../features/phonetransaction/presentation/views/cancelling_order.dart';
 import '../features/phonetransaction/presentation/views/receive_scan.dart';
 import '../features/phonetransaction/presentation/views/receiving_order.dart';
+import '../features/phonetransaction/presentation/views/send_scan.dart';
+import '../features/phonetransaction/presentation/views/sending_order.dart';
 import '../features/phonetransaction/presentation/views/smartphone_detail.dart';
 import '../features/phonetransaction/presentation/views/smartphone_grid_list.dart';
 import '../features/phonetransaction/presentation/views/trans_history.dart';
@@ -80,6 +82,18 @@ final router = GoRouter(
               builder: (context, state) {
                 return const SmartphoneDetailPage();
               },
+              routes: [
+                GoRoute(
+                  path: RoutePath.sendOrder.path,
+                  name: RoutePath.sendOrder.name,
+                  builder: (context, state) => const SendingOrder(),
+                ),
+                GoRoute(
+                  path: RoutePath.sendScan.path,
+                  name: RoutePath.sendScan.name,
+                  builder: (context, state) => const SendScan(),
+                ),
+              ],
             ),
           ],
         ),
@@ -158,6 +172,8 @@ enum RoutePath {
   smartphonesGridList(path: 'smartphone-grid-list'),
   smartphoneDetailFromGridList(path: 'smartphone-details'), //
   orderDetailFromHome(path: 'order-details'),
+  sendOrder(path: 'send-order'),
+  sendScan(path: 'send-scan'),
   receiveScan(path: 'receive-scan'),
   receiveOrder(path: 'receive-order'),
   cancelOrder(path: 'cancel-order'),

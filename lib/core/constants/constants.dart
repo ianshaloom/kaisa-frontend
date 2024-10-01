@@ -2,6 +2,7 @@ const String company = 'Kaisa Traders';
 
 // hive boxes
 const String userDataBox = 'user-data-box';
+const String dataCacheBox = 'data-cache-box';
 
 const String waveIcon = '👋';
 

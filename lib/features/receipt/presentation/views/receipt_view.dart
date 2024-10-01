@@ -10,7 +10,6 @@ import '../../../../core/constants/image_path_const.dart';
 import '../../domain/entity/receipt_entity.dart';
 import '../controller/receipt_ctrl.dart';
 import 'receipt_detail_view.dart';
-import 'receipt_form.dart';
 
 final _rCtrl = Get.find<ReceiptCtrl>();
 
@@ -89,20 +88,6 @@ class ReceiptView extends StatelessWidget {
             },
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _rCtrl.reset2();
-
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => ReceiptForm(),
-            ),
-          );
-
-          _rCtrl.actionFromReceiptList = true;
-        },
-        child: const Icon(Icons.add),
       ),
     );
   }

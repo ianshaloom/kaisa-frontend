@@ -24,180 +24,167 @@ class ProfileView extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final color = Theme.of(context).colorScheme;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Profile',
-          style: bodyMedium(textTheme).copyWith(fontSize: 13),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            const Spacer(),
+            IconButton(
+              icon: const Icon(CupertinoIcons.refresh_thin),
+              onPressed: () {
+                refreshingProfile(context);
+              },
+            ),
+          ],
         ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(CupertinoIcons.refresh_thin),
-            onPressed: () {
-              refreshingProfile(context);
-            },
-          ),
-        ],
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            children: [
-              const SizedBox(height: 20),
-              ValueListenableBuilder(
-                valueListenable: HiveBoxes.getUserDataBox.listenable(),
-                builder: (context, box, child) {
-                  if (box.isEmpty) {
-                    return Center(
-                      child: LoadingAnimationWidget.fourRotatingDots(
-                        color: Colors.black,
-                        size: 50,
-                      ),
-                    );
-                  }
-
-                  final userData = box.values.first;
-                  return Column(
-                    children: [
-                      Container(
-                        alignment: Alignment.center,
-                        child: CircleAvatar(
-                          radius: 51.5,
-                          backgroundColor: color.primary,
-                          child: CircleAvatar(
-                            backgroundColor: color.surface,
-                            radius: 50,
-                            child: CachedNetworkImage(
-                              imageUrl: userData.profileImgUrl,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      ListTile(
-                        leading: const SizedBox(
-                          width: 50,
-                          height: 50,
-                          child: Icon(
-                            Icons.person,
-                            size: 30,
-                          ),
-                        ),
-                        title: Text(
-                          'Name',
-                          style: bodyMedium(textTheme),
-                        ),
-                        subtitle: Text(
-                          userData.fullName,
-                          style: bodyRegular(textTheme),
-                        ),
-                      ),
-                      ListTile(
-                        leading: const SizedBox(
-                          width: 50,
-                          height: 50,
-                          child: Icon(
-                            Icons.email_rounded,
-                            size: 30,
-                          ),
-                        ),
-                        title: Text(
-                          'Email',
-                          style: bodyMedium(textTheme),
-                        ),
-                        subtitle: Text(
-                          userData.email,
-                          style: bodyRegular(textTheme),
-                        ),
-                      ),
-                      ListTile(
-                        leading: const SizedBox(
-                          width: 50,
-                          height: 50,
-                          child: Icon(
-                            Icons.location_pin,
-                            size: 30,
-                          ),
-                        ),
-                        title: Text(
-                          'Shop Location',
-                          style: bodyMedium(textTheme),
-                        ),
-                        subtitle: Text(
-                          userData.address,
-                          style: bodyRegular(textTheme),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
-              const SizedBox(height: 30),
-              Column(
-                children: [
-                  // const Divider(),
-                  const SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Text(
-                      'Choose profile avatar',
-                      style: bodyMedium(textTheme).copyWith(fontSize: 12.5),
+        Column(
+          children: [
+            const SizedBox(height: 20),
+            ValueListenableBuilder(
+              valueListenable: HiveBoxes.getUserDataBox.listenable(),
+              builder: (context, box, child) {
+                if (box.isEmpty) {
+                  return Center(
+                    child: LoadingAnimationWidget.fourRotatingDots(
+                      color: Colors.black,
+                      size: 50,
                     ),
-                  ),
-                  const SizedBox(height: 30),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ...profilePictures.map((avatar) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5),
-                          child: GestureDetector(
-                            onTap: () async {
-                              var userData = await HiveUserDataCrud().getUser();
-                              userData.profileImgUrl = avatar;
-                              userData.save();
-                            },
-                            child: CircleAvatar(
-                              backgroundImage: NetworkImage(avatar, scale: 1),
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.surface,
-                              radius: 30,
-                            ),
+                  );
+                }
+
+                final userData = box.values.first;
+                return Column(
+                  children: [
+                    Container(
+                      alignment: Alignment.center,
+                      child: CircleAvatar(
+                        radius: 51.5,
+                        backgroundColor: color.primary,
+                        child: CircleAvatar(
+                          backgroundColor: color.surface,
+                          radius: 50,
+                          child: CachedNetworkImage(
+                            imageUrl: userData.profileImgUrl,
                           ),
-                        );
-                      }).toList(),
-                    ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    ListTile(
+                      leading: const SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: Icon(
+                          Icons.person,
+                          size: 30,
+                        ),
+                      ),
+                      title: Text(
+                        'Name',
+                        style: bodyMedium(textTheme),
+                      ),
+                      subtitle: Text(
+                        userData.fullName,
+                        style: bodyRegular(textTheme),
+                      ),
+                    ),
+                    ListTile(
+                      leading: const SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: Icon(
+                          Icons.email_rounded,
+                          size: 30,
+                        ),
+                      ),
+                      title: Text(
+                        'Email',
+                        style: bodyMedium(textTheme),
+                      ),
+                      subtitle: Text(
+                        userData.email,
+                        style: bodyRegular(textTheme),
+                      ),
+                    ),
+                    ListTile(
+                      leading: const SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: Icon(
+                          Icons.location_pin,
+                          size: 30,
+                        ),
+                      ),
+                      title: Text(
+                        'Shop Location',
+                        style: bodyMedium(textTheme),
+                      ),
+                      subtitle: Text(
+                        userData.address,
+                        style: bodyRegular(textTheme),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+            const SizedBox(height: 30),
+            Column(
+              children: [
+                // const Divider(),
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    'Choose profile avatar',
+                    style: bodyMedium(textTheme).copyWith(fontSize: 12.5),
                   ),
-                ],
-              ),
-            ],
-          ),
-
-          Column(
-            children: [
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: CustomFilledBtn(
-                  title: 'Sign Out',
-                  onPressed: () => signOut(context),
-                  pad: 0,
                 ),
-              ),
-            ],
-          )
+                const SizedBox(height: 30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ...profilePictures.map((avatar) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: GestureDetector(
+                          onTap: () async {
+                            var userData = await HiveUserDataCrud().getUser();
+                            userData.profileImgUrl = avatar;
+                            userData.save();
+                          },
+                          child: CircleAvatar(
+                            backgroundImage: NetworkImage(avatar, scale: 1),
+                            backgroundColor:
+                                Theme.of(context).colorScheme.surface,
+                            radius: 30,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
 
-          // delete account button
-        ],
-      ),
+        Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: CustomFilledBtn(
+                title: 'Sign Out',
+                onPressed: () => signOut(context),
+                pad: 0,
+              ),
+            ),
+          ],
+        )
+
+        // delete account button
+      ],
     );
   }
 

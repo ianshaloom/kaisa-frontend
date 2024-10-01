@@ -11,12 +11,9 @@ import 'features/stock/presentation/controller/stock_ctrl_bind.dart';
 
 FutureOr<void> init() async {
   AuthRepoBinding().dependencies();
+  Get.put(HomePageCtrl());
   SharedCtrlBind().dependencies();
   PhoneTransitBind().dependencies();
   StockCtrlBind().dependencies();
   ReceiptCtrlBind().dependencies();
-
-  Get.lazyPut(
-    () => HomePageCtrl(),
-  );
 }

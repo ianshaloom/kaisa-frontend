@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/connection/network_info.dart';
@@ -10,14 +8,12 @@ import '../../domain/entity/receipt_entity.dart';
 import '../../domain/repository/receipt_abs.dart';
 import '../core/error/cloud_storage_exceptions.dart';
 import '../core/error/receipt_failure_success.dart';
-import '../provider/network/cloud_storage_ds.dart';
 import '../provider/network/firestore_receipt_ds.dart';
 import '../../../../core/errors/cloud_storage_exceptions.dart';
 
 class ReceiptAbsImpl extends ReceiptAbs {
   ReceiptAbsImpl(this.firestoreReceiptDs);
   final FirestoreReceiptDs firestoreReceiptDs;
-  final CloudStorageDs cloudStorageDs = CloudStorageDs();
   final KaisaBackendDS kaisaBackendDS = KaisaBackendDS();
 
   @override
@@ -31,7 +27,8 @@ class ReceiptAbsImpl extends ReceiptAbs {
   }
 
   @override
-  Future<Either<Failure, ReceiptEntity>> fetchReceipt(String imei, String shopId) async {
+  Future<Either<Failure, ReceiptEntity>> fetchReceipt(
+      String imei, String shopId) async {
     try {
       final receipt = await firestoreReceiptDs.fetchReceipt(imei, shopId);
       return Future.value(Right(receipt));
@@ -59,10 +56,8 @@ class ReceiptAbsImpl extends ReceiptAbs {
   }
 
   @override
-  Future<Either<Failure, List<String>>> uploadImage(
-    List<File> files,
-    String imei,
-  ) async {
+  Future<Either<Failure, List<Map<String, dynamic>>>> fetchWeeklySales(
+      String startDate) async {
     final bool isConnected = await NetworkInfo.connectionChecker.hasConnection;
 
     if (!isConnected) {
@@ -72,19 +67,9 @@ class ReceiptAbsImpl extends ReceiptAbs {
     }
 
     try {
-      List<String> downloadUrls = [];
-      final fileNames = genFilenames(files.length, imei);
+      final sales = await kaisaBackendDS.fetchWeeklySales(startDate);
 
-      for (int i = 0; i < files.length; i++) {
-        // upload image
-        final downloadUrl =
-            await cloudStorageDs.uploadImage(files[i], fileNames[i]);
-
-        // add to downloadUrls
-        downloadUrls.add(downloadUrl);
-      }
-
-      return Future.value(Right(downloadUrls));
+      return Future.value(Right(sales));
     } on CloudStorageExceptions catch (e) {
       return Future.value(Left(ReceiptFailure(errorMessage: e.toString())));
     }

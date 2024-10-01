@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/errors/failure_n_success.dart';
@@ -10,7 +8,8 @@ class ReceiptUsecase {
   final ReceiptAbs receiptAbs;
   ReceiptUsecase(this.receiptAbs);
 
-  Future<Either<Failure, ReceiptEntity>> fetchReceipt(String imei, String shopId) {
+  Future<Either<Failure, ReceiptEntity>> fetchReceipt(
+      String imei, String shopId) {
     return receiptAbs.fetchReceipt(imei, shopId);
   }
 
@@ -26,7 +25,7 @@ class ReceiptUsecase {
     return receiptAbs.updateReceipt(receipt);
   }
 
-  Future<Either<Failure, List<String>>> uploadImage(List<File> files, String imei) {
-    return receiptAbs.uploadImage(files, imei);
+  Future<Either<Failure, List<Map<String, dynamic>>>> uploadImage(String startDate) {
+    return receiptAbs.fetchWeeklySales(startDate);
   }
 }

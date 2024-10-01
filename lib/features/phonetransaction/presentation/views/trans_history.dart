@@ -127,8 +127,8 @@ class TopNav extends StatelessWidget {
                 backgroundColor: title == 'Delivered'
                     ? Colors.green
                     : title == 'Cancelled'
-                        ? Colors.black54
-                        : color.primary,
+                        ? const Color(0xffB1BCAE)
+                        : const Color.fromARGB(255, 171, 198, 236),
                 radius: 5,
               ),
               const SizedBox(width: 10),
