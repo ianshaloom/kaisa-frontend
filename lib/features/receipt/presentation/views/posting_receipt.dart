@@ -173,13 +173,7 @@ class CustomerBasketBottomBar extends StatelessWidget {
   }
 
   Future<void> backToHome(BuildContext context) async {
-    if (_rCtrl.actionFromReceiptList) {
-      // pop screen twice
-      Navigator.of(context).pop();
-      Navigator.of(context).pop();
-      _rCtrl.fetchReceipts();
-    }
-    // pop screen twice
-    Navigator.of(context).popUntil((route) => route.isFirst);
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
   }
 }

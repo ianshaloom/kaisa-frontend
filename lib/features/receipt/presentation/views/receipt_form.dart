@@ -1,19 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
+import '../../../../core/constants/image_path_const.dart';
+import '../../../../core/utils/utility_methods.dart';
 import '../../../../core/widgets/custom_filled_btn.dart';
 import '../../../../core/widgets/snacks.dart';
 import '../../../../theme/text_scheme.dart';
 import '../../domain/entity/receipt_entity.dart';
 import '../controller/receipt_ctrl.dart';
-import '../widgets/mbs_stock_items.dart.dart';
+import '../../../stock/presentation/widgets/mbs_stock_items.dart.dart';
 import '../widgets/receipt_image.dart';
 import '../widgets/seg_buttons.dart';
 import 'posting_receipt.dart';
-
-final _rCtrl = Get.find<ReceiptCtrl>();
 
 class ReceiptForm extends StatelessWidget {
   ReceiptForm({super.key});
@@ -22,6 +22,7 @@ class ReceiptForm extends StatelessWidget {
   final TextEditingController _cusNameCtrl = TextEditingController();
   final TextEditingController _cusPhoneCtrl = TextEditingController();
   final TextEditingController _cashPriceCtrl = TextEditingController();
+  final _rCtrl = Get.find<ReceiptCtrl>();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -31,183 +32,214 @@ class ReceiptForm extends StatelessWidget {
     final color = Theme.of(context).colorScheme;
 
     return Scaffold(
-        appBar: AppBar(
-          toolbarHeight: 40,
-          elevation: 0,
-          scrolledUnderElevation: 0,
-          leading: IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(CupertinoIcons.back),
-          ),
-          centerTitle: true,
-          actions: [
-            TextButton(
-              onPressed: () => _stockItemSelectionDialog(context),
-              child: Obx(
-                () => Text(
-                  _rCtrl.imeiz.value.isEmpty
-                      ? 'Select Stock Item'
-                      : _rCtrl.deviceDetailsz.value,
-                  style: bodyBold(textTheme).copyWith(
-                    fontSize: 12,
-                    color: color.primary,
-                  ),
+      appBar: AppBar(
+        toolbarHeight: 40,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(CupertinoIcons.back),
+        ),
+        centerTitle: true,
+        actions: [
+          TextButton(
+            onPressed: () => _stockItemSelectionDialog(context),
+            child: Obx(
+              () => Text(
+                _rCtrl.imeiz.value.isEmpty
+                    ? 'Select Stock Item'
+                    : _rCtrl.deviceDetailsz.value,
+                style: bodyBold(textTheme).copyWith(
+                  fontSize: 12,
+                  color: color.primary,
                 ),
               ),
             ),
-          ],
-        ),
-        body: ListView(
-          // padding: const EdgeInsets.all(8),
-          children: [
-            ConstrainedBox(
-                constraints: const BoxConstraints(
-                  minHeight: 100,
-                  maxHeight: 300,
-                ),
-                child: ReceiptImage(imei: _rCtrl.imei)),
-            const SizedBox(height: 15),
-            Divider(
-              thickness: 10,
-              color: color.onSurface.withOpacity(0.05),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    Row(
+          ),
+        ],
+      ),
+      body: ListView(
+        // padding: const EdgeInsets.all(8),
+        children: [
+          ConstrainedBox(
+              constraints: const BoxConstraints(
+                minHeight: 100,
+                maxHeight: 300,
+              ),
+              child: ReceiptImage(imei: _rCtrl.imei)),
+          const SizedBox(height: 5),
+          Divider(
+            thickness: 10,
+            color: color.onSurface.withOpacity(0.05),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  const SizedBox(height: 15),
+                  Obx(
+                    () => readOnlyField('IMEI: ${_rCtrl.imeiz.value}', context),
+                  ),
+                  const SizedBox(height: 5),
+                  Obx(
+                    () => readOnlyField(
+                        'Device: ${_rCtrl.deviceDetailsz.value}', context),
+                  ),
+                  const SizedBox(height: 5),
+                  const SingleChoice(),
+                  const SizedBox(height: 15),
+                  SizedBox(
+                    height: 70,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        const Spacer(),
-                        Obx(() {
-                          return Text(
-                            DateFormat.yMMMd().format(_rCtrl.date.value),
-                            style:
-                                bodyRegular(textTheme).copyWith(fontSize: 13),
-                          );
-                        }),
-                        const SizedBox(width: 5),
                         IconButton(
                           onPressed: () => _showCalendar(context),
-                          icon: const Icon(CupertinoIcons.calendar),
+                          icon: SvgPicture.asset(
+                            calendar,
+                            colorFilter: ColorFilter.mode(
+                              color.onSurface.withOpacity(0.5),
+                              BlendMode.srcIn,
+                            ),
+                            height: 50,
+                          ),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Receipt Date',
+                              style:
+                                  bodyRegular(textTheme).copyWith(fontSize: 11),
+                            ),
+                            const SizedBox(width: 5),
+                            Obx(
+                              () => _rCtrl.date.isEmpty
+                                  ? Text(
+                                      "Choose a Date",
+                                      style: bodyMedium(textTheme).copyWith(
+                                        color: color.onSurface.withOpacity(0.5),
+                                      ),
+                                    )
+                                  : Text(
+                                      newDate(_rCtrl.date.first),
+                                      style: bodyMedium(textTheme).copyWith(
+                                        color: color.onSurface,
+                                      ),
+                                    ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                    const SingleChoice(),
-                    const SizedBox(height: 10),
-                    Obx(
-                      () =>
-                          readOnlyField('IMEI: ${_rCtrl.imeiz.value}', context),
-                    ),
-                    const SizedBox(height: 15),
-                    Obx(
-                      () => readOnlyField(
-                          'Device: ${_rCtrl.deviceDetailsz.value}', context),
-                    ),
-                    const SizedBox(height: 15),
-                    TextFormField(
-                      controller: _receiptNoCtrl,
-                      keyboardType: TextInputType.number,
-                      autocorrect: false,
-                      textInputAction: TextInputAction.next,
-                      onTapOutside: (event) => FocusScope.of(context).unfocus(),
-                      decoration: InputDecoration(
-                        labelText: 'Receipt Number',
-                        labelStyle: bodyRegular(textTheme).copyWith(),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                  ),
+                  const SizedBox(height: 15),
+                  TextFormField(
+                    controller: _receiptNoCtrl,
+                    keyboardType: TextInputType.number,
+                    autocorrect: false,
+                    textInputAction: TextInputAction.next,
+                    onTapOutside: (event) => FocusScope.of(context).unfocus(),
+                    decoration: InputDecoration(
+                      labelText: 'Receipt Number',
+                      labelStyle: bodyRegular(textTheme).copyWith(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Receipt number is required';
-                        }
-                        return null;
-                      },
                     ),
-                    const SizedBox(height: 15),
-                    TextFormField(
-                      controller: _cusNameCtrl,
-                      textCapitalization: TextCapitalization.sentences,
-                      textInputAction: TextInputAction.next,
-                      keyboardType: TextInputType.text,
-                      autocorrect: false,
-                      onTapOutside: (event) => FocusScope.of(context).unfocus(),
-                      decoration: InputDecoration(
-                        labelText: 'Customer Name',
-                        labelStyle: bodyRegular(textTheme).copyWith(),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Receipt number is required';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 15),
+                  TextFormField(
+                    controller: _cusNameCtrl,
+                    textCapitalization: TextCapitalization.sentences,
+                    textInputAction: TextInputAction.next,
+                    keyboardType: TextInputType.text,
+                    autocorrect: false,
+                    onTapOutside: (event) => FocusScope.of(context).unfocus(),
+                    decoration: InputDecoration(
+                      labelText: 'Customer Name',
+                      labelStyle: bodyRegular(textTheme).copyWith(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Customer name is required';
-                        }
-                        return null;
-                      },
                     ),
-                    const SizedBox(height: 15),
-                    TextFormField(
-                      controller: _cusPhoneCtrl,
-                      keyboardType: TextInputType.phone,
-                      textInputAction: TextInputAction.next,
-                      autocorrect: false,
-                      onTapOutside: (event) => FocusScope.of(context).unfocus(),
-                      decoration: InputDecoration(
-                        labelText: 'Customer Phone Number',
-                        labelStyle: bodyRegular(textTheme).copyWith(),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Customer name is required';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 15),
+                  TextFormField(
+                    controller: _cusPhoneCtrl,
+                    keyboardType: TextInputType.phone,
+                    textInputAction: TextInputAction.next,
+                    autocorrect: false,
+                    onTapOutside: (event) => FocusScope.of(context).unfocus(),
+                    decoration: InputDecoration(
+                      labelText: 'Customer Phone Number',
+                      labelStyle: bodyRegular(textTheme).copyWith(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Phone number is required';
-                        }
-                        return null;
-                      },
                     ),
-                    const SizedBox(height: 15),
-                    TextFormField(
-                      controller: _cashPriceCtrl,
-                      keyboardType: TextInputType.number,
-                      textInputAction: TextInputAction.done,
-                      autocorrect: false,
-                      onTapOutside: (event) => FocusScope.of(context).unfocus(),
-                      decoration: InputDecoration(
-                        labelText: 'Cash Price',
-                        labelStyle: bodyRegular(textTheme).copyWith(),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Phone number is required';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 15),
+                  TextFormField(
+                    controller: _cashPriceCtrl,
+                    keyboardType: TextInputType.number,
+                    textInputAction: TextInputAction.done,
+                    autocorrect: false,
+                    onTapOutside: (event) => FocusScope.of(context).unfocus(),
+                    decoration: InputDecoration(
+                      labelText: 'Cash Price',
+                      labelStyle: bodyRegular(textTheme).copyWith(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Cash price is required';
-                        }
-                        return null;
-                      },
                     ),
-                    const SizedBox(height: 5),
-                  ],
-                ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Cash price is required';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 5),
+                ],
               ),
             ),
-            Divider(
-              thickness: 10,
-              color: color.onSurface.withOpacity(0.05),
-            ),
-            CustomFilledBtn(
-              title: 'Post Receipt',
-              onPressed: () async {
-                postReceipt(context);
-              },
-              pad: 5,
-            ),
-          ],
-        ));
+          ),
+          Divider(
+            thickness: 10,
+            color: color.onSurface.withOpacity(0.05),
+          ),
+          CustomFilledBtn(
+            title: 'Post Receipt',
+            onPressed: () async {
+              postReceipt(context);
+            },
+            pad: 5,
+          ),
+        ],
+      ),
+    );
   }
 
   void _stockItemSelectionDialog(BuildContext context) {
@@ -263,6 +295,13 @@ class ReceiptForm extends StatelessWidget {
       return;
     }
 
+    if (_rCtrl.date.isEmpty) {
+      Snack().showSnackBar(
+          context: context, message: 'Please select receipt date');
+
+      return;
+    }
+
     if (_formKey.currentState!.validate()) {
       int cashPrice;
       int receiptNo;
@@ -299,7 +338,7 @@ class ReceiptForm extends StatelessWidget {
       final deviceDetails = _rCtrl.deviceDetailsz.value;
       final downloadUrls = _rCtrl.downloadUrls;
       final shopId = _rCtrl.shopId;
-      final receiptDate = _rCtrl.date.value;
+      final receiptDate = _rCtrl.date.first;
       final smUuid = _rCtrl.smUuid;
       final org = _rCtrl.organisation;
 
@@ -335,7 +374,7 @@ class ReceiptForm extends StatelessWidget {
     );
 
     if (date != null) {
-      _rCtrl.date.value = date;
+      _rCtrl.date.assign(date);
     }
   }
 

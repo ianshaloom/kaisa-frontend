@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:kaisa/theme/text_scheme.dart';
 
 import '../../../../core/widgets/custom_filled_btn.dart';
-import '../../../../router/route_transitions.dart';
 import '../../../receipt/presentation/controller/receipt_ctrl.dart';
 import '../../../receipt/presentation/widgets/mbs_receipt_view.dart';
 import '../../../shared/presentation/controller/shared_ctrl.dart';
@@ -61,7 +60,7 @@ class MbsMenuStockItem extends StatelessWidget {
           )
         : SingleChildScrollView(
             child: Container(
-              height: 183,
+              height: 123,
               padding: const EdgeInsets.symmetric(horizontal: 7),
               child: Column(
                 children: [
@@ -72,19 +71,6 @@ class MbsMenuStockItem extends StatelessWidget {
                     title: Text(
                       'Send as Order',
                       style: bodyMedium(textTheme),
-                    ),
-                    shape: shape,
-                  ),
-                  ListTile(
-                    onTap: () => toPostReceipt(context),
-                    leading: const Icon(Icons.receipt),
-                    title: Text(
-                      'Post Receipt',
-                      style: bodyMedium(textTheme),
-                    ),
-                    trailing: const Icon(
-                      Icons.arrow_forward_ios,
-                      size: 15,
                     ),
                     shape: shape,
                   ),
@@ -125,16 +111,6 @@ class MbsMenuStockItem extends StatelessWidget {
         return const MbsShopList();
       },
     );
-  }
-
-  Future<void> toPostReceipt(BuildContext context) async {
-    // reset
-    _rCtrl.reset1();
-
-    Navigator.pop(context);
-    await Navigator.of(context).push(toReceitForm()).then(
-          (value) => _rCtrl.actionFromReceiptList = false,
-        );
   }
 
   Future<void> toReceitView(BuildContext context) async {

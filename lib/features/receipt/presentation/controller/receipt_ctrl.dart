@@ -13,8 +13,6 @@ class ReceiptCtrl extends GetxController {
   final ReceiptUsecase receiptUsecase;
   ReceiptCtrl(this.receiptUsecase);
 
-  var actionFromReceiptList = true;
-
   var requestInProgress1 = false.obs;
   var progressStatus = 'Uploading images...'.obs;
   var requestInProgress2 = false.obs;
@@ -46,7 +44,7 @@ class ReceiptCtrl extends GetxController {
   var customerName = '';
   var customerPhoneNo = '';
   var cashPrice = 0;
-  var date = DateTime.now().obs;
+  var date = <DateTime>[].obs;
   var org = Org.none.obs;
   var downloadUrls = <String>[];
 
@@ -55,7 +53,7 @@ class ReceiptCtrl extends GetxController {
   void pickImage() async {
     ImagePicker picker = ImagePicker();
     XFile? i =
-        await picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
+        await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
 
     if (i != null) {
       images.add(File(i.path));
@@ -74,6 +72,12 @@ class ReceiptCtrl extends GetxController {
     await image.delete();
   }
 
+  void clearImagesMemory() {
+    for (var image in images) {
+      image.delete();
+    }
+  }
+
   List<String> get downloadUrlsList => _selReceipt.receiptImgUrl;
   String get organisation {
     switch (org.value) {
@@ -90,19 +94,7 @@ class ReceiptCtrl extends GetxController {
     }
   }
 
-  void reset1() {
-    receiptNo = '';
-    customerName = '';
-    customerPhoneNo = '';
-    cashPrice = 0;
-
-    date.value = DateTime.now();
-    org.value = Org.none;
-    images.clear();
-    downloadUrls.clear();
-  }
-
-  void reset2() {
+  void reset() {
     imeiz.value = '';
     deviceDetailsz.value = '';
 
@@ -110,7 +102,7 @@ class ReceiptCtrl extends GetxController {
     customerName = '';
     customerPhoneNo = '';
     cashPrice = 0;
-    date.value = DateTime.now();
+    date.clear();
     org.value = Org.none;
     images.clear();
     downloadUrls.clear();
@@ -120,13 +112,7 @@ class ReceiptCtrl extends GetxController {
     requestFailure = null;
     requestInProgress1.value = true;
 
-    String leading;
-
-    if(actionFromReceiptList){
-      leading = imeiz.value;
-    } else {
-      leading = imei;
-    }
+    String leading = imeiz.value;
 
     final result = await receiptUsecase.uploadImage(images, leading);
 
@@ -146,7 +132,10 @@ class ReceiptCtrl extends GetxController {
 
     result.fold(
       (failure) => requestFailure = failure,
-      (_) => fetchReceipts(),
+      (_) {
+        clearImagesMemory();
+        fetchReceipts();
+      },
     );
 
     requestInProgress1.value = false;

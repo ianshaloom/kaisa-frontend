@@ -6,9 +6,9 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../../core/utils/utility_methods.dart';
 import '../../../../theme/text_scheme.dart';
-import '../../../stock/domain/entity/stock_item_entity.dart';
-import '../../../stock/presentation/controller/stock_ctrl.dart';
-import '../controller/receipt_ctrl.dart';
+import '../../domain/entity/stock_item_entity.dart';
+import '../controller/stock_ctrl.dart';
+import '../../../receipt/presentation/controller/receipt_ctrl.dart';
 
 final _ctrl = Get.find<StockCtrl>();
 final _rCtrl = Get.find<ReceiptCtrl>();
@@ -58,6 +58,15 @@ class MbsStockItems extends StatelessWidget {
                 }
 
                 final stock = _ctrl.stockItems.where((e) => !e.isSold).toList();
+
+                if (stock.isEmpty) {
+                  return Center(
+                    child: Text(
+                      'You have no unsold stock',
+                      style: bodyMedium(textTheme),
+                    ),
+                  );
+                }
 
                 return CarouselView(
                   itemExtent: 340,

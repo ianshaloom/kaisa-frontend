@@ -92,15 +92,13 @@ class ReceiptView extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _rCtrl.reset2();
+          _rCtrl.reset();
 
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => ReceiptForm(),
             ),
           );
-
-          _rCtrl.actionFromReceiptList = true;
         },
         child: const Icon(Icons.add),
       ),
@@ -118,20 +116,23 @@ class ReceiptView extends StatelessWidget {
     // dont repeat the date that is already in the list
     List dates = [];
     for (final receipt in receipts) {
-      final date = receipt.addeOn.day;
+      final date = receipt.receiptDate.day;
       if (!dates.contains(date)) {
         dates.add(date);
       }
     }
 
+    // sort the dates, starting from the most recent
+    dates.sort((a, b) => a.compareTo(b));
+
     // Loop through the dates and group the receipts by date
     for (final date in dates) {
       final receiptsByDate =
-          receipts.where((receipt) => receipt.addeOn.day == date).toList();
+          receipts.where((receipt) => receipt.receiptDate.day == date).toList();
 
       receiptsByDate.sort((a, b) => b.addeOn.compareTo(a.addeOn));
 
-      groupedReceipts[receiptsByDate.first.addeOn] = receiptsByDate;
+      groupedReceipts[receiptsByDate.first.receiptDate] = receiptsByDate;
     }
 
     return groupedReceipts;

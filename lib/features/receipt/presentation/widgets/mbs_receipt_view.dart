@@ -251,6 +251,18 @@ class TileGroupTwo extends StatelessWidget {
           const SizedBox(height: 15), */
           Row(
             children: [
+              Text(
+                'Product Name',
+                style: bodyDft1,
+              ),
+              const Spacer(),
+              Text(receipt.deviceDatails,
+                  style: bodyDft2.copyWith(fontWeight: FontWeight.w600)),
+            ],
+          ),
+          const SizedBox(height: 15),
+          Row(
+            children: [
               Text('Receipt Date', style: bodyDft1),
               const Spacer(),
               Text(

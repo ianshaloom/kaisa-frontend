@@ -138,6 +138,18 @@ class TileGroupTwo extends StatelessWidget {
           const SizedBox(height: 15), */
           Row(
             children: [
+              Text(
+                'Product Name',
+                style: bodyDft1,
+              ),
+              const Spacer(),
+              Text(receipt.deviceDatails,
+                  style: bodyDft2.copyWith(fontWeight: FontWeight.w600)),
+            ],
+          ),
+          const SizedBox(height: 15),
+          Row(
+            children: [
               Text('Receipt Date', style: bodyDft1),
               const Spacer(),
               Text(
@@ -168,17 +180,6 @@ class TileGroupTwo extends StatelessWidget {
               Text('Customer Tel.', style: bodyDft1),
               const Spacer(),
               Text(receipt.customerPhoneNo, style: bodyDft2),
-            ],
-          ),
-          const SizedBox(height: 15),
-          Row(
-            children: [
-              Text(
-                'Device Model',
-                style: bodyDft1,
-              ),
-              const Spacer(),
-              Text(receipt.deviceDatails, style: bodyDft2),
             ],
           ),
           const SizedBox(height: 15),

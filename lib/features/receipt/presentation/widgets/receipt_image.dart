@@ -29,6 +29,7 @@ class ReceiptImage extends StatelessWidget {
           child: Obx(
             () => _ctrl.images.isEmpty
                 ? Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
                     width: double.infinity,
                     padding: const EdgeInsets.all(60),
                     decoration: BoxDecoration(

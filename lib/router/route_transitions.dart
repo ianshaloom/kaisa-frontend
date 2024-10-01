@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/* import 'package:flutter/material.dart';
 
 import '../features/receipt/presentation/views/frm_stock_receipt_form.dart';
 
@@ -22,4 +22,4 @@ Route toReceitForm() {
       );
     },
   );
-}
+} */
