@@ -11,7 +11,7 @@ import '../../../../core/utils/utility_methods.dart';
 import '../../../../router/route_names.dart';
 import '../../../../theme/text_scheme.dart';
 import '../../../phonetransaction/presentation/controller/phone_transaction_ctrl.dart';
-import '../../../shared/presentation/controller/shared_ctrl.dart';
+import '../../../../shared/shared_ctrl.dart';
 
 final _pCtrl = Get.find<PhoneTransactionCtrl>();
 final _sCtrl = Get.find<SharedCtrl>();

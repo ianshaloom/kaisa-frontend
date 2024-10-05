@@ -5,7 +5,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../../../core/constants/image_path_const.dart';
 import '../../../../theme/text_scheme.dart';
-import '../../../shared/presentation/controller/shared_ctrl.dart';
+import '../../../../shared/shared_ctrl.dart';
 
 final _shCtrl = Get.find<SharedCtrl>();
 

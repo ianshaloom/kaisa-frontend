@@ -7,7 +7,7 @@ import '../../../../core/constants/image_path_const.dart';
 import '../../../../core/widgets/custom_filled_btn.dart';
 import '../../../../core/widgets/custom_outllined_btn.dart';
 import '../../../../theme/text_scheme.dart';
-import '../../../shared/presentation/controller/shared_ctrl.dart';
+import '../../../../shared/shared_ctrl.dart';
 import '../controller/phone_transaction_ctrl.dart';
 
 final _ctrl = Get.find<PhoneTransactionCtrl>();

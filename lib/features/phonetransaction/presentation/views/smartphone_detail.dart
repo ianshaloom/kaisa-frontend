@@ -9,7 +9,7 @@ import '../../../../core/constants/image_path_const.dart';
 import '../../../../core/utils/utility_methods.dart';
 import '../../../../router/route_names.dart';
 import '../../../../theme/text_scheme.dart';
-import '../../../shared/presentation/controller/shared_ctrl.dart';
+import '../../../../shared/shared_ctrl.dart';
 import '../controller/phone_transaction_ctrl.dart';
 import '../widgets/custom_bottomnav.dart';
 import '../widgets/mbs_shoplist.dart';

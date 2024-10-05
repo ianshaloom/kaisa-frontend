@@ -8,7 +8,7 @@ import '../../../../core/utils/utility_methods.dart';
 import '../../../../core/widgets/custom_filled_btn.dart';
 import '../../../../core/widgets/snacks.dart';
 import '../../../../router/route_names.dart';
-import '../../../shared/presentation/controller/shared_ctrl.dart';
+import '../../../../shared/shared_ctrl.dart';
 import '../controller/phone_transaction_ctrl.dart';
 
 final _ptCtrl = Get.find<PhoneTransactionCtrl>();

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:kaisa/features/shared/presentation/controller/shared_ctrl.dart';
+import 'package:kaisa/shared/shared_ctrl.dart';
 
 
 part 'phone_transaction.g.dart';

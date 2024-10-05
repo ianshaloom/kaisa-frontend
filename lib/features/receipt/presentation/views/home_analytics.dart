@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../domain/entity/chart_colors.dart';
-import '../controller/receipt_ctrl.dart';
+import '../../../../shared/shared_ctrl.dart';
+import '../../../../shared/shared_models.dart';
 import '../widgets/pie_chart.dart';
 
-final _ctrl = Get.find<ReceiptCtrl>();
+final _ctrl = Get.find<SharedCtrl>();
 
 class HomeAnalytics extends StatelessWidget {
   const HomeAnalytics({super.key});

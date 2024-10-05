@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../../core/datasources/firestore/crud/kaisa_users_ds.dart';
-import '../../../../core/datasources/firestore/models/kaisa-user/kaisa_user.dart';
-import '../../../../core/errors/failure_n_success.dart';
-import '../../core/error/shared_failure_success.dart';
-import '../../domain/repository/shared_abs.dart';
+import '../core/datasources/firestore/crud/kaisa_users_ds.dart';
+import '../core/datasources/firestore/models/kaisa-user/kaisa_user.dart';
+import '../core/errors/failure_n_success.dart';
+import 'shared_failure_success.dart';
+import 'shared_abs.dart';
 
 class SharedAbsImpl implements SharedAbs{
      @override

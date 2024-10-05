@@ -7,7 +7,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../../../core/utils/utility_methods.dart';
 import '../../../../router/route_names.dart';
 import '../../../../theme/text_scheme.dart';
-import '../../../shared/presentation/controller/shared_ctrl.dart';
+import '../../../../shared/shared_ctrl.dart';
 import '../../domain/entity/smartphone_entity.dart';
 import '../controller/phone_transaction_ctrl.dart';
 

@@ -8,11 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-import '../../domain/entity/chart_colors.dart';
-import '../../domain/entity/daily_sales.dart';
-import '../controller/receipt_ctrl.dart';
 
-final _rCtrl = Get.find<ReceiptCtrl>();
+import '../../../../shared/shared_ctrl.dart';
+import '../../../../shared/shared_models.dart';
+
+final _rCtrl = Get.find<SharedCtrl>();
 
 /// A colored piece of the [RallyPieChart].
 class RallyPieChartSegment {
