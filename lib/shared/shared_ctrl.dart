@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:kaisa/core/datasources/hive/hive-crud/hive_user_crud.dart';
 import 'package:kaisa/core/errors/failure_n_success.dart';
 
@@ -81,6 +82,7 @@ class SharedCtrl extends GetxController {
   KaisaBackendDS kaisaBackendDS = KaisaBackendDS();
 
   var isProcessingRequest = false.obs;
+  var isProcessingRequest1 = false.obs;
 
   var pageIndex = 0.obs;
   void swipeToPage(int i) {
@@ -179,6 +181,72 @@ class SharedCtrl extends GetxController {
 
     isProcessingRequest.value = false;
   }
+
+  var receipts = <Map<String, dynamic>>[].obs;
+
+  void getSalesAnalysis() async {
+    isProcessingRequest1.value = true;
+    receipts.clear();
+
+    final date = getFirstDayOfTheWeek();
+
+    await kaisaBackendDS.fetchWeeklySales(date).then((value) {
+      receipts.assignAll(value);
+    });
+
+    isProcessingRequest1.value = false;
+  }
+
+  // shop analysis
+  List<ShopAnalysis> shopAnalysis() {
+    List<ShopAnalysis> shopAnalysis = [];
+
+    // create a list of the shopIds for the receipts
+    final List<String> shopIds = [];
+    for (final receipt in receipts) {
+      final shopId = receipt['shopId'];
+      if (!shopIds.contains(shopId)) {
+        shopIds.add(shopId);
+      }
+    }
+
+    // create a map of the shops
+    for (var shopId in shopIds) {
+      final shopReceipts =
+          receipts.where((receipt) => receipt['shopId'] == shopId);
+
+      final shopName = getShopName(shopReceipts.first['shopId']);
+
+      final ShopAnalysis shopData = ShopAnalysis(
+        shopName: shopName,
+        totalSales: shopReceipts.length,
+        sales: [],
+      );
+
+      // group the receipts by org
+      for (final receipt in shopReceipts) {
+        final org = receipt['org'];
+
+        if (org == 'Watu') {
+          shopData.watuSales += 1;
+        } else if (org == 'M-Kopa') {
+          shopData.mKopaSales += 1;
+        } else if (org == 'Onfon') {
+          shopData.onfonSales += 1;
+        } else {
+          shopData.otherSales += 1;
+        }
+       
+        shopData.sales.add(receipt);
+      }
+
+      shopAnalysis.add(shopData);
+    }
+
+    shopAnalysis.sort((a, b) => b.totalSales.compareTo(a.totalSales));
+
+    return shopAnalysis;
+  }
 }
 
 // group receipts by org and date
@@ -267,59 +335,6 @@ Map<String, Map<String, List<Map<String, dynamic>>>> groupReceiptsByOrgAndDate(
 // to that method will pass a filter of the org name, The filter string can be either 'Watu', 'M-Kopa', 'Onfon', 'Other'
 // if the filter string is null, then the method will return the total sales for all the orgs
 
-Map<String, Map<String, dynamic>> shopAnalysis(
-    List<Map<String, dynamic>> receipts, String? filter) {
-  final Map<String, Map<String, dynamic>> shopAnalysis = {};
-
-  // create a list of the shopIds for the receipts
-  final List<String> shopIds = [];
-  for (final receipt in receipts) {
-    final shopId = receipt['shopId'];
-    if (!shopIds.contains(shopId)) {
-      shopIds.add(shopId);
-    }
-  }
-
-  // create a map of the shops
-  for (var shopId in shopIds) {
-    final shopReceipts = receipts.where((receipt) => receipt['shopId'] == shopId);
-
-    final shopName =getShopName(shopReceipts.first['shopId']);
-
-    final Map<String, dynamic> shopData = {
-      'Shop Name': shopName,
-      'Total Sales': shopReceipts.length,
-      'Watu Sales': 0,
-      'M-Kopa Sales': 0,
-      'Onfon Sales': 0,
-      'Other Sales': 0,
-      'Sales': [],
-    };
-
-    // group the receipts by org
-    for (final receipt in shopReceipts) {
-      final org = receipt['org'];
-
-      if (org == 'Watu') {
-        shopData['Watu Sales'] += 1;
-      } else if (org == 'M-Kopa') {
-        shopData['M-Kopa Sales'] += 1;
-      } else if (org == 'Onfon') {
-        shopData['Onfon Sales'] += 1;
-      } else {
-        shopData['Other Sales'] += 1;
-      }
-
-      shopData['Sales'].add(receipt);
-    }
-
-    shopAnalysis[shopName] = shopData;
-  }
-
-  return shopAnalysis;
-}
-
-
 //  days of the week
 const List<String> daysOfWeek = [
   'mon',
@@ -344,12 +359,12 @@ String getFirstDayOfTheWeek() {
 }
 
 String getShopName(String shopId) {
-    // shopId has no spaces, so split it by uppercase letters
-    final shopName = shopId.splitMapJoin(
-      RegExp(r'(?=[A-Z])'),
-      onMatch: (m) => ' ',
-      onNonMatch: (m) => m,
-    );
+  // shopId has no spaces, so split it by uppercase letters
+  final shopName = shopId.splitMapJoin(
+    RegExp(r'(?=[A-Z])'),
+    onMatch: (m) => ' ',
+    onNonMatch: (m) => m,
+  );
 
-    return shopName;
-  }
+  return shopName;
+}
