@@ -7,6 +7,7 @@ import '../../../../core/constants/image_path_const.dart';
 import '../../../../router/route_names.dart';
 import '../../../profile/presentation/views/profile_view.dart';
 import '../../../shop/presentation/views/shop_view.dart';
+import '../../../shop/presentation/widget/shop_view_appbar.dart';
 import '../../../stock/presentation/views/stock_view.dart';
 import '../controller/homepagectrl.dart';
 import 'home_view.dart';
@@ -21,20 +22,18 @@ class HomePage extends StatelessWidget {
     final color = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 1,
-        scrolledUnderElevation: 0,
-        elevation: 0,
-      ),
       body: Obx(
-        () => AnimatedPageSwitcher(
-          index: _ctrl.navIndex.value,
-          children: const [
-            HomeView(),
-            StockView(),
-            ShopView(),
-            ProfileView(),
-          ],
+        () => Padding(
+          padding: const EdgeInsets.only(top: 25),
+          child: AnimatedPageSwitcher(
+            index: _ctrl.navIndex.value,
+            children: const [
+              HomeView(),
+              StockView(),
+              ShopView(),
+              ProfileView(),
+            ],
+          ),
         ),
       ),
       floatingActionButton: Obx(

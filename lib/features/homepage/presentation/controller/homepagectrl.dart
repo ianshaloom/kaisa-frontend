@@ -8,6 +8,9 @@ class HomePageCtrl extends GetxController {
     navIndex.value = i;
   }
 
+  bool get isHome => navIndex.value == 0;
+  bool get isAnalysis => navIndex.value == 2;
+
 
 
 }

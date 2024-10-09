@@ -1,16 +1,22 @@
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:kaisa/core/datasources/hive/hive-crud/hive_user_crud.dart';
-import 'package:kaisa/core/errors/failure_n_success.dart';
 
 import '../core/datasources/firestore/models/kaisa-user/kaisa_user.dart';
+import '../core/datasources/hive/hive-crud/hive_user_crud.dart';
 import '../core/datasources/kaisa-backend/crud/kaisa_backend_ds.dart';
+import '../core/errors/failure_n_success.dart';
 import 'shared_models.dart';
 import 'shared_usecase.dart';
 
 class SharedCtrl extends GetxController {
   final SharedUsecase stockUsecase;
   SharedCtrl(this.stockUsecase);
+
+  /* -------------------------------------------------------------------------- */
+  var analysis = 'All'.obs;
+  var isGettingAnalysisData = true.obs;
+  bool get isOverview => analysis.value == 'All';
+
+  var index = 0.obs;
 
   //  STRICTLY FOR KAISA USER AND SHOPS
   /* -------------------------------------------------------------------------- */
@@ -236,7 +242,7 @@ class SharedCtrl extends GetxController {
         } else {
           shopData.otherSales += 1;
         }
-       
+
         shopData.sales.add(receipt);
       }
 

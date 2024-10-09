@@ -4,6 +4,7 @@ import 'package:kaisa/theme/text_scheme.dart';
 
 import '../../../../shared/shared_ctrl.dart';
 import '../../../../shared/shared_models.dart';
+import '../widget/shop_view_appbar.dart';
 
 final _shCtrl = Get.find<SharedCtrl>();
 
@@ -19,19 +20,22 @@ class ShopView extends StatelessWidget {
 
     return CustomScrollView(
       slivers: [
-        /* SliverAppBar(
-          title: Text(
-            'Shop Analysis',
-            style: bodyRegular(textTheme).copyWith(
-              fontSize: 13,
-            ),
-          ),
+        const SliverAppBar(
+          title: ShopViewAppbar(),
           floating: true,
           snap: true,
-          centerTitle: true,
           scrolledUnderElevation: 0,
           elevation: 0,
-        ), */
+          // pinned: true,
+          toolbarHeight: 50,
+          /*  bottom: PreferredSize(
+            preferredSize: Size.fromHeight(50),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: ShopViewAppbar(),
+            ),
+          ), */
+        ),
         Obx(
           () {
             if (_shCtrl.isProcessingRequest1.value) {
