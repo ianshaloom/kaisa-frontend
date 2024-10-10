@@ -1,9 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kaisa/features/receipt/domain/entity/receipt_entity.dart';
 
 import '../core/datasources/firestore/models/kaisa-user/kaisa_user.dart';
 import '../core/datasources/hive/hive-crud/hive_user_crud.dart';
 import '../core/datasources/kaisa-backend/crud/kaisa_backend_ds.dart';
 import '../core/errors/failure_n_success.dart';
+import '../features/receipt/presentation/views/receipt_view.dart';
 import 'shared_models.dart';
 import 'shared_usecase.dart';
 
@@ -95,6 +98,8 @@ class SharedCtrl extends GetxController {
     pageIndex.value = i;
   }
 
+  var receipts = <Map<String, dynamic>>[];
+
   var allOrgSales = <String, Map<String, List<Map<String, dynamic>>>>{}.obs;
 
   // getters
@@ -183,75 +188,41 @@ class SharedCtrl extends GetxController {
 
     await kaisaBackendDS.fetchWeeklySales(date).then((value) {
       allOrgSales.value = groupReceiptsByOrgAndDate(value, date);
+      receipts.assignAll(value);
     });
 
     isProcessingRequest.value = false;
   }
 
-  var receipts = <Map<String, dynamic>>[].obs;
+  // view Receipts
+  void orgReceipts(String org, BuildContext context) {
+    final orgReceipts = receipts.where((receipt) => receipt['org'] == org);
+    final rcts = orgReceipts.map((e) => ReceiptEntity.fromJson(e)).toList();
 
-  void getSalesAnalysis() async {
-    isProcessingRequest1.value = true;
-    receipts.clear();
-
-    final date = getFirstDayOfTheWeek();
-
-    await kaisaBackendDS.fetchWeeklySales(date).then((value) {
-      receipts.assignAll(value);
-    });
-
-    isProcessingRequest1.value = false;
+    Navigator.of(context).push(toReceitView(org, rcts));
   }
 
-  // shop analysis
-  List<ShopAnalysis> shopAnalysis() {
-    List<ShopAnalysis> shopAnalysis = [];
+  Route toReceitView(String org, List<ReceiptEntity> receipts) {
+    return PageRouteBuilder<SlideTransition>(
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          ReceiptsPage(org: org, receipts: receipts),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        //  create a slide animation that brings the new page from right to left
+        const begin = Offset(1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
 
-    // create a list of the shopIds for the receipts
-    final List<String> shopIds = [];
-    for (final receipt in receipts) {
-      final shopId = receipt['shopId'];
-      if (!shopIds.contains(shopId)) {
-        shopIds.add(shopId);
-      }
-    }
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-    // create a map of the shops
-    for (var shopId in shopIds) {
-      final shopReceipts =
-          receipts.where((receipt) => receipt['shopId'] == shopId);
+        var offsetAnimation = animation.drive(tween);
 
-      final shopName = getShopName(shopReceipts.first['shopId']);
-
-      final ShopAnalysis shopData = ShopAnalysis(
-        shopName: shopName,
-        totalSales: shopReceipts.length,
-        sales: [],
-      );
-
-      // group the receipts by org
-      for (final receipt in shopReceipts) {
-        final org = receipt['org'];
-
-        if (org == 'Watu') {
-          shopData.watuSales += 1;
-        } else if (org == 'M-Kopa') {
-          shopData.mKopaSales += 1;
-        } else if (org == 'Onfon') {
-          shopData.onfonSales += 1;
-        } else {
-          shopData.otherSales += 1;
-        }
-
-        shopData.sales.add(receipt);
-      }
-
-      shopAnalysis.add(shopData);
-    }
-
-    shopAnalysis.sort((a, b) => b.totalSales.compareTo(a.totalSales));
-
-    return shopAnalysis;
+        return SlideTransition(
+          position: offsetAnimation,
+          child: child,
+        );
+      },
+    );
   }
 }
 
@@ -314,33 +285,6 @@ Map<String, Map<String, List<Map<String, dynamic>>>> groupReceiptsByOrgAndDate(
   return groupedReceipts;
 }
 
-// analysis for shop
-// the map will have the following structure
-/* 
-    {
-      'Shop Name' : {
-            'Shop Name': "Shop Name",
-            'Total Sales': 0,
-            'Watu Sales': 0,
-            'M-Kopa Sales': 0,
-            'Onfon Sales': 0, e
-            'Other Sales': 0,
-            'sales':[],
-          },
-      'SHop Name' : {
-            'Shop Name': "Shop Name",
-            'Total Sales': 0,
-            'Watu Sales': 0,
-            'M-Kopa Sales': 0,
-            'Onfon Sales': 0,
-            'Other Sales': 0,
-            'Allales':[],
-          },
-    }
-*/
-// to that method will pass a filter of the org name, The filter string can be either 'Watu', 'M-Kopa', 'Onfon', 'Other'
-// if the filter string is null, then the method will return the total sales for all the orgs
-
 //  days of the week
 const List<String> daysOfWeek = [
   'mon',
@@ -362,15 +306,4 @@ String getFirstDayOfTheWeek() {
   final now = DateTime.now();
   final firstDayOfTheWeek = now.subtract(Duration(days: now.weekday - 1));
   return firstDayOfTheWeek.toString().substring(0, 10);
-}
-
-String getShopName(String shopId) {
-  // shopId has no spaces, so split it by uppercase letters
-  final shopName = shopId.splitMapJoin(
-    RegExp(r'(?=[A-Z])'),
-    onMatch: (m) => ' ',
-    onNonMatch: (m) => m,
-  );
-
-  return shopName;
 }

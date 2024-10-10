@@ -41,6 +41,7 @@ class RecentOrders extends StatelessWidget {
                   ),
                 )
               : ListView.builder(
+                  padding: const EdgeInsets.all(0),
                   itemCount: data.length,
                   itemBuilder: (context, index) {
                     final order = data[index];

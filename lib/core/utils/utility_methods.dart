@@ -84,3 +84,16 @@ String genShopId(String id) {
 
   return formatted;
 }
+
+
+
+String getShopName(String shopId) {
+  // shopId has no spaces, so split it by uppercase letters
+  final shopName = shopId.splitMapJoin(
+    RegExp(r'(?=[A-Z])'),
+    onMatch: (m) => ' ',
+    onNonMatch: (m) => m,
+  );
+
+  return shopName;
+}

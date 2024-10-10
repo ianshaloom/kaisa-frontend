@@ -13,7 +13,6 @@ import '../features/phonetransaction/presentation/views/smartphone_detail.dart';
 import '../features/phonetransaction/presentation/views/smartphone_grid_list.dart';
 import '../features/phonetransaction/presentation/views/trans_history.dart';
 import '../features/profile/presentation/views/profile_view.dart';
-import '../features/receipt/presentation/views/receipt_view.dart';
 import '../features/shop/presentation/views/shop_view.dart';
 import '../features/stock/presentation/views/stock_view.dart';
 import '../features/zkeleton/views/zleton.dart';
@@ -132,11 +131,11 @@ final router = GoRouter(
         ),
 
         // root page is Home page, to show receipt
-        GoRoute(
+        /*  GoRoute(
           name: RoutePath.receipt.name,
           path: RoutePath.receipt.path,
           builder: (context, state) => const ReceiptView(),
-        ),
+        ), */
 
         // root page is Home page, to show stock
         GoRoute(
@@ -149,7 +148,7 @@ final router = GoRouter(
         GoRoute(
           name: RoutePath.shop.name,
           path: RoutePath.shop.path,
-          builder: (context, state) => const ShopView(),
+          builder: (context, state) => const AnalyticsView(),
         ),
 
         // root page is Home page, to show profile details

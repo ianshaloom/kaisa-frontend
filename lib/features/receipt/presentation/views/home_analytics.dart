@@ -35,7 +35,7 @@ class HomeAnalytics extends StatelessWidget {
                     padEnds: false,
                     children: [
                       RallyPieChart(
-                        heroLabel: 'Watu Credit',
+                        heroLabel: 'Watu',
                         heroAmount: _ctrl.watuTotalSalesInAmount,
                         wholeAmount: _ctrl.totalWatWeeklySales,
                         segments: buildSegmentsFromAccountItems(
@@ -51,7 +51,7 @@ class HomeAnalytics extends StatelessWidget {
                         ),
                       ),
                       RallyPieChart(
-                        heroLabel: 'Onfons',
+                        heroLabel: 'Onfon',
                         heroAmount: _ctrl.totalOnfonWeeklySales,
                         wholeAmount: _ctrl.totalOnfonWeeklySales,
                         segments: buildSegmentsFromAccountItems(

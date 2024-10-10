@@ -14,6 +14,7 @@ const String location = 'assets/icons/location.svg';
 const String filter = 'assets/icons/filter.svg';
 const String stock = 'assets/icons/stock.svg';
 const String shop = 'assets/icons/shop.svg';
+const String rank = 'assets/icons/rank.svg';
 const String userProfile = 'assets/icons/user-profile.svg';
 const String search = 'assets/icons/search.svg';
 const String home = 'assets/icons/home.svg';

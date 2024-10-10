@@ -2,16 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:kaisa/shared/shared_models.dart';
 import 'package:kaisa/theme/text_scheme.dart';
 
 import '../../../../core/constants/image_path_const.dart';
 import '../../../receipt/domain/entity/receipt_entity.dart';
-import '../widgets/mbs_receipt_view.dart';
+import '../widget/mbs_s_receipt_view.dart';
 
-class ReceiptsPage extends StatelessWidget {
-  final String org;
-  final List<ReceiptEntity> receipts;
-  const ReceiptsPage({super.key, required this.receipts, required this.org});
+class ShopReceipts extends StatelessWidget {
+  final ShopAnalysis shop;
+  const ShopReceipts({super.key, required this.shop});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class ReceiptsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          org,
+          shop.shopName,
           style: bodyRegular(textTheme).copyWith(fontSize: 13),
         ),
         centerTitle: true,
@@ -33,11 +33,11 @@ class ReceiptsPage extends StatelessWidget {
         ),
       ),
       body: ListView.builder(
-        itemCount: groupByReceiptDate(receipts).length,
+        itemCount: groupByReceiptDate(shop.shopReceipts).length,
         itemBuilder: (context, index) {
           final date =
-              groupByReceiptDate(receipts).keys.elementAt(index);
-          final receiptList = groupByReceiptDate(receipts)[date]!;
+              groupByReceiptDate(shop.shopReceipts).keys.elementAt(index);
+          final receiptList = groupByReceiptDate(shop.shopReceipts)[date]!;
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,7 +172,7 @@ class ReceiptTile extends StatelessWidget {
         borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
       ),
       builder: (context) {
-        return MbsReceiptView(receipt: rcpt);
+        return MbsShopReceipt(receipt: rcpt);
       },
     );
   }

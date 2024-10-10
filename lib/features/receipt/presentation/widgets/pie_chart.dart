@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-
 import '../../../../shared/shared_ctrl.dart';
 import '../../../../shared/shared_models.dart';
 
@@ -128,7 +127,8 @@ class _AnimatedRallyPieChart extends AnimatedWidget {
     final textTheme = Theme.of(context).textTheme;
     final color = Theme.of(context).colorScheme;
     final labelTextStyle = textTheme.bodyMedium!.copyWith(
-      fontSize: 12,
+      fontSize: 16,
+      fontWeight: FontWeight.w500,
     );
 
     return LayoutBuilder(builder: (context, constraints) {
@@ -150,16 +150,28 @@ class _AnimatedRallyPieChart extends AnimatedWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              /* Text(
                 centerLabel,
                 overflow: TextOverflow.clip,
                 style: labelTextStyle,
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 4), */
               Text(
                 amount(),
                 overflow: TextOverflow.clip,
-                style: headlineStyle,
+                style: (_rCtrl.pageIndex.value == 0)
+                    ? labelTextStyle
+                    : headlineStyle,
+              ),
+              const SizedBox(height: 5),
+              TextButton(
+                onPressed: () => _rCtrl.orgReceipts(centerLabel, context),
+                style: TextButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(7),
+                  ),
+                ),
+                child: const Text('View Sales', style: TextStyle(fontSize: 11)),
               ),
             ],
           ),

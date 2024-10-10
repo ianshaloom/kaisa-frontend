@@ -3,18 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../../../core/utils/utility_methods.dart';
 import '../../../../theme/text_scheme.dart';
 import '../../../receipt/domain/entity/receipt_entity.dart';
 
-class MbsReceiptView extends StatelessWidget {
+class MbsShopReceipt extends StatelessWidget {
   final ReceiptEntity receipt;
-  const MbsReceiptView({super.key, required this.receipt});
+  const MbsShopReceipt({super.key, required this.receipt});
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
 
     return Column(
       children: [
@@ -47,20 +45,12 @@ class MbsReceiptView extends StatelessWidget {
               const SizedBox(height: 10),
               Row(
                 children: [
-                  const SizedBox(width: 10),
+                  const Spacer(),
                   Text(
                     "Receipt Details",
                     style: bodyBold(textTheme),
                   ),
                   const Spacer(),
-                  Text(
-                    getShopName(receipt.shopId),
-                    style: bodyRegular(textTheme).copyWith(
-                      color: colorScheme.primary,
-                      fontSize: 11,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
                 ],
               ),
               const SizedBox(height: 10),

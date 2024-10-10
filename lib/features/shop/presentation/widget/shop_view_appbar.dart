@@ -1,10 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
-import '../../../../shared/shared_ctrl.dart';
+import '../../../../core/constants/image_path_const.dart';
+import '../controller/shop_ctrl.dart';
+import 'mbs_filter.dart';
 
-final h = Get.find<SharedCtrl>();
+final h = Get.find<ShopCtrl>();
 
 class ShopViewAppbar extends StatelessWidget {
   const ShopViewAppbar({super.key});
@@ -40,6 +42,7 @@ class ShopViewAppbar extends StatelessWidget {
                 onTap: () {
                   h.index.value = 0;
                   _changed();
+                  h.shopAnalysis();
                 },
                 child: Text(
                   'All',
@@ -51,6 +54,7 @@ class ShopViewAppbar extends StatelessWidget {
                 onTap: () {
                   h.index.value = 1;
                   _changed();
+                  h.shopAnalysis();
                 },
                 child: Text(
                   'Watu',
@@ -62,6 +66,7 @@ class ShopViewAppbar extends StatelessWidget {
                 onTap: () {
                   h.index.value = 2;
                   _changed();
+                  h.shopAnalysis();
                 },
                 child: Text(
                   'M-Kopa',
@@ -73,6 +78,7 @@ class ShopViewAppbar extends StatelessWidget {
                 onTap: () {
                   h.index.value = 3;
                   _changed();
+                  h.shopAnalysis();
                 },
                 child: Text(
                   'Onfon',
@@ -84,9 +90,10 @@ class ShopViewAppbar extends StatelessWidget {
         }),
         const Spacer(),
         IconButton(
-            onPressed: () => null,
-            // cupertino filter icon
-            icon: const Icon(CupertinoIcons.slider_horizontal_3)),
+          onPressed: () => _showFilterMBS(context),
+          // cupertino filter icon
+          icon: SvgPicture.asset(filter),
+        ),
       ],
     );
   }
@@ -101,5 +108,21 @@ class ShopViewAppbar extends StatelessWidget {
     } else if (h.index.value == 3) {
       h.analysis.value = 'Onfon';
     }
+  }
+
+  void _showFilterMBS(BuildContext context) {
+    if (!h.isFiltering) {
+      h.resetFilterss();
+    }
+    // show filter
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+      ),
+      builder: (context) {
+        return const MbsFilter();
+      },
+    );
   }
 }

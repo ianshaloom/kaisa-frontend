@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kaisa/features/receipt/domain/entity/receipt_entity.dart';
 
 class DailySales {
   const DailySales({
@@ -64,6 +65,8 @@ class ShopAnalysis {
   int onfonSales;
   int otherSales;
   final List<Map<String, dynamic>> sales;
+
+   List<ReceiptEntity> get shopReceipts => sales.map((e) => ReceiptEntity.fromJson(e)).toList();
 
   // string getters
   String get totalSalesString => totalSales.toString();

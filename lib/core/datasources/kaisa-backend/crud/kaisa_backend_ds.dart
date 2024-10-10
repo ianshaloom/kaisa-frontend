@@ -87,7 +87,7 @@ class KaisaBackendDS {
       List<Map<String, dynamic>> sales;
 
       // check if data is cached
-      final cachedData = await DataCacheCRUD.getCachedData('weeklySales');
+      final cachedData = await DataCacheCRUD.getCachedData(startDate);
 
       if (cachedData.id.isNotEmpty &&
           DateTime.now().isBefore(cachedData.expiryDate)) {
@@ -112,7 +112,7 @@ class KaisaBackendDS {
         // cache data
         await DataCacheCRUD.cacheData(
           DataCacheModel(
-            id: 'weeklySales',
+            id: startDate,
             value: sales,
             expiryDate: DateTime.now().add(const Duration(minutes: 5)),
           ),

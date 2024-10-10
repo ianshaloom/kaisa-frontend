@@ -10,7 +10,7 @@ class DataCacheCRUD {
   static Future<void> cacheData(DataCacheModel data) async {
     // delete existing cache data of the id
     // but first check if the id exists
-    final userData = _cacheBox.values.firstWhere(
+    final cachedDataa = _cacheBox.values.firstWhere(
       (element) => element.id == data.id,
       orElse: () => DataCacheModel(
         id: '',
@@ -19,8 +19,8 @@ class DataCacheCRUD {
       ),
     );
 
-    if (userData.id.isNotEmpty) {
-      await _cacheBox.delete(userData.key);
+    if (cachedDataa.id.isNotEmpty) {
+      await _cacheBox.delete(cachedDataa.key);
     }
 
     await _cacheBox.add(data);
@@ -42,5 +42,10 @@ class DataCacheCRUD {
   // get all cached data
   static Future<List<DataCacheModel>> getAllCachedData() async {
     return _cacheBox.values.toList();
+  }
+
+  //  Clear all cached data
+  static Future<void> clearCahe() async {
+    await _cacheBox.clear();
   }
 }

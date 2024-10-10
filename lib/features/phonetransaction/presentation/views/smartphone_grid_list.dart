@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-import '../../../../core/constants/image_path_const.dart';
 import '../../../../theme/text_scheme.dart';
 // import '../../data/provider/network/firestore_smartphone_ds.dart';
 import '../controller/smartphones_ctrl.dart';
@@ -30,22 +28,6 @@ class SmartphonesGridList extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
           icon: const Icon(CupertinoIcons.back),
         ),
-        actions: [
-          IconButton(
-            onPressed: () async {
-              /* final FirestoreSmartPhoneDs firestoreSmartPhoneDs =
-                  FirestoreSmartPhoneDs();
-
-              for (var smart in smartps) {
-                await firestoreSmartPhoneDs.createSmartPhone(smart);
-              }
-
-              _ctrl.fetchSmartphones(); */
-            },
-            icon: SvgPicture.asset(filter),
-          )
-        ],
-        // scrolledUnderElevation: 0,
 
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(60),

@@ -6,8 +6,8 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/image_path_const.dart';
 import '../../../../router/route_names.dart';
 import '../../../profile/presentation/views/profile_view.dart';
+import '../../../shop/presentation/controller/shop_ctrl.dart';
 import '../../../shop/presentation/views/shop_view.dart';
-import '../../../shop/presentation/widget/shop_view_appbar.dart';
 import '../../../stock/presentation/views/stock_view.dart';
 import '../controller/homepagectrl.dart';
 import 'home_view.dart';
@@ -30,8 +30,8 @@ class HomePage extends StatelessWidget {
             children: const [
               HomeView(),
               StockView(),
-              ShopView(),
-              ProfileView(),
+              AnalyticsView(),
+              ShopsView(),
             ],
           ),
         ),
@@ -52,6 +52,15 @@ class HomePage extends StatelessWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       bottomNavigationBar: const BtmNavigationBar(),
+      drawer: const Drawer(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(8),
+            bottomRight: Radius.circular(8),
+          ),
+        ),
+        child: ProfileView(),
+      ),
     );
   }
 
@@ -73,7 +82,14 @@ class BtmNavigationBar extends StatelessWidget {
         height: 40,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
         selectedIndex: _ctrl.navIndex.value,
-        onDestinationSelected: (int index) => _ctrl.navOnPressed(index),
+        onDestinationSelected: (int index) {
+          _ctrl.navOnPressed(index);
+
+          if (index == 2) {
+            final c = Get.find<ShopCtrl>();
+            c.resetFilters();
+          }
+        },
         destinations: <Widget>[
           NavigationDestination(
             selectedIcon: SvgPicture.asset(
@@ -103,6 +119,19 @@ class BtmNavigationBar extends StatelessWidget {
           ),
           NavigationDestination(
             selectedIcon: SvgPicture.asset(
+              rank,
+              height: 30,
+              colorFilter: ColorFilter.mode(color.primary, BlendMode.modulate),
+            ),
+            icon: SvgPicture.asset(
+              rank,
+              height: 30,
+              colorFilter: ColorFilter.mode(color.primary, BlendMode.srcIn),
+            ),
+            label: 'Profile',
+          ),
+          NavigationDestination(
+            selectedIcon: SvgPicture.asset(
               shop,
               height: 30,
               colorFilter: ColorFilter.mode(color.primary, BlendMode.modulate),
@@ -113,19 +142,6 @@ class BtmNavigationBar extends StatelessWidget {
               colorFilter: ColorFilter.mode(color.primary, BlendMode.srcIn),
             ),
             label: 'Shops',
-          ),
-          NavigationDestination(
-            selectedIcon: SvgPicture.asset(
-              userProfile,
-              height: 30,
-              colorFilter: ColorFilter.mode(color.primary, BlendMode.modulate),
-            ),
-            icon: SvgPicture.asset(
-              userProfile,
-              height: 30,
-              colorFilter: ColorFilter.mode(color.primary, BlendMode.srcIn),
-            ),
-            label: 'Profile',
           ),
         ],
       ),
@@ -152,6 +168,31 @@ class AnimatedPageSwitcher extends StatelessWidget {
         child: child,
       ),
       child: children[index],
+    );
+  }
+}
+
+class ShopsView extends StatelessWidget {
+  const ShopsView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          title: Text(
+            'Shops',
+          ),
+          floating: true,
+          snap: true,
+          centerTitle: true,
+        ),
+        SliverFillRemaining(
+          child: Center(
+            child: Text('Shops Feature Coming Soon'),
+          ),
+        )
+      ],
     );
   }
 }

@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -27,20 +26,9 @@ class ProfileView extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          children: [
-            const Spacer(),
-            IconButton(
-              icon: const Icon(CupertinoIcons.refresh_thin),
-              onPressed: () {
-                refreshingProfile(context);
-              },
-            ),
-          ],
-        ),
         Column(
           children: [
-            const SizedBox(height: 20),
+            const SizedBox(height: 40),
             ValueListenableBuilder(
               valueListenable: HiveBoxes.getUserDataBox.listenable(),
               builder: (context, box, child) {
@@ -67,6 +55,17 @@ class ProfileView extends StatelessWidget {
                           child: CachedNetworkImage(
                             imageUrl: userData.profileImgUrl,
                           ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextButton(
+                      onPressed: () => refreshingProfile(context),
+                      child: Text(
+                        'Refresh Profile',
+                        style: bodyMedium(textTheme).copyWith(
+                          color: color.primary,
+                          fontSize: 12,
                         ),
                       ),
                     ),
@@ -142,45 +141,42 @@ class ProfileView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ...profilePictures.map((avatar) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                        child: GestureDetector(
+                SizedBox(
+                  width: double.infinity,
+                  height: 100,
+                  child: GridView(
+                    padding: const EdgeInsets.all(0),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                    ),
+                    children: [
+                      ...profilePictures.map((avatar) {
+                        return GestureDetector(
                           onTap: () async {
                             var userData = await HiveUserDataCrud().getUser();
                             userData.profileImgUrl = avatar;
                             userData.save();
                           },
                           child: CircleAvatar(
+                            radius: 20,
                             backgroundImage: NetworkImage(avatar, scale: 1),
-                            backgroundColor:
-                                Theme.of(context).colorScheme.surface,
-                            radius: 30,
+                            backgroundColor: color.surface,
                           ),
-                        ),
-                      );
-                    }).toList(),
-                  ],
+                        );
+                      }).toList(),
+                    ],
+                  ),
                 ),
               ],
             ),
           ],
         ),
 
-        Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: CustomFilledBtn(
-                title: 'Sign Out',
-                onPressed: () => signOut(context),
-                pad: 0,
-              ),
-            ),
-          ],
+        CustomFilledBtn(
+          title: 'Sign Out',
+          onPressed: () => signOut(context),
+          pad: 5,
         )
 
         // delete account button
