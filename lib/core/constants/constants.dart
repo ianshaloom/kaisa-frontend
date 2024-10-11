@@ -10,3 +10,5 @@ const String waveIcon = '👋';
 const String usersCollection = 'kaisa-users';
 const String smartPhonesCollection = 'kaisa-products';
 const String kaisaShopsCollection = 'production-shops';
+const String receiptsSubCollection = 'receipts';
+const String stockSubCollection = 'stock';

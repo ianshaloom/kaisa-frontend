@@ -1,6 +1,4 @@
 import 'package:get/get.dart';
-import 'package:kaisa/shared/shared_abs_impl.dart';
-import 'package:kaisa/shared/shared_usecase.dart';
 
 import '../features/homepage/presentation/controller/homepagectrl.dart';
 import '../features/phonetransaction/data/provider/network/firestore_phone_transaction_ds.dart';
@@ -16,12 +14,18 @@ import '../features/receipt/data/provider/network/firestore_receipt_ds.dart';
 import '../features/receipt/data/repository/receipt_abs_impl.dart';
 import '../features/receipt/domain/usecase/receipt_usecase.dart';
 import '../features/receipt/presentation/controller/receipt_ctrl.dart';
-import '../features/shop/presentation/controller/shop_ctrl.dart';
+import '../features/analytics/presentation/controller/analytics_ctrl.dart';
+import '../features/shops/shop_abs_impl.dart';
+import '../features/shops/shop_ctrl.dart';
+import '../features/shops/shop_ds.dart';
+import '../features/shops/shop_usecase.dart';
 import '../features/stock/data/provider/network/firestore_stock_ds.dart';
 import '../features/stock/data/repository/stock_abs_impl.dart';
 import '../features/stock/domain/usecase/stock_usecase.dart';
 import '../features/stock/presentation/controller/stock_ctrl.dart';
+import 'shared_abs_impl.dart';
 import 'shared_ctrl.dart';
+import 'shared_usecase.dart';
 
 class SharedCtrlBind extends Bindings {
   @override
@@ -35,7 +39,7 @@ class SharedCtrlBind extends Bindings {
         ),
       ),
     );
-    Get.lazyPut(() => ShopCtrl());
+    Get.lazyPut(() => AnalyticsCtlr());
     Get.lazyPut<ReceiptCtrl>(
       () => ReceiptCtrl(
         ReceiptUsecase(
@@ -63,6 +67,16 @@ class SharedCtrlBind extends Bindings {
       () => TransacHistoryCtrl(
         PhoneTransactionUsecase(
           PhoneTransactionRepoImpl(FirestoreKOrderTransc()),
+        ),
+      ),
+    );
+
+    Get.lazyPut<ShopCtrl>(
+      () => ShopCtrl(
+        ShopUsecase(
+          ShopAbsImpl(
+            ShopDs(),
+          ),
         ),
       ),
     );

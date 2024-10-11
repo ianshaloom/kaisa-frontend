@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:kaisa/core/datasources/firestore/models/kaisa-user/kaisa_user.dart';
 import 'package:kaisa/features/receipt/domain/entity/receipt_entity.dart';
+
+import '../core/utils/utility_methods.dart';
 
 class DailySales {
   const DailySales({
@@ -66,7 +69,8 @@ class ShopAnalysis {
   int otherSales;
   final List<Map<String, dynamic>> sales;
 
-   List<ReceiptEntity> get shopReceipts => sales.map((e) => ReceiptEntity.fromJson(e)).toList();
+  List<ReceiptEntity> get shopReceipts =>
+      sales.map((e) => ReceiptEntity.fromJsonKBackend(e)).toList();
 
   // string getters
   String get totalSalesString => totalSales.toString();
@@ -87,4 +91,19 @@ class ShopAnalysis {
       sales: map['Sales'],
     );
   }
+}
+
+class KaisaShop {
+  final String shopName;
+  final List<KaisaUser> attendants;
+
+  KaisaShop({
+    required this.shopName,
+    required this.attendants,
+  });
+
+  // getters
+  String get shopId => genShopId(shopName);
+  List<String> get attendantIds => attendants.map((e) => e.uuid).toList();
+  static KaisaShop get empty => KaisaShop(shopName: '', attendants: []);
 }

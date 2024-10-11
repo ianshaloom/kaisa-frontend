@@ -6,8 +6,9 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/image_path_const.dart';
 import '../../../../router/route_names.dart';
 import '../../../profile/presentation/views/profile_view.dart';
-import '../../../shop/presentation/controller/shop_ctrl.dart';
-import '../../../shop/presentation/views/shop_view.dart';
+import '../../../analytics/presentation/controller/analytics_ctrl.dart';
+import '../../../analytics/presentation/views/analytics_view.dart';
+import '../../../shops/shops_view.dart';
 import '../../../stock/presentation/views/stock_view.dart';
 import '../controller/homepagectrl.dart';
 import 'home_view.dart';
@@ -86,7 +87,7 @@ class BtmNavigationBar extends StatelessWidget {
           _ctrl.navOnPressed(index);
 
           if (index == 2) {
-            final c = Get.find<ShopCtrl>();
+            final c = Get.find<AnalyticsCtlr>();
             c.resetFilters();
           }
         },
@@ -168,31 +169,6 @@ class AnimatedPageSwitcher extends StatelessWidget {
         child: child,
       ),
       child: children[index],
-    );
-  }
-}
-
-class ShopsView extends StatelessWidget {
-  const ShopsView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const CustomScrollView(
-      slivers: [
-        SliverAppBar(
-          title: Text(
-            'Shops',
-          ),
-          floating: true,
-          snap: true,
-          centerTitle: true,
-        ),
-        SliverFillRemaining(
-          child: Center(
-            child: Text('Shops Feature Coming Soon'),
-          ),
-        )
-      ],
     );
   }
 }

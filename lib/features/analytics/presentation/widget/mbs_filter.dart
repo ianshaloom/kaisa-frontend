@@ -4,9 +4,9 @@ import 'package:get/get.dart';
 
 import '../../../../core/widgets/custom_filled_btn.dart';
 import '../../../../theme/text_scheme.dart';
-import '../controller/shop_ctrl.dart';
+import '../controller/analytics_ctrl.dart';
 
-final _ctrl = Get.find<ShopCtrl>();
+final _ctrl = Get.find<AnalyticsCtlr>();
 
 class MbsFilter extends StatelessWidget {
   const MbsFilter({super.key});

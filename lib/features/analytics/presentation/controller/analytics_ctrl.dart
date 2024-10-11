@@ -5,7 +5,7 @@ import '../../../../core/errors/failure_n_success.dart';
 import '../../../../core/utils/utility_methods.dart';
 import '../../../../shared/shared_models.dart';
 
-class ShopCtrl extends GetxController {
+class AnalyticsCtlr extends GetxController {
   KaisaBackendDS kaisaBackendDS = KaisaBackendDS();
 
   var index = 0.obs;
@@ -164,6 +164,7 @@ class ShopCtrl extends GetxController {
     firstDayOfTheWeek.value = getFirstDayOfTheWeek();
     getSalesAnalysis();
   }
+
   void resetFilterss() {
     index.value = 0;
     isFiltering = false;

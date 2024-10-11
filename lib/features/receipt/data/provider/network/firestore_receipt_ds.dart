@@ -6,7 +6,6 @@ import '../../../../../core/datasources/kaisa-backend/crud/kaisa_backend_ds.dart
 import '../../../../../core/errors/cloud_storage_exceptions.dart';
 import '../../../../../core/utils/utility_methods.dart';
 import '../../../domain/entity/receipt_entity.dart';
-import '../../core/constants.dart';
 
 class FirestoreReceiptDs {
   static final shop =

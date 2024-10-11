@@ -2,11 +2,15 @@ import 'package:intl/intl.dart';
 import 'package:kaisa/core/constants/constants.dart';
 import 'package:kaisa/core/constants/network_const.dart';
 
+import '../../features/receipt/domain/entity/receipt_entity.dart';
+
 String elapsedTime(DateTime pdate) {
   final now = DateTime.now();
   final difference = now.difference(pdate);
 
-  if (difference.inDays > 0) {
+  if (difference.inDays > 1) {
+    return customDate(pdate);
+  } else if (difference.inDays > 0) {
     return '${difference.inDays}d ago';
   } else if (difference.inHours > 0) {
     return '${difference.inHours}h ago';
@@ -85,8 +89,6 @@ String genShopId(String id) {
   return formatted;
 }
 
-
-
 String getShopName(String shopId) {
   // shopId has no spaces, so split it by uppercase letters
   final shopName = shopId.splitMapJoin(
@@ -96,4 +98,35 @@ String getShopName(String shopId) {
   );
 
   return shopName;
+}
+
+// Function to group receipts by date
+Map<DateTime, List<ReceiptEntity>> groupByReceiptDate(
+  List<ReceiptEntity> receipts,
+) {
+  // Create a map to store the grouped receipts
+  final Map<DateTime, List<ReceiptEntity>> groupedReceipts = {};
+
+  // Loop through the receipts, obtain the date into a List<DateTime>
+  // dont repeat the date that is already in the list
+  List dates = [];
+  for (final receipt in receipts) {
+    final date = receipt.addeOn;
+    if (!dates.contains(date)) {
+      dates.add(date);
+    }
+  }
+
+  // sort the dates, starting from the most recent
+  dates.sort((a, b) => b.compareTo(a));
+
+  // Loop through the dates and group the receipts by date
+  for (final date in dates) {
+    final receiptsByDate =
+        receipts.where((receipt) => receipt.addeOn.day == date.day).toList();
+
+    groupedReceipts[receiptsByDate.first.addeOn] = receiptsByDate;
+  }
+
+  return groupedReceipts;
 }

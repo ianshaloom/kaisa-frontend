@@ -92,7 +92,7 @@ class ReceiptEntity {
         'org': org,
       };
 
-  ReceiptEntity.fromJson(Map<String, dynamic> json)
+  ReceiptEntity.fromJsonKBackend(Map<String, dynamic> json)
       : imei = json['imei'],
         receiptNo = json['receiptNo'],
         customerName = json['customerName'],
@@ -106,8 +106,24 @@ class ReceiptEntity {
         smUuid = json['smUuid'],
         org = json['org'];
 
+  ReceiptEntity.fromJson(Map<String, dynamic> json)
+      : imei = json['imei'],
+        receiptNo = json['receiptNo'],
+        customerName = json['customerName'],
+        customerPhoneNo = json['customerPhoneNo'],
+        deviceDatails = json['deviceDatails'],
+        cashPrice = json['cashPrice'],
+        receiptImgUrl = json['receiptImgUrl'].cast<String>(),
+        shopId = json['shopId'],
+        receiptDate = DateTime.parse(json['receiptDate']),
+        addeOn = DateTime.parse(json['addeOn']),
+        smUuid = json['smUuid'],
+        org = json['org'];
+
   static List<ReceiptEntity> fromJsonList(List<dynamic> jsonList) {
-    return jsonList.map((json) => ReceiptEntity.fromJson(json)).toList();
+    return jsonList
+        .map((json) => ReceiptEntity.fromJsonKBackend(json))
+        .toList();
   }
 
   //  copywith method

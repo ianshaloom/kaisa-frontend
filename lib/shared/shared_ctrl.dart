@@ -14,6 +14,12 @@ class SharedCtrl extends GetxController {
   final SharedUsecase stockUsecase;
   SharedCtrl(this.stockUsecase);
 
+  @override
+  void onInit() {
+    fetchUserProfile();
+    super.onInit();
+  }
+
   /* -------------------------------------------------------------------------- */
   var analysis = 'All'.obs;
   var isGettingAnalysisData = true.obs;
@@ -64,6 +70,24 @@ class SharedCtrl extends GetxController {
     requestInProgress.value = false;
   }
 
+  Future<void> fetchShops() async {
+    kaisaShopsList.clear();
+    requestFailure = null;
+    requestInProgress.value = true;
+
+    final usersOrFailure = await stockUsecase.fetchUsers();
+
+    usersOrFailure.fold(
+      (failure) => requestFailure = failure,
+      (users) {
+        users.sort((a, b) => a.address.compareTo(b.address));
+        kaisaShopsList.assignAll(users);
+      },
+    );
+
+    requestInProgress.value = false;
+  }
+
   // actions performed on grid tile tap event
   void reset() {
     requestFailure = null;
@@ -81,11 +105,7 @@ class SharedCtrl extends GetxController {
     userData = KaisaUser.fromUserHiveData(userDataHive: user);
   }
 
-  @override
-  void onInit() {
-    fetchUserProfile();
-    super.onInit();
-  }
+  List<KaisaShop> get kaisaShops => getKaisaShops(kaisaShopsList);
 
   /* -------------------------------------------------------------------------- */
   KaisaBackendDS kaisaBackendDS = KaisaBackendDS();
@@ -197,7 +217,8 @@ class SharedCtrl extends GetxController {
   // view Receipts
   void orgReceipts(String org, BuildContext context) {
     final orgReceipts = receipts.where((receipt) => receipt['org'] == org);
-    final rcts = orgReceipts.map((e) => ReceiptEntity.fromJson(e)).toList();
+    final rcts =
+        orgReceipts.map((e) => ReceiptEntity.fromJsonKBackend(e)).toList();
 
     Navigator.of(context).push(toReceitView(org, rcts));
   }
@@ -306,4 +327,34 @@ String getFirstDayOfTheWeek() {
   final now = DateTime.now();
   final firstDayOfTheWeek = now.subtract(Duration(days: now.weekday - 1));
   return firstDayOfTheWeek.toString().substring(0, 10);
+}
+
+//  return a list of [KaisaShop]s
+List<KaisaShop> getKaisaShops(List<KaisaUser> users) {
+  List<KaisaShop> shops = [];
+
+  // extract the shop name from the users
+  List<String> shopNames = [];
+  for (var user in users) {
+    if (!shopNames.contains(user.address)) {
+      shopNames.add(user.address);
+    }
+  }
+
+  // create a list of KaisaShop
+  for (var shopName in shopNames) {
+    List<KaisaUser> attendants = [];
+
+    for (var user in users) {
+      if (user.address == shopName) {
+        attendants.add(user);
+      }
+    }
+
+    final shop = KaisaShop(shopName: shopName, attendants: attendants);
+
+    shops.add(shop);
+  }
+
+  return shops;
 }

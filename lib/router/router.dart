@@ -13,7 +13,7 @@ import '../features/phonetransaction/presentation/views/smartphone_detail.dart';
 import '../features/phonetransaction/presentation/views/smartphone_grid_list.dart';
 import '../features/phonetransaction/presentation/views/trans_history.dart';
 import '../features/profile/presentation/views/profile_view.dart';
-import '../features/shop/presentation/views/shop_view.dart';
+import '../features/analytics/presentation/views/analytics_view.dart';
 import '../features/stock/presentation/views/stock_view.dart';
 import '../features/zkeleton/views/zleton.dart';
 

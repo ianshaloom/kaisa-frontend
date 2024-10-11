@@ -1,12 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
-import '../../../../core/constants/image_path_const.dart';
-import '../controller/shop_ctrl.dart';
+import '../controller/analytics_ctrl.dart';
 import 'mbs_filter.dart';
 
-final h = Get.find<ShopCtrl>();
+final h = Get.find<AnalyticsCtlr>();
 
 class ShopViewAppbar extends StatelessWidget {
   const ShopViewAppbar({super.key});
@@ -92,7 +91,7 @@ class ShopViewAppbar extends StatelessWidget {
         IconButton(
           onPressed: () => _showFilterMBS(context),
           // cupertino filter icon
-          icon: SvgPicture.asset(filter),
+          icon: const Icon(CupertinoIcons.slider_horizontal_3),
         ),
       ],
     );

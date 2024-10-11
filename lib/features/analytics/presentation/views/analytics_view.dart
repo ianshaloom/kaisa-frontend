@@ -3,12 +3,12 @@ import 'package:get/get.dart';
 import 'package:kaisa/theme/text_scheme.dart';
 
 import '../../../../shared/shared_models.dart';
-import '../controller/shop_ctrl.dart';
+import '../controller/analytics_ctrl.dart';
 import '../widget/all_tile.dart';
-import '../widget/shop_view_appbar.dart';
+import '../widget/analytics_view_appbar.dart';
 import 'receipt_list.dart';
 
-final _shCtrl = Get.find<ShopCtrl>();
+final _shCtrl = Get.find<AnalyticsCtlr>();
 
 class AnalyticsView extends StatelessWidget {
   const AnalyticsView({super.key});
