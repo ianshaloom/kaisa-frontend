@@ -40,7 +40,7 @@ class HomePage extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        "Transaction History",
+                        "Order History",
                         style: bodyBold(textTheme).copyWith(
                           fontSize: 13,
                         ),
