@@ -37,13 +37,11 @@ class FirestoreKOrderTransc {
   }
 
   // fetch all transactions by participant id
-  Future<List<PhoneTransaction>> fetchKOrderTranscById() async {
+  Future<List<PhoneTransaction>> fetchKOrderTranscById(String uuid) async {
     try {
-      final user = await hiveUser.getUser();
-      final userId = user.uuid;
 
       final snapshot =
-          await trans.where('participants', arrayContains: userId).get();
+          await trans.where('participants', arrayContains:uuid ).get();
 
       final transactions = snapshot.docs
           .map((doc) => PhoneTransaction.fromDocSnapshot(documentSnapshot: doc))

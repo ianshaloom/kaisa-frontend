@@ -11,9 +11,12 @@ KaisaUser _$KaisaUserFromJson(Map<String, dynamic> json) => KaisaUser(
       fullName: json['fullName'] as String,
       email: json['email'] as String,
       phoneNumber: json['phoneNumber'] as String,
-      address: json['address'] as String,
-      isEmailVerified: json['isEmailVerified'] as bool,
+      shop: json['shop'] as String,
+      active: json['active'] as bool,
+      empDate: DateTime.parse(json['empDate'] as String),
       role: json['role'] as String,
+      imgUrl: json['imgUrl'] as String,
+      srv: json['srv'] as String,
     );
 
 Map<String, dynamic> _$KaisaUserToJson(KaisaUser instance) => <String, dynamic>{
@@ -21,7 +24,10 @@ Map<String, dynamic> _$KaisaUserToJson(KaisaUser instance) => <String, dynamic>{
       'fullName': instance.fullName,
       'email': instance.email,
       'phoneNumber': instance.phoneNumber,
-      'address': instance.address,
-      'isEmailVerified': instance.isEmailVerified,
+      'shop': instance.shop,
+      'imgUrl': instance.imgUrl,
+      'empDate': instance.empDate.toIso8601String(),
       'role': instance.role,
+      'srv': instance.srv,
+      'active': instance.active,
     };

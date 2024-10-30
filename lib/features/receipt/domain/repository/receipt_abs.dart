@@ -10,7 +10,7 @@ abstract class ReceiptAbs {
     String imei,
     String shopId,
   );
-  Future<Either<Failure, List<ReceiptEntity>>> fetchReceipts();
+  Future<Either<Failure, List<ReceiptEntity>>> fetchReceipts(String uuid);
   Future<Either<Failure, void>> createReceipt(ReceiptEntity receipt);
   Future<Either<Failure, void>> updateReceipt(ReceiptEntity receipt);
   Future<Either<Failure, List<String>>> uploadImage(

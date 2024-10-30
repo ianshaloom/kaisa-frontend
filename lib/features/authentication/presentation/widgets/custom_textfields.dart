@@ -28,6 +28,7 @@ class _EmailTextFormFieldState extends State<EmailTextFormField> {
     final textTheme = Theme.of(context).textTheme;
 
     return TextFormField(
+      onTapOutside: (event) => FocusScope.of(context).unfocus(),
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
       controller: widget.controller,
@@ -84,6 +85,7 @@ class _PassWordTextFormFieldState extends State<PassWordTextFormField> {
 
     return TextFormField(
       autocorrect: false,
+      onTapOutside: (event) => FocusScope.of(context).unfocus(),
       textInputAction: TextInputAction.done,
       controller: widget.controller,
       decoration: InputDecoration(
@@ -144,6 +146,7 @@ class _ActivateTextFormFieldState extends State<ActivateTextFormField> {
 
     return TextFormField(
       autocorrect: false,
+      onTapOutside: (event) => FocusScope.of(context).unfocus(),
       textInputAction: TextInputAction.next,
       controller: widget.controller,
       keyboardType: TextInputType.number,
@@ -201,6 +204,7 @@ class _NormalTextFormFieldState extends State<NormalTextFormField> {
     return TextFormField(
       textCapitalization: TextCapitalization.words,
       autocorrect: false,
+      onTapOutside: (event) => FocusScope.of(context).unfocus(),
       textInputAction: TextInputAction.next,
       controller: widget.controller,
       decoration: InputDecoration(
@@ -224,6 +228,8 @@ class _NormalTextFormFieldState extends State<NormalTextFormField> {
     );
   }
 }
+
+
 
 // Component: Confirm Phone Number Text Form Field
 class TelTextFormField extends StatefulWidget {
@@ -251,6 +257,7 @@ class _TelTextFormFieldState extends State<TelTextFormField> {
 
     return TextFormField(
       autocorrect: false,
+      onTapOutside: (event) => FocusScope.of(context).unfocus(),
       textInputAction: TextInputAction.next,
       controller: widget.controller,
       keyboardType: TextInputType.phone,

@@ -5,6 +5,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../../core/utils/utility_methods.dart';
+import '../../../../shared/shared_ctrl.dart';
 import '../../../../theme/text_scheme.dart';
 import '../../domain/entity/stock_item_entity.dart';
 import '../controller/stock_ctrl.dart';
@@ -21,7 +22,8 @@ class MbsStockItems extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final color = Theme.of(context).colorScheme;
 
-    _ctrl.fetchStockItems();
+    final uuid = Get.find<SharedCtrl>().userData.shopId;
+    _ctrl.fetchStockItems(uuid);
 
     return SizedBox(
       height: 300,
@@ -41,7 +43,7 @@ class MbsStockItems extends StatelessWidget {
               () {
                 if (_ctrl.requestInProgress1.value) {
                   return Center(
-                    child: LoadingAnimationWidget.fourRotatingDots(
+                    child: LoadingAnimationWidget.staggeredDotsWave(
                       color: color.primary,
                       size: 50,
                     ),

@@ -118,14 +118,25 @@ class SignInPage extends StatelessWidget {
     final color = Theme.of(context).colorScheme;
     final controller = Get.find<AuthController>();
     showDialog(
-      barrierColor: color.primary.withOpacity(0.2),
+      barrierColor: color.onSurface.withOpacity(0.2),
       context: context,
       barrierDismissible: false,
-      builder: (_) => Center(
-        child: LoadingAnimationWidget.fourRotatingDots(
-          color: color.primary,
-          size: 50,
-        ),
+      builder: (_) => Column(
+        children: [
+          const Expanded(
+            flex: 1,
+            child: Center(),
+          ),
+          Expanded(
+            flex: 1,
+            child: Center(
+              child: LoadingAnimationWidget.staggeredDotsWave(
+                color: color.primary,
+                size: 50,
+              ),
+            ),
+          ),
+        ],
       ),
     );
 
@@ -137,9 +148,11 @@ class SignInPage extends StatelessWidget {
     } else {
       Navigator.pop(context);
 
+      await Future.delayed(const Duration(milliseconds: 500));
+
       _instance.showSnackBar(
         context: context,
-        message: controller.loggedInFailure[0].errorMessage,
+        message: controller.loggedInFailure!.errorMessage,
       );
     }
   }

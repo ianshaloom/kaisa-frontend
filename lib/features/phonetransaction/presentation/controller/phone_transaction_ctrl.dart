@@ -32,7 +32,7 @@ class PhoneTransactionCtrl extends GetxController {
   set setSelectedShopDetails(KaisaUser selectedShop) {
     selectedShopId.value = selectedShop.uuid;
     selectedShopName.value = selectedShop.fullName;
-    selectedShopAddress.value = selectedShop.address;
+    selectedShopAddress.value = selectedShop.shop;
   }
 
   bool get isShopEmpty => selectedShopName.isEmpty;
@@ -87,8 +87,8 @@ class PhoneTransactionCtrl extends GetxController {
   }
 
   // stream phone transactions by id
-  Stream<List<PhoneTransaction>> streamKOrderTranscById() {
-    return _phoneTransactionUseCase.streamKOrderTranscById(userData.uuid);
+  Stream<List<PhoneTransaction>> streamKOrderTranscById(String uuid) {
+    return _phoneTransactionUseCase.streamKOrderTranscById(uuid);
   }
 
   // stream a single phone transaction by id

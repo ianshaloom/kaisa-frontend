@@ -78,4 +78,38 @@ class KaisaBackendDS {
       throw PatchDataException(e.message);
     }
   }
+
+    // fETCH wEEKLY sALES
+  Future<List<Map<String, dynamic>>> fetchWeeklySales() async {
+    try {
+      List<Map<String, dynamic>> sales;
+
+      final startDate = getFirstDayOfTheWeek();
+
+      final response = await dio.get(
+        receipt,
+        queryParameters: {
+          'date': startDate,
+        },
+      );
+
+      if (response.statusCode != 200) {
+        throw FetchDataException(response.data['message']);
+      }
+
+      var salesList = response.data as List;
+
+      sales = salesList.map((e) => e as Map<String, dynamic>).toList();
+
+      return sales;
+    } on DioException catch (e) {
+      throw FetchDataException(e.message);
+    }
+  }
+}
+
+String getFirstDayOfTheWeek() {
+  final now = DateTime.now();
+  final firstDayOfTheWeek = now.subtract(Duration(days: now.weekday - 1));
+  return firstDayOfTheWeek.toString().substring(0, 10);
 }

@@ -1,11 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:get/get.dart';
+
+import '../../shared/shared_ctrl.dart';
 
 const String kBaseUrlImages =
     'https://ianshaloom.fugitechnologies.com/assets/img/kaisa/';
-const String kBaseUrlBackend =
-    'https://kaisa-backend-klik5ce-moolsha-nai.globeapp.dev';
-// const String kBaseUrlBackend = 'http://192.168.0.114:8080';
-// http://192.168.0.114:8080
 
 // end points
 const String activCode = '/kcode';
@@ -17,18 +16,33 @@ const String receipt = '/kreceipt';
 final dio = Dio(options);
 
 final options = BaseOptions(
-  baseUrl: kBaseUrlBackend,
+  baseUrl: NetworkConst.kBaseUrlBackend,
   connectTimeout: const Duration(seconds: 30),
   receiveTimeout: const Duration(seconds: 30),
   contentType: 'application/json',
 );
 
-const String kBaseUrlProfileImgs = 'https://ianshaloom.github.io';
+const String kBaseUrlProfileImgs =
+    'https://firebasestorage.googleapis.com/v0/b/kaisa-341a6.appspot.com/o/avatar.png?alt=media&token=a7852af7-fb22-42e7-84f8-6978a627e487';
 
-List<String> profilePictures = [
-  '$kBaseUrlProfileImgs/assets/img/avatar-1-female.png',
-  '$kBaseUrlProfileImgs/assets/img/avatar-2-female.png',
-  '$kBaseUrlProfileImgs/assets/img/avatar-male-1.png',
-  '$kBaseUrlProfileImgs/assets/img/avatar-male-2.png',
-  '$kBaseUrlProfileImgs/assets/img/avatar-male-3.png',
-];
+class NetworkConst {
+  static String get kBaseUrlBackend => url();
+
+  static String url() {
+  final svr = Get.find<SharedCtrl>().userData.srv;
+
+    if(svr.isEmpty) {
+      // ignore: avoid_print
+      print(' 🚩 No server 🚩');
+
+      return 'https://kaisa-backend-vslzx7k-moolsha-nai.globeapp.dev';
+    } else {
+       // ignore: avoid_print
+      print(' 🏁 Yes server 🏁');
+      return 'https://kaisa-backend-$svr-moolsha-nai.globeapp.dev';
+    }
+  }
+
+  // const String kBaseUrlBackend = 'http://192.168.0.114:8080';
+// http://192.168.0.114:8080
+}

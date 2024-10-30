@@ -6,9 +6,11 @@ import 'package:kaisa/core/utils/extension_methods.dart';
 
 import '../../../../core/constants/image_path_const.dart';
 import '../../../../router/route_names.dart';
+import '../../../../shared/shared_ctrl.dart';
 import '../../../../theme/text_scheme.dart';
 import '../../../phonetransaction/presentation/controller/phone_transaction_ctrl.dart';
 import '../../../phonetransaction/presentation/widgets/recent_orders_pageview.dart';
+import '../../../shop/shop_ctrl.dart';
 import '../widgets/avatar_n_name.dart';
 import '../widgets/homepage_menu.dart';
 import '../../../phonetransaction/presentation/widgets/order_tile.dart';
@@ -92,12 +94,18 @@ class HomePage extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-          onPressed: () => context.go(AppNamedRoutes.toShop),
-          child: SvgPicture.asset(
-            shop,
-            height: 40,
-            colorFilter: ColorFilter.mode(color.primary, BlendMode.srcIn),
-          )),
+        onPressed: () {
+          context.go(AppNamedRoutes.toShop);
+
+          final id = Get.find<SharedCtrl>().userData.shopId;
+          Get.find<ShopCtrl>().reset(id);
+        },
+        child: SvgPicture.asset(
+          shop,
+          height: 40,
+          colorFilter: ColorFilter.mode(color.primary, BlendMode.srcIn),
+        ),
+      ),
     );
   }
 }

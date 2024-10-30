@@ -14,9 +14,10 @@ class StockAbsImpl extends StockAbs {
   final FirestoreStockDs _firestoreStockDs;
 
   @override
-  Future<Either<Failure, List<StockItemEntity>>> fetchStockItems() async {
+  Future<Either<Failure, List<StockItemEntity>>> fetchStockItems(
+      String uuid) async {
     try {
-      final stockItems = await _firestoreStockDs.fetchStock();
+      final stockItems = await _firestoreStockDs.fetchStock(uuid);
       return Future.value(Right(stockItems));
     } on CouldNotFetchException catch (e) {
       return Future.value(Left(StockFailure(errorMessage: e.toString())));

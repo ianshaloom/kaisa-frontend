@@ -5,7 +5,7 @@ import 'package:kaisa/theme/text_scheme.dart';
 import '../../../../core/widgets/custom_filled_btn.dart';
 import '../../../receipt/presentation/controller/receipt_ctrl.dart';
 import '../../../receipt/presentation/widgets/mbs_receipt_view.dart';
-import '../../../shared/presentation/controller/shared_ctrl.dart';
+import '../../../../shared/shared_ctrl.dart';
 import '../controller/stock_ctrl.dart';
 import 'mbs_shoplist.dart';
 

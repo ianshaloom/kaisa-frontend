@@ -21,9 +21,10 @@ class ReceiptAbsImpl extends ReceiptAbs {
   final KaisaBackendDS kaisaBackendDS = KaisaBackendDS();
 
   @override
-  Future<Either<Failure, List<ReceiptEntity>>> fetchReceipts() async {
+  Future<Either<Failure, List<ReceiptEntity>>> fetchReceipts(
+      String uuid) async {
     try {
-      final receipts = await firestoreReceiptDs.fetchReceipts();
+      final receipts = await firestoreReceiptDs.fetchReceipts(uuid);
       return Future.value(Right(receipts));
     } on CouldNotFetchException catch (e) {
       return Future.value(Left(ReceiptFailure(errorMessage: e.toString())));

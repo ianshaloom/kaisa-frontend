@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-import '../../../hive/hive-models/user-data-model/hive_user_data_model.dart';
+import '../../../../utils/utility_methods.dart';
 
 part 'kaisa_user.g.dart';
 
@@ -12,37 +12,40 @@ class KaisaUser {
     required this.fullName,
     required this.email,
     required this.phoneNumber,
-    required this.address,
-    required this.isEmailVerified,
+    required this.shop,
+    required this.active,
+    required this.empDate,
     required this.role,
+    required this.imgUrl,
+    required this.srv,
   });
 
   final String uuid;
   final String fullName;
   final String email;
   final String phoneNumber;
-  final String address;
-  final bool isEmailVerified;
+  final String shop;
+  final String imgUrl;
+  final DateTime empDate;
   final String role;
+  final String srv;
+  final bool active;
 
-  static KaisaUser get empty => const KaisaUser(
+  bool get isAdmin => role == 'admin';
+  String get shopId => genShopId(shop);
+
+  static KaisaUser get empty => KaisaUser(
         uuid: '',
-        fullName: 'Stranger',
+        fullName: '',
         email: '',
         phoneNumber: '',
-        address: '',
-        role: '',
-        isEmailVerified: true,
+        shop: '',
+        imgUrl: '',
+        empDate: DateTime.now(),
+        role: 'user',
+        srv: '',
+        active: true,
       );
-
-  KaisaUser.fromUserHiveData({required UserDataHive userDataHive})
-      : uuid = userDataHive.uuid,
-        fullName = userDataHive.fullName,
-        email = userDataHive.email,
-        phoneNumber = userDataHive.phoneNumber,
-        address = userDataHive.address,
-        role = userDataHive.role,
-        isEmailVerified = userDataHive.isEmailVerified;
 
   KaisaUser.fromQuerySnapshot(
       {required QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot})
@@ -50,9 +53,25 @@ class KaisaUser {
         fullName = documentSnapshot['fullName'],
         email = documentSnapshot['email'],
         phoneNumber = documentSnapshot['phoneNumber'],
-        address = documentSnapshot['address'],
+        shop = documentSnapshot['shop'],
+        imgUrl = documentSnapshot['imgUrl'],
+        empDate = DateTime.parse(documentSnapshot['empDate']),
         role = documentSnapshot['role'],
-        isEmailVerified = documentSnapshot['isEmailVerified'];
+        srv = documentSnapshot['srv'],
+        active = documentSnapshot['active'];
+
+  KaisaUser.fromDocSnapshot(
+      {required DocumentSnapshot<Map<String, dynamic>> documentSnapshot})
+      : uuid = documentSnapshot.id,
+        fullName = documentSnapshot['fullName'],
+        email = documentSnapshot['email'],
+        phoneNumber = documentSnapshot['phoneNumber'],
+        shop = documentSnapshot['shop'],
+        imgUrl = documentSnapshot['imgUrl'],
+        empDate = DateTime.parse(documentSnapshot['empDate']),
+        role = documentSnapshot['role'],
+        srv = documentSnapshot['srv'],
+        active = documentSnapshot['active'];
 
   factory KaisaUser.fromJson(Map<String, dynamic> json) =>
       _$KaisaUserFromJson(json);

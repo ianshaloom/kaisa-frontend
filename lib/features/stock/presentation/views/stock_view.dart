@@ -41,7 +41,7 @@ class StockView extends StatelessWidget {
         () {
           if (_sCtrl.requestInProgress1.value) {
             return Center(
-              child: LoadingAnimationWidget.fourRotatingDots(
+              child: LoadingAnimationWidget.staggeredDotsWave(
                 color: color.primary,
                 size: 50,
               ),
@@ -56,6 +56,7 @@ class StockView extends StatelessWidget {
               ),
             );
           }
+
 
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -137,6 +138,17 @@ class StockItemGridTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
+                    stock.imei,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 8,
+                          color: stock.isSold
+                              ? colorScheme.onSurface.withOpacity(0.5)
+                              : colorScheme.primary.withOpacity(0.5),
+                        ),
+                  ),
+                  Text(
                     '${stock.ram} ~ ${stock.storage}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -161,6 +173,14 @@ class StockItemGridTile extends StatelessWidget {
       ),
     );
   }
+
+  /* void onTap(BuildContext context) {
+    // set stock item
+    _sCtrl.stockItem = stock;
+
+    // show MbsMenuStockItem
+    _showMbsMenuStockItem(context);
+  } */
 
   // this method shows the MbsMenuStockItem
   void _showMbsMenuStockItem(BuildContext context) {

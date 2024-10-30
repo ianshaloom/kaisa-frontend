@@ -6,6 +6,9 @@ const String userDataBox = 'user-data-box';
 const String waveIcon = '👋';
 
 // firestore collections
-const String usersCollection = 'kaisa-users';
 const String smartPhonesCollection = 'kaisa-products';
+const String usersCollection = 'production-users';
 const String kaisaShopsCollection = 'production-shops';
+
+const String receiptsSubCollection = 'receipts';
+const String receiptsFolder = 'receipts';

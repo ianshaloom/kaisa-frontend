@@ -82,7 +82,7 @@ class SmartphonesGridList extends StatelessWidget {
         () {
           if (_ctrl.isProcessingRequest.value) {
             return Center(
-              child: LoadingAnimationWidget.fourRotatingDots(
+              child: LoadingAnimationWidget.staggeredDotsWave(
                 color: color.primary,
                 size: 50,
               ),

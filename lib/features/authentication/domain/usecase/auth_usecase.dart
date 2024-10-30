@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 
 
+import '../../../../core/datasources/firestore/models/kaisa-user/kaisa_user.dart';
 import '../../../../core/errors/failure_n_success.dart';
 import '../entity/auth_user.dart';
 import '../repository/auth_repo.dart';
@@ -50,5 +51,13 @@ class AuthUC {
 
   Future<Either<Failure, Success>> signOut() async {
     return await _authRepository.signOut();
+  }
+
+  Stream<KaisaUser> userStream({required String userId}) {
+    return _authRepository.userStream(userId: userId);
+  }
+
+  Future<Either<Failure, Success>> deleteAccount() {
+    return _authRepository.deleteAccount();
   }
 }

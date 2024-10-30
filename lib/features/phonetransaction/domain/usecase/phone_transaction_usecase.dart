@@ -22,8 +22,9 @@ class PhoneTransactionUsecase {
   }
 
   // fetch phone transactions
-  Future<Either<Failure, List<PhoneTransaction>>> fetchPhoneTransactions() async {
-    return await _phoneTransactionRepo.fetchPhoneTransactions();
+  Future<Either<Failure, List<PhoneTransaction>>> fetchPhoneTransactions(
+      String uuid) async {
+    return await _phoneTransactionRepo.fetchPhoneTransactions(uuid);
   }
 
   // stream phone transactions by id

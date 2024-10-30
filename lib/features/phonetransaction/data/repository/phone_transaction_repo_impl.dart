@@ -26,10 +26,11 @@ class PhoneTransactionRepoImpl implements PhoneTransactionRepo {
 
   @override
   Future<Either<Failure, List<PhoneTransaction>>>
-      fetchPhoneTransactions() async {
+      fetchPhoneTransactions(
+      String uuid) async {
     try {
       final phoneTransactions =
-          await _firestorePhoneTransactionDs.fetchKOrderTranscById();
+          await _firestorePhoneTransactionDs.fetchKOrderTranscById(uuid);
 
       return Right(phoneTransactions);
     } on CouldNotFetchTrans catch (e) {

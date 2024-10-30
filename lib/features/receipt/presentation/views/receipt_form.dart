@@ -7,6 +7,7 @@ import '../../../../core/constants/image_path_const.dart';
 import '../../../../core/utils/utility_methods.dart';
 import '../../../../core/widgets/custom_filled_btn.dart';
 import '../../../../core/widgets/snacks.dart';
+import '../../../../shared/shared_ctrl.dart';
 import '../../../../theme/text_scheme.dart';
 import '../../domain/entity/receipt_entity.dart';
 import '../controller/receipt_ctrl.dart';
@@ -47,10 +48,10 @@ class ReceiptForm extends StatelessWidget {
             child: Obx(
               () => Text(
                 _rCtrl.imeiz.value.isEmpty
-                    ? 'Select Stock Item'
+                    ? 'Select Device'
                     : _rCtrl.deviceDetailsz.value,
                 style: bodyBold(textTheme).copyWith(
-                  fontSize: 12,
+                  fontSize: 11,
                   color: color.primary,
                 ),
               ),
@@ -363,6 +364,11 @@ class ReceiptForm extends StatelessWidget {
         _rCtrl.postReceipt();
       });
     }
+
+    // fetch receipts
+    final uuid = Get.find<SharedCtrl>().userData.uuid;
+    _rCtrl.fetchReceipts(uuid);
+
   }
 
   void _showCalendar(BuildContext context) async {

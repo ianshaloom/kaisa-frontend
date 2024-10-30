@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/custom_filled_btn.dart';
 import '../../../../core/widgets/custom_outllined_btn.dart';
 import '../../../../router/route_names.dart';
+import '../controller/authrepo_controller.dart';
 
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
@@ -66,8 +68,11 @@ class LandingPage extends StatelessWidget {
             child: CustomOutlinedBtn(
           title: 'Sign Up',
           pad: 10,
-          onPressed: () => context.go(AppNamedRoutes.toSignUp),
-          //onPressed: () {},
+          onPressed: () async {
+            final ctrl = Get.find<AuthController>();
+            ctrl.address.value = '';
+            context.go(AppNamedRoutes.toSignUp);
+          },
         )),
       ],
     );

@@ -17,3 +17,6 @@ const String shop = 'assets/icons/shop.svg';
 const String userProfile = 'assets/icons/user-profile.svg';
 const String search = 'assets/icons/search.svg';
 const String calendar = 'assets/icons/calendar.svg';
+const String whatsapp = 'assets/icons/whatsapp.svg';
+const String phone = 'assets/icons/phone.svg';
+const String graph = 'assets/icons/graph.svg';

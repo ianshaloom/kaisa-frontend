@@ -3,9 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../../../core/constants/constants.dart';
 import '../../../../../core/datasources/hive/hive-crud/hive_user_crud.dart';
 import '../../../../../core/errors/cloud_storage_exceptions.dart';
-import '../../../../../core/utils/utility_methods.dart';
 import '../../../domain/entity/receipt_entity.dart';
-import '../../core/constants.dart';
 
 class FirestoreReceiptDs {
   static final shop =
@@ -13,13 +11,10 @@ class FirestoreReceiptDs {
   final HiveUserDataCrud hiveUser = HiveUserDataCrud();
 
   // get all receipts
-  Future<List<ReceiptEntity>> fetchReceipts() async {
+  Future<List<ReceiptEntity>> fetchReceipts(String uuid) async {
     try {
-      final user = await hiveUser.getUser();
-      final id = genShopId(user.address);
-
       // reference to the shop
-      final docRef = shop.doc(id).collection(receiptsSubCollection);
+      final docRef = shop.doc(uuid).collection(receiptsSubCollection);
 
       final fetchedReceipts = await docRef.get();
 

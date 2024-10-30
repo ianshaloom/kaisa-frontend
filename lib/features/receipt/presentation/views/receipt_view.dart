@@ -7,6 +7,7 @@ import 'package:kaisa/theme/text_scheme.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../../../core/constants/image_path_const.dart';
+import '../../../../core/utils/utility_methods.dart';
 import '../../domain/entity/receipt_entity.dart';
 import '../controller/receipt_ctrl.dart';
 import 'receipt_detail_view.dart';
@@ -40,7 +41,7 @@ class ReceiptView extends StatelessWidget {
         () {
           if (_rCtrl.requestInProgress1.value) {
             return Center(
-              child: LoadingAnimationWidget.fourRotatingDots(
+              child: LoadingAnimationWidget.staggeredDotsWave(
                 color: color.primary,
                 size: 50,
               ),
@@ -105,38 +106,7 @@ class ReceiptView extends StatelessWidget {
     );
   }
 
-  // Function to group receipts by date
-  Map<DateTime, List<ReceiptEntity>> groupByReceiptDate(
-    List<ReceiptEntity> receipts,
-  ) {
-    // Create a map to store the grouped receipts
-    final Map<DateTime, List<ReceiptEntity>> groupedReceipts = {};
-
-    // Loop through the receipts, obtain the date into a List<DateTime>
-    // dont repeat the date that is already in the list
-    List dates = [];
-    for (final receipt in receipts) {
-      final date = receipt.receiptDate.day;
-      if (!dates.contains(date)) {
-        dates.add(date);
-      }
-    }
-
-    // sort the dates, starting from the most recent
-    dates.sort((a, b) => a.compareTo(b));
-
-    // Loop through the dates and group the receipts by date
-    for (final date in dates) {
-      final receiptsByDate =
-          receipts.where((receipt) => receipt.receiptDate.day == date).toList();
-
-      receiptsByDate.sort((a, b) => b.addeOn.compareTo(a.addeOn));
-
-      groupedReceipts[receiptsByDate.first.receiptDate] = receiptsByDate;
-    }
-
-    return groupedReceipts;
-  }
+ 
 }
 
 class ReceiptTile extends StatelessWidget {

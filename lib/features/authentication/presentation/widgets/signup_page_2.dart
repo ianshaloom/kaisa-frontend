@@ -112,19 +112,13 @@ class SignupPage2 extends StatelessWidget {
   Widget progressMessage(BuildContext context, String data) {
     final textTheme = Theme.of(context).textTheme;
     final color = Theme.of(context).colorScheme;
-    return Container(
-      margin: const EdgeInsets.only(top: 15),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: color.primary.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(0),
-      ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
       child: Text(
         data,
         style: bodyMedium(textTheme).copyWith(
           fontSize: 13,
-          fontWeight: FontWeight.w600,
-          color: color.surface,
+          color: color.primary,
         ),
       ),
     );
@@ -133,34 +127,39 @@ class SignupPage2 extends StatelessWidget {
   Future signingUp(BuildContext context) async {
     final color = Theme.of(context).colorScheme;
     showDialog(
-      barrierColor: color.primary.withOpacity(0.2),
+      barrierColor: color.onSurface.withOpacity(0.2),
       context: context,
       barrierDismissible: false,
-      builder: (_) => Center(
-        child: SizedBox(
-          height: 100,
-          width: 300,
-          child: Column(
-            children: [
-              LoadingAnimationWidget.fourRotatingDots(
-                color: color.primary,
-                size: 50,
-              ),
-              Obx(() {
-                if (_ctrl.isCheckingQualification.value) {
-                  return progressMessage(
-                      context, 'Verifying activation code...');
-                }
-
-                if (_ctrl.isSigningUp.value) {
-                  return progressMessage(context, 'Creating account...');
-                }
-
-                return progressMessage(context, 'Please wait...');
-              }),
-            ],
+      builder: (_) => Column(
+        children: [
+          const Expanded(
+            flex: 6,
+            child: Center(),
           ),
-        ),
+          Expanded(
+            flex: 2,
+            child: Column(
+              children: [
+                LoadingAnimationWidget.staggeredDotsWave(
+                  color: color.primary,
+                  size: 50,
+                ),
+                Obx(() {
+                  if (_ctrl.isCheckingQualification.value) {
+                    return progressMessage(
+                        context, 'Verifying activation code...');
+                  }
+
+                  if (_ctrl.isSigningUp.value) {
+                    return progressMessage(context, 'Creating account...');
+                  }
+
+                  return progressMessage(context, 'Please wait...');
+                }),
+              ],
+            ),
+          ),
+        ],
       ),
     );
 
@@ -193,6 +192,9 @@ class SignupPage2 extends StatelessWidget {
       Navigator.popUntil(context, (route) => route.isFirst);
     } else {
       Navigator.pop(context);
+
+      await Future.delayed(const Duration(milliseconds: 500));
+      
       _instance.showSnackBar(
         context: context,
         message: _ctrl.createdUserFailure[0].errorMessage,

@@ -14,7 +14,6 @@ final _ctrl = Get.find<PhoneTransactionCtrl>();
 class TransHistoryTile extends StatelessWidget {
   final PhoneTransaction phoneTransaction;
   const TransHistoryTile({super.key, required this.phoneTransaction});
-
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -22,60 +21,34 @@ class TransHistoryTile extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        _ctrl.actionFromTH = true;
+        _ctrl.actionFromTH = false;
         _ctrl.selectedTransaction = phoneTransaction;
-        context.go(AppNamedRoutes.toTransHistoryDetails);
+        context.go(AppNamedRoutes.toOrderDetails);
       },
       child: Container(
         height: 100,
         margin: const EdgeInsets.only(bottom: 5, top: 5),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.only(
+            // topLeft: Radius.circular(10),
+            bottomLeft: Radius.circular(10),
+            bottomRight: Radius.circular(10),
+          ),
+          border: Border(
+            bottom: BorderSide(
+              color: bgColor(color),
+              width: 2.5,
+            ),
+          ),
+        ),
         child: Row(
           children: [
             Expanded(
-              flex: 3,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.horizontal(
-                    left: Radius.circular(10),
-                  ),
-                  border: Border(
-                    top: border(color),
-                    bottom: border(color),
-                    left: border(color),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(left: 10, top: 10, bottom: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            phoneTransaction.deviceName.toUpperCase(),
-                            style: bodyMedium(textTheme).copyWith(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const Spacer(),
-                          details(context),
-                        ],
-                      ),
-                    ),
-                    const Spacer(),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
               flex: 1,
               child: Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: bgColor(color),
-                  borderRadius: const BorderRadius.horizontal(
+                padding: const EdgeInsets.all(20),
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.horizontal(
                     right: Radius.circular(10),
                   ),
                 ),
@@ -83,7 +56,41 @@ class TransHistoryTile extends StatelessWidget {
                   imageUrl: generateImageUrl(phoneTransaction.imgUrl),
                 ),
               ),
-            )
+            ),
+            Expanded(
+              flex: 3,
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Flexible(
+                      fit: FlexFit.tight,
+                      child: Row(
+                        children: [
+                          Text(
+                            phoneTransaction.model.toUpperCase(),
+                            style: bodyMedium(textTheme).copyWith(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const Spacer(),
+                          Text(
+                            elapsedTime(phoneTransaction.dateTime),
+                            style: bodyMedium(textTheme).copyWith(
+                              fontSize: 10,
+                              color: color.onSurface.withOpacity(0.7),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    details(context),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -99,19 +106,22 @@ class TransHistoryTile extends StatelessWidget {
 
   Color bgColor(ColorScheme color) {
     if (phoneTransaction.isCancelled) {
-      return Colors.black.withOpacity(0.2);
+      return const Color.fromARGB(255, 183, 183, 183);
     } else if (phoneTransaction.isDelivered) {
-      return Colors.green.withOpacity(0.2);
+      return const Color.fromARGB(255, 153, 226, 139);
     } else {
-      return color.primary.withOpacity(0.2);
+      return const Color.fromARGB(255, 171, 194, 226);
     }
   }
 
   Widget details(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final color = Theme.of(context).colorScheme;
-    final bolded = bodyMedium(textTheme)
-        .copyWith(fontWeight: FontWeight.w500, fontSize: 10);
+    final bolded = bodyMedium(textTheme).copyWith(fontSize: 10);
+
+    final shop = phoneTransaction.senderAddress == 'Pipeline Stage'
+        ? 'Main Shop'
+        : phoneTransaction.senderAddress;
 
     return RichText(
       textAlign: TextAlign.left,
@@ -122,31 +132,23 @@ class TransHistoryTile extends StatelessWidget {
           fontWeight: FontWeight.w300,
         ),
         children: <TextSpan>[
-          const TextSpan(
-            text: 'RAM',
-          ),
           TextSpan(
             text: ' ${phoneTransaction.ram}',
             style: bolded,
           ),
           const TextSpan(
-            text: '  ~  Internal storage ',
+            text: '  ~  ',
           ),
           TextSpan(
             text: ' ${phoneTransaction.storage}',
             style: bolded,
           ),
           TextSpan(
-            text:
-                '\n${phoneTransaction.senderAddress} to ${phoneTransaction.receiverAddress} ',
-          ),
-          const TextSpan(
-            text: ' \nIMEI ',
-            style: TextStyle(fontSize: 10),
+            text: '\n ${phoneTransaction.imei}',
+            style: bolded,
           ),
           TextSpan(
-            text: ' ${phoneTransaction.imei}',
-            style: bolded,
+            text: '\n$shop to ${phoneTransaction.receiverAddress} ',
           ),
         ],
       ),

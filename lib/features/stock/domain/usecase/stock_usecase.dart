@@ -9,8 +9,8 @@ class StockUsecase {
   final StockAbs stockAbs;
   StockUsecase(this.stockAbs);
 
-  Future<Either<Failure, List<StockItemEntity>>> fetchStockItems() {
-    return stockAbs.fetchStockItems();
+  Future<Either<Failure, List<StockItemEntity>>> fetchStockItems(String uuid) {
+    return stockAbs.fetchStockItems(uuid);
   }
 
   Future<Either<Failure, Success>> sendOrder(

@@ -51,6 +51,7 @@ dependencies:
   ai_barcode_scanner: ^5.1.1+2
   image_picker: ^1.1.2
   collection: ^1.18.0
+  url_launcher: ^6.3.1
 
 dev_dependencies:
   flutter_test:

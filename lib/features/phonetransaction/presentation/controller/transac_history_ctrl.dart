@@ -22,11 +22,11 @@ class TransacHistoryCtrl extends GetxController {
   }
 
   // fetch all phone transactions
-  Future<void> fetchPhoneTransactions() async {
+  Future<void> fetchPhoneTransactions(String uuid) async {
     reset();
     isProcessingRequest.value = true;
 
-    final result = await _phoneTransactionUseCase.fetchPhoneTransactions();
+    final result = await _phoneTransactionUseCase.fetchPhoneTransactions(uuid);
 
     result.fold(
       (failure) {

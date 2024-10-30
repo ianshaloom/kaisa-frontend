@@ -32,7 +32,7 @@ class PostingReceipt extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Center(
-                      child: LoadingAnimationWidget.fourRotatingDots(
+                      child: LoadingAnimationWidget.staggeredDotsWave(
                         color: color.primary,
                         size: 50,
                       ),

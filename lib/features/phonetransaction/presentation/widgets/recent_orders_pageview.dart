@@ -12,6 +12,7 @@ import '../../../../core/datasources/firestore/models/phone-transaction/phone_tr
 import '../../../../core/utils/utility_methods.dart';
 import '../../../../router/route_names.dart';
 import '../../../../theme/text_scheme.dart';
+import '../../../../shared/shared_ctrl.dart';
 import '../controller/phone_transaction_ctrl.dart';
 
 final _ctrl = Get.find<PhoneTransactionCtrl>();
@@ -19,6 +20,7 @@ final _ctrl = Get.find<PhoneTransactionCtrl>();
 class RecentOrdersPageView extends StatelessWidget {
   RecentOrdersPageView({super.key});
 
+  final uuid = Get.find<SharedCtrl>().userData.uuid;
   final controller = PageController();
 
   @override
@@ -27,7 +29,7 @@ class RecentOrdersPageView extends StatelessWidget {
     return SizedBox(
       height: 200,
       child: StreamBuilder<List<PhoneTransaction>>(
-        stream: _ctrl.streamKOrderTranscById(),
+        stream: _ctrl.streamKOrderTranscById(uuid),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(
@@ -93,7 +95,7 @@ class RecentOrdersPageView extends StatelessWidget {
             ]);
           } else {
             return Center(
-              child: LoadingAnimationWidget.fourRotatingDots(
+              child: LoadingAnimationWidget.staggeredDotsWave(
                 color: color.primary,
                 size: 50,
               ),

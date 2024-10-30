@@ -25,11 +25,11 @@ class StockCtrl extends GetxController {
   StockItemEntity get selStockItem => _selStockItem;
   set stockItem(StockItemEntity value) => _selStockItem = value;
 
-  void fetchStockItems() async {
+  void fetchStockItems(String uuid) async {
     requestFailure = null;
     requestInProgress1.value = true;
 
-    final result = await stockUsecase.fetchStockItems();
+    final result = await stockUsecase.fetchStockItems(uuid);
 
     result.fold(
       (failure) => requestFailure = failure,

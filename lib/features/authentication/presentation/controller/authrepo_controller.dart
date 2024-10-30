@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:kaisa/core/datasources/firestore/models/kaisa-user/kaisa_user.dart';
 
 import '../../../../core/errors/failure_n_success.dart';
 import '../../domain/entity/auth_user.dart';
@@ -12,7 +13,7 @@ class AuthController extends GetxController {
   // user data
   var fullName = '';
   var email = '';
-  var address = '';
+  var address = ''.obs;
   var phoneNumber = '';
   var password = '';
   var code = 0;
@@ -30,7 +31,7 @@ class AuthController extends GetxController {
     required String phoneNumber,
   }) {
     this.fullName = fullName;
-    this.address = address;
+    this.address.value = address;
     this.phoneNumber = phoneNumber;
   }
 
@@ -47,7 +48,7 @@ class AuthController extends GetxController {
   void cleanUp() {
     fullName = '';
     email = '';
-    address = '';
+    address.value = '';
     phoneNumber = '';
     password = '';
     code = 0;
@@ -69,7 +70,7 @@ class AuthController extends GetxController {
 
   // log in
   var loggedInUser = <AuthUser>[].obs;
-  var loggedInFailure = <Failure>[].obs;
+  Failure? loggedInFailure;
   Future<void> logIn({required String email, required String password}) async {
     isLoggingIn.value = true;
 
@@ -79,7 +80,7 @@ class AuthController extends GetxController {
     );
 
     userOrFailure.fold(
-      (failure) => loggedInFailure.add(failure),
+      (failure) => loggedInFailure = failure,
       (user) async {
         loggedInUser.add(user);
       },
@@ -96,7 +97,7 @@ class AuthController extends GetxController {
 
     final userOrFailure = await authUC.createUser(
       fullName: fullName,
-      address: address,
+      address: address.value,
       phoneNumber: phoneNumber,
       email: email,
       password: password,
@@ -170,5 +171,27 @@ class AuthController extends GetxController {
     );
 
     isCheckingQualification.value = false;
+  }
+
+  //  user stream
+  Stream<KaisaUser> userStream({required String userId}) {
+    return authUC.userStream(userId: userId);
+  }
+
+  // delete account
+  var accountDeleted = false.obs;
+  var isDeletingAccount = false.obs;
+  var accountDeletionFailure = <Failure>[].obs;
+  Future<void> deleteAccount() async {
+    isDeletingAccount.value = true;
+
+    final successOrFailure = await authUC.deleteAccount();
+
+    successOrFailure.fold(
+      (failure) => accountDeletionFailure.add(failure),
+      (success) => accountDeleted(true),
+    );
+
+    isDeletingAccount.value = false;
   }
 }

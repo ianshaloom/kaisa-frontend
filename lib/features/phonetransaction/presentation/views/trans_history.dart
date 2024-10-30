@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
+import '../../../../shared/shared_ctrl.dart';
 import '../../../../theme/text_scheme.dart';
 import '../controller/transac_history_ctrl.dart';
 import '../widgets/trans_history_tile.dart';
@@ -16,13 +17,15 @@ class TransHistoryView extends StatelessWidget {
     final color = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
-    _ctrl.fetchPhoneTransactions();
+    final uuid = Get.find<SharedCtrl>().userData.uuid;
+
+    _ctrl.fetchPhoneTransactions(uuid);
 
     return Scaffold(
       body: Obx(
         () => _ctrl.isProcessingRequest.value
             ? Center(
-                child: LoadingAnimationWidget.fourRotatingDots(
+                child: LoadingAnimationWidget.staggeredDotsWave(
                   color: color.primary,
                   size: 50,
                 ),

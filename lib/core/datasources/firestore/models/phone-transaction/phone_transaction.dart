@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:kaisa/shared/shared_ctrl.dart';
 
-import '../../../../../features/phonetransaction/presentation/controller/phone_transaction_ctrl.dart';
 
 part 'phone_transaction.g.dart';
 
@@ -65,7 +65,7 @@ class PhoneTransaction {
   bool get isCancelled => status == 'Cancelled';
   bool get isDelivered => status == 'Delivered';
   bool get isSender {
-    final controller = Get.find<PhoneTransactionCtrl>();
+    final controller = Get.find<SharedCtrl>();
     return senderId == controller.userData.uuid;
   }
 

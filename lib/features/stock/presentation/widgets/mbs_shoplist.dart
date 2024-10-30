@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:kaisa/core/datasources/firestore/models/kaisa-user/kaisa_user.dart';
 import 'package:kaisa/core/utils/utility_methods.dart';
 import 'package:kaisa/core/widgets/custom_filled_btn.dart';
-import 'package:kaisa/features/shared/presentation/controller/shared_ctrl.dart';
+import 'package:kaisa/shared/shared_ctrl.dart';
 import 'package:kaisa/theme/text_scheme.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:uuid/uuid.dart';
@@ -31,7 +31,7 @@ class MbsShopList extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Center(
-                child: LoadingAnimationWidget.fourRotatingDots(
+                child: LoadingAnimationWidget.staggeredDotsWave(
                   color: color.primary,
                   size: 50,
                 ),
@@ -153,7 +153,7 @@ class MbsShopList extends StatelessWidget {
               () {
                 if (_shCtrl.requestInProgress.value) {
                   return Center(
-                    child: LoadingAnimationWidget.fourRotatingDots(
+                    child: LoadingAnimationWidget.staggeredDotsWave(
                       color: color.primary,
                       size: 50,
                     ),
@@ -161,9 +161,9 @@ class MbsShopList extends StatelessWidget {
                 }
 
                 return ListView.builder(
-                  itemCount: _shCtrl.kaisaShopsList.length,
+                  itemCount: _shCtrl.kaisaUsers.length,
                   itemBuilder: (context, index) {
-                    final user = _shCtrl.kaisaShopsList[index];
+                    final user = _shCtrl.kaisaUsers[index];
                     return CustomListTile(user: user);
                   },
                 );
@@ -181,7 +181,7 @@ class MbsShopList extends StatelessWidget {
       smUuid: _stCtrl.selStockItem.smUuid,
       senderId: _shCtrl.userData.uuid,
       senderName: _shCtrl.userData.fullName,
-      senderAddress: _shCtrl.userData.address,
+      senderAddress: _shCtrl.userData.shop,
       receiverId: _shCtrl.selectedShopId.value,
       receiverName: _shCtrl.selectedShopName.value,
       receiverAddress: _shCtrl.selectedShopAddress.value,
@@ -241,7 +241,7 @@ class CustomListTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  user.address.toUpperCase(),
+                  user.shop.toUpperCase(),
                   style: bodyMedium(textTheme),
                 ),
                 const SizedBox(height: 3),

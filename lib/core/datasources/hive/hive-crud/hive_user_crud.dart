@@ -1,10 +1,9 @@
-import 'package:hive_flutter/hive_flutter.dart';
+// import 'package:hive_flutter/hive_flutter.dart';
 
-import '../hive-models/user-data-model/hive_user_data_model.dart';
-import '../hive_init.dart';
+// import '../hive_init.dart';
 
 class HiveUserDataCrud {
-    HiveUserDataCrud._privateConstructor(this._userDataBox);
+/*     HiveUserDataCrud._privateConstructor(this._userDataBox);
   static final HiveUserDataCrud _instance =
       HiveUserDataCrud._privateConstructor(HiveBoxes.getUserDataBox);
   factory HiveUserDataCrud() => _instance;
@@ -25,5 +24,5 @@ class HiveUserDataCrud {
   // clear user profile data
   Future<void> clearUserData() async {
     await _userDataBox.clear();
-  }
+  } */
 }

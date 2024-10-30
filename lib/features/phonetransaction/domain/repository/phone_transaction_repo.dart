@@ -14,7 +14,8 @@ abstract class PhoneTransactionRepo {
       {required PhoneTransaction phoneTransaction});
 
   // fetch Phone Transactions
-  Future<Either<Failure, List<PhoneTransaction>>> fetchPhoneTransactions();
+  Future<Either<Failure, List<PhoneTransaction>>> fetchPhoneTransactions(
+      String uuid);
 
   // stream Phone Transactions by id
   Stream<List<PhoneTransaction>> streamKOrderTranscById(String userId);

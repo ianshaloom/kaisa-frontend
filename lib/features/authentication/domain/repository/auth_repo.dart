@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dartz/dartz.dart';
+import '../../../../core/datasources/firestore/models/kaisa-user/kaisa_user.dart';
 import '../../../../core/errors/failure_n_success.dart';
 import '../entity/auth_user.dart';
 
@@ -29,4 +30,8 @@ abstract class AuthRepository {
   Future<Either<Failure, Success>> resetPassword({required String email});
   
   Future<Either<Failure, Success>> signOut();
+
+   Stream<KaisaUser> userStream({required String userId}) ;
+
+   Future<Either<Failure, Success>> deleteAccount() ;
 }

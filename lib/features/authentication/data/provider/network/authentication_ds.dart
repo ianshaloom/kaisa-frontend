@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 
+import '../../../../../core/constants/network_const.dart';
 import '../../../../../core/datasources/firestore/crud/kaisa_users_ds.dart';
 import '../../../../../core/datasources/firestore/models/kaisa-user/kaisa_user.dart';
-import '../../../../../core/datasources/hive/hive-models/user-data-model/hive_user_data_model.dart';
 import '../../../../../core/datasources/kaisa-backend/crud/kaisa_backend_ds.dart';
 import '../../../core/errors/exception.dart';
 import '../../../domain/entity/auth_user.dart';
@@ -55,13 +55,6 @@ class FirebaseAuthentification {
         throw Exception('Sign in failed: The user is null after sign in.');
       }
 
-      // fetch user data from firestore
-      final userData =
-          await FirestoreUsersDs.fetchUser(userId: credential.user!.uid);
-
-      // then store user data in device
-      await hiveUserDataCrud.saveUser(UserDataHive.copyWithUserData(userData));
-
       return AuthUser.fromFirebase(credential.user!);
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw AuthenticationException(message: e.code);
@@ -94,13 +87,15 @@ class FirebaseAuthentification {
         fullName: fullName,
         email: email,
         phoneNumber: phoneNumber,
-        address: address,
-        isEmailVerified: false,
+        shop: address,
+        active: false,
+        imgUrl: kBaseUrlProfileImgs,
         role: 'user',
+        empDate: DateTime.now(),
+        srv: 'vslzx7k',
       );
 
       await FirestoreUsersDs.createUser(user: userData);
-      await hiveUserDataCrud.saveUser(UserDataHive.copyWithUserData(userData));
 
       return AuthUser.fromFirebase(credential.user!);
     } on firebase_auth.FirebaseAuthException catch (e) {
@@ -139,19 +134,15 @@ class FirebaseAuthentification {
     }
   }
 
-  Future<AuthUser> changePassword({
-    required String password,
-  }) async {
+  // delete account
+  Future<void> deleteAccount() async {
     try {
       final firebase_auth.User? user = _firebaseAuth.currentUser;
       if (user == null) {
-        throw Exception('Failed to change password, User was found to be null');
+        throw Exception('Failed to delete account, User was found to be null');
       }
-      await user.updatePassword(password);
 
-      /// ToDo
-
-      return AuthUser.fromFirebase(user);
+      await user.delete();
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw AuthenticationException(message: e.code);
     } catch (e) {
@@ -163,13 +154,16 @@ class FirebaseAuthentification {
     try {
       await _firebaseAuth.signOut();
 
-      // delete user info from device
-      await hiveUserDataCrud.clearUserData();
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw AuthenticationException(message: e.code);
     } catch (e) {
       throw AuthenticationException(message: e.toString());
     }
+  }
+
+  // stream user
+  Stream<KaisaUser> userStream({required String userId}) {
+    return FirestoreUsersDs.userStream(userId: userId);
   }
 
   // factory constructor

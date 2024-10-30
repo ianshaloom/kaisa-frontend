@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 
-import '../../core/constants.dart';
+import '../../../../../core/constants/constants.dart';
 import '../../core/error/cloud_storage_exceptions.dart';
 
 class CloudStorageDs {

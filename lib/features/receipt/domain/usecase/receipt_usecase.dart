@@ -14,8 +14,8 @@ class ReceiptUsecase {
     return receiptAbs.fetchReceipt(imei, shopId);
   }
 
-  Future<Either<Failure, List<ReceiptEntity>>> fetchReceipts() {
-    return receiptAbs.fetchReceipts();
+  Future<Either<Failure, List<ReceiptEntity>>> fetchReceipts(String uuid) {
+    return receiptAbs.fetchReceipts(uuid);
   }
 
   Future<Either<Failure, void>> createReceipt(ReceiptEntity receipt) {

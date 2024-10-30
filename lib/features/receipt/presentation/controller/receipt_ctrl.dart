@@ -134,7 +134,7 @@ class ReceiptCtrl extends GetxController {
       (failure) => requestFailure = failure,
       (_) {
         clearImagesMemory();
-        fetchReceipts();
+       
       },
     );
 
@@ -185,11 +185,11 @@ class ReceiptCtrl extends GetxController {
   }
 
   // RECEIPT CRUD
-  void fetchReceipts() async {
+  void fetchReceipts(String uuid) async {
     requestFailure = null;
     requestInProgress1.value = true;
 
-    final result = await receiptUsecase.fetchReceipts();
+    final result = await receiptUsecase.fetchReceipts(uuid);
 
     result.fold(
       (failure) => requestFailure = failure,
