@@ -110,6 +110,7 @@ class HomeWrapper extends StatelessWidget {
           final isUserEmpty = user != KaisaUser.empty;
 
           if (isUserEmpty) {
+            
             // assign user data to shared controller
             shCtrl.userData = user;
 

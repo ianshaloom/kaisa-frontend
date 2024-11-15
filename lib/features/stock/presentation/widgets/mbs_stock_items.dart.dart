@@ -7,12 +7,12 @@ import 'package:shimmer/shimmer.dart';
 import '../../../../core/utils/utility_methods.dart';
 import '../../../../shared/shared_ctrl.dart';
 import '../../../../theme/text_scheme.dart';
+import '../../../feature-receipts/f_receipt_ctrl.dart';
 import '../../domain/entity/stock_item_entity.dart';
 import '../controller/stock_ctrl.dart';
-import '../../../receipt/presentation/controller/receipt_ctrl.dart';
 
 final _ctrl = Get.find<StockCtrl>();
-final _rCtrl = Get.find<ReceiptCtrl>();
+final _rCtrl = Get.find<FReceiptCtrl>();
 
 class MbsStockItems extends StatelessWidget {
   const MbsStockItems({super.key});

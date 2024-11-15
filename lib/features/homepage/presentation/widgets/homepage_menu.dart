@@ -7,12 +7,8 @@ import 'package:kaisa/theme/text_scheme.dart';
 import '../../../../core/constants/image_path_const.dart';
 import '../../../../router/route_names.dart';
 import '../../../../shared/shared_ctrl.dart';
-import '../../../receipt/presentation/controller/receipt_ctrl.dart';
+import '../../../feature-receipts/f_receipt_ctrl.dart';
 import '../../../stock/presentation/controller/stock_ctrl.dart';
-
-final _sCtrl = Get.find<StockCtrl>();
-final _rCtrl = Get.find<ReceiptCtrl>();
-final uuid = Get.find<SharedCtrl>().userData.shopId;
 
 class HomeMenu extends StatelessWidget {
   const HomeMenu({super.key});
@@ -49,12 +45,17 @@ class HomeMenu extends StatelessWidget {
   }
 
   void _toStock(BuildContext context) {
-    _sCtrl.fetchStockItems(uuid);
+    final sCtrl = Get.find<StockCtrl>();
+    final uuid = Get.find<SharedCtrl>().userData.shopId;
+    sCtrl.fetchStockItems(uuid);
     context.go(AppNamedRoutes.toStock);
   }
 
   void _toReceipt(BuildContext context) {
-    _rCtrl.fetchReceipts(uuid);
+    final uuid = Get.find<SharedCtrl>().userData.shopId;
+    
+    final rCtrl = Get.find<FReceiptCtrl>();
+    rCtrl.fetchReceipts(uuid);
     context.go(AppNamedRoutes.toReceipt);
   }
 

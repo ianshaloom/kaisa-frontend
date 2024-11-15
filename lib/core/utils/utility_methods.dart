@@ -2,7 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:kaisa/core/constants/constants.dart';
 import 'package:kaisa/core/constants/network_const.dart';
 
-import '../../features/receipt/domain/entity/receipt_entity.dart';
+import '../../features/feature-receipts/f_receipt.dart';
 
 String elapsedTime(DateTime pdate) {
   final now = DateTime.now();

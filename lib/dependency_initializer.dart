@@ -7,6 +7,10 @@ import 'features/authentication/data/provider/network/authentication_ds.dart';
 import 'features/authentication/data/repository/auth_repo_impl.dart';
 import 'features/authentication/domain/usecase/auth_usecase.dart';
 import 'features/authentication/presentation/controller/authrepo_controller.dart';
+import 'features/feature-receipts/f_receipt_abs_impl.dart';
+import 'features/feature-receipts/f_receipt_ctrl.dart';
+import 'features/feature-receipts/f_receipt_ds.dart';
+import 'features/feature-receipts/f_receipt_usc.dart';
 import 'features/phonetransaction/data/provider/network/firestore_phone_transaction_ds.dart';
 import 'features/phonetransaction/data/provider/network/firestore_smartphone_ds.dart';
 import 'features/phonetransaction/data/repository/phone_transaction_repo_impl.dart';
@@ -16,10 +20,6 @@ import 'features/phonetransaction/domain/usecase/smartphones_usecase.dart';
 import 'features/phonetransaction/presentation/controller/phone_transaction_ctrl.dart';
 import 'features/phonetransaction/presentation/controller/smartphones_ctrl.dart';
 import 'features/phonetransaction/presentation/controller/transac_history_ctrl.dart';
-import 'features/receipt/data/provider/network/firestore_receipt_ds.dart';
-import 'features/receipt/data/repository/receipt_abs_impl.dart';
-import 'features/receipt/domain/usecase/receipt_usecase.dart';
-import 'features/receipt/presentation/controller/receipt_ctrl.dart';
 import 'features/shop/shop_abs_impl.dart';
 import 'features/shop/shop_ctrl.dart';
 import 'features/shop/shop_usecase.dart';
@@ -90,10 +90,10 @@ class DependencyBinder extends Bindings {
       ),
     );
 
-    Get.lazyPut<ReceiptCtrl>(
-      () => ReceiptCtrl(
-        ReceiptUsecase(
-          ReceiptAbsImpl(FirestoreReceiptDs()),
+    Get.lazyPut<FReceiptCtrl>(
+      () => FReceiptCtrl(
+        FReceiptUsecase(
+          FReceiptAbsImpl(FReceiptDs()),
         ),
       ),
     );

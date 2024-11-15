@@ -8,12 +8,10 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../../../core/constants/image_path_const.dart';
 import '../../../../core/utils/utility_methods.dart';
-import '../../domain/entity/receipt_entity.dart';
-import '../controller/receipt_ctrl.dart';
+import '../../f_receipt.dart';
+import '../../f_receipt_ctrl.dart';
 import 'receipt_detail_view.dart';
 import 'receipt_form.dart';
-
-final _rCtrl = Get.find<ReceiptCtrl>();
 
 class ReceiptView extends StatelessWidget {
   const ReceiptView({super.key});
@@ -22,6 +20,8 @@ class ReceiptView extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final color = Theme.of(context).colorScheme;
+
+    final rCtrl = Get.find<FReceiptCtrl>();
 
     return Scaffold(
       appBar: AppBar(
@@ -39,7 +39,7 @@ class ReceiptView extends StatelessWidget {
       ),
       body: Obx(
         () {
-          if (_rCtrl.requestInProgress1.value) {
+          if (rCtrl.fetchRequest.value) {
             return Center(
               child: LoadingAnimationWidget.staggeredDotsWave(
                 color: color.primary,
@@ -48,10 +48,10 @@ class ReceiptView extends StatelessWidget {
             );
           }
 
-          if (_rCtrl.requestFailure != null) {
+          if (rCtrl.fetchFailure != null) {
             return Center(
               child: Text(
-                _rCtrl.requestFailure!.errorMessage,
+                rCtrl.fetchFailure!.errorMessage,
                 textAlign: TextAlign.center,
                 style: bodyMedium(textTheme),
               ),
@@ -59,11 +59,11 @@ class ReceiptView extends StatelessWidget {
           }
 
           return ListView.builder(
-            itemCount: groupByReceiptDate(_rCtrl.receipts).length,
+            itemCount: groupByReceiptDate(rCtrl.receipts).length,
             itemBuilder: (context, index) {
               final date =
-                  groupByReceiptDate(_rCtrl.receipts).keys.elementAt(index);
-              final receiptList = groupByReceiptDate(_rCtrl.receipts)[date]!;
+                  groupByReceiptDate(rCtrl.receipts).keys.elementAt(index);
+              final receiptList = groupByReceiptDate(rCtrl.receipts)[date]!;
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,7 +93,7 @@ class ReceiptView extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _rCtrl.reset();
+          rCtrl.reset();
 
           Navigator.of(context).push(
             MaterialPageRoute(
@@ -105,8 +105,6 @@ class ReceiptView extends StatelessWidget {
       ),
     );
   }
-
- 
 }
 
 class ReceiptTile extends StatelessWidget {
@@ -118,11 +116,13 @@ class ReceiptTile extends StatelessWidget {
     final color = Theme.of(context).colorScheme;
     final font = Theme.of(context).textTheme;
 
+    final rCtrl = Get.find<FReceiptCtrl>();
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 0),
       child: GestureDetector(
         onTap: () {
-          _rCtrl.receipt = rcpt;
+          rCtrl.receipt = rcpt;
           _toReceiptDetailView(context);
         },
         child: Stack(

@@ -3,13 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:kaisa/features/receipt/domain/entity/receipt_entity.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../../theme/text_scheme.dart';
-import '../controller/receipt_ctrl.dart';
+import '../../f_receipt.dart';
+import '../../f_receipt_ctrl.dart';
 
-final _rCtrl = Get.find<ReceiptCtrl>();
+
 
 class ReceiptDetailView extends StatelessWidget {
   const ReceiptDetailView({super.key});
@@ -18,10 +18,12 @@ class ReceiptDetailView extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
+    final rCtrl = Get.find<FReceiptCtrl>();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Receipt ${_rCtrl.selReceipt.receiptNo}',
+          'Receipt ${rCtrl.selReceipt.receiptNo}',
           style: bodyRegular(textTheme).copyWith(fontSize: 13),
         ),
         centerTitle: true,
@@ -42,8 +44,8 @@ class ReceiptDetailView extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               children: [
-                for (int i = 0; i < _rCtrl.downloadUrlsList.length; i++)
-                  CaroselTile(imgUrl: _rCtrl.downloadUrlsList[i]),
+                for (int i = 0; i < rCtrl.downloadUrlsList.length; i++)
+                  CaroselTile(imgUrl: rCtrl.downloadUrlsList[i]),
               ],
             ),
           ),
@@ -60,7 +62,7 @@ class ReceiptDetailView extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           TileGroupTwo(
-            receipt: _rCtrl.selReceipt,
+            receipt: rCtrl.selReceipt,
           )
         ],
       ),

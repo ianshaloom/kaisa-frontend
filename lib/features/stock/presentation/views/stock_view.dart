@@ -8,12 +8,12 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../../core/utils/utility_methods.dart';
 import '../../../../theme/text_scheme.dart';
-import '../../../receipt/presentation/controller/receipt_ctrl.dart';
+import '../../../feature-receipts/f_receipt_ctrl.dart';
 import '../controller/stock_ctrl.dart';
 import '../widgets/mbs_menu.dart';
 
 final _sCtrl = Get.find<StockCtrl>();
-final _rCtrl = Get.find<ReceiptCtrl>();
+final _rCtrl = Get.find<FReceiptCtrl>();
 
 class StockView extends StatelessWidget {
   const StockView({super.key});
@@ -56,7 +56,6 @@ class StockView extends StatelessWidget {
               ),
             );
           }
-
 
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -103,8 +102,8 @@ class StockItemGridTile extends StatelessWidget {
                 padding: const EdgeInsets.all(30),
                 decoration: BoxDecoration(
                   color: stock.isSold
-                      ? colorScheme.onSurface.withOpacity(0.1)
-                      : colorScheme.primary.withOpacity(0.05),
+                      ? Colors.transparent
+                      : colorScheme.onSurface.withOpacity(0.1),
                   borderRadius: index.isEven
                       ? const BorderRadius.only(
                           topRight: Radius.circular(5),

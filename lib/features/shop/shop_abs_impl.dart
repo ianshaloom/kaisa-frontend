@@ -5,7 +5,7 @@ import '../../core/connection/network_info.dart';
 import '../../core/errors/cloud_storage_exceptions.dart';
 import '../../core/errors/failure_n_success.dart';
 import '../../shared/shared_models.dart';
-import '../receipt/domain/entity/receipt_entity.dart';
+import '../feature-receipts/f_receipt.dart';
 import 'shop_abs.dart';
 import 'shop_errors.dart';
 

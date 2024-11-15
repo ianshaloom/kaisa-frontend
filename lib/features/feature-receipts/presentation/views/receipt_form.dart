@@ -7,11 +7,10 @@ import '../../../../core/constants/image_path_const.dart';
 import '../../../../core/utils/utility_methods.dart';
 import '../../../../core/widgets/custom_filled_btn.dart';
 import '../../../../core/widgets/snacks.dart';
-import '../../../../shared/shared_ctrl.dart';
 import '../../../../theme/text_scheme.dart';
-import '../../domain/entity/receipt_entity.dart';
-import '../controller/receipt_ctrl.dart';
 import '../../../stock/presentation/widgets/mbs_stock_items.dart.dart';
+import '../../f_receipt.dart';
+import '../../f_receipt_ctrl.dart';
 import '../widgets/receipt_image.dart';
 import '../widgets/seg_buttons.dart';
 import 'posting_receipt.dart';
@@ -23,7 +22,6 @@ class ReceiptForm extends StatelessWidget {
   final TextEditingController _cusNameCtrl = TextEditingController();
   final TextEditingController _cusPhoneCtrl = TextEditingController();
   final TextEditingController _cashPriceCtrl = TextEditingController();
-  final _rCtrl = Get.find<ReceiptCtrl>();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -31,6 +29,8 @@ class ReceiptForm extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final color = Theme.of(context).colorScheme;
+
+    final rCtrl = Get.find<FReceiptCtrl>();
 
     return Scaffold(
       appBar: AppBar(
@@ -47,9 +47,9 @@ class ReceiptForm extends StatelessWidget {
             onPressed: () => _stockItemSelectionDialog(context),
             child: Obx(
               () => Text(
-                _rCtrl.imeiz.value.isEmpty
+                rCtrl.imeiz.value.isEmpty
                     ? 'Select Device'
-                    : _rCtrl.deviceDetailsz.value,
+                    : rCtrl.deviceDetailsz.value,
                 style: bodyBold(textTheme).copyWith(
                   fontSize: 11,
                   color: color.primary,
@@ -67,7 +67,7 @@ class ReceiptForm extends StatelessWidget {
                 minHeight: 100,
                 maxHeight: 300,
               ),
-              child: ReceiptImage(imei: _rCtrl.imei)),
+              child: ReceiptImage()),
           const SizedBox(height: 5),
           Divider(
             thickness: 10,
@@ -81,12 +81,12 @@ class ReceiptForm extends StatelessWidget {
                 children: [
                   const SizedBox(height: 15),
                   Obx(
-                    () => readOnlyField('IMEI: ${_rCtrl.imeiz.value}', context),
+                    () => readOnlyField('IMEI: ${rCtrl.imeiz.value}', context),
                   ),
                   const SizedBox(height: 5),
                   Obx(
                     () => readOnlyField(
-                        'Device: ${_rCtrl.deviceDetailsz.value}', context),
+                        'Device: ${rCtrl.deviceDetailsz.value}', context),
                   ),
                   const SizedBox(height: 5),
                   const SingleChoice(),
@@ -118,7 +118,7 @@ class ReceiptForm extends StatelessWidget {
                             ),
                             const SizedBox(width: 5),
                             Obx(
-                              () => _rCtrl.date.isEmpty
+                              () => rCtrl.date.isEmpty
                                   ? Text(
                                       "Choose a Date",
                                       style: bodyMedium(textTheme).copyWith(
@@ -126,7 +126,7 @@ class ReceiptForm extends StatelessWidget {
                                       ),
                                     )
                                   : Text(
-                                      newDate(_rCtrl.date.first),
+                                      newDate(rCtrl.date.first),
                                       style: bodyMedium(textTheme).copyWith(
                                         color: color.onSurface,
                                       ),
@@ -233,9 +233,7 @@ class ReceiptForm extends StatelessWidget {
           ),
           CustomFilledBtn(
             title: 'Post Receipt',
-            onPressed: () async {
-              postReceipt(context);
-            },
+            onPressed: () => postReceipt(context),
             pad: 5,
           ),
         ],
@@ -276,27 +274,29 @@ class ReceiptForm extends StatelessWidget {
   }
 
   void postReceipt(BuildContext context) async {
-    if (_rCtrl.imeiz.value.isEmpty || _rCtrl.deviceDetailsz.value.isEmpty) {
+    final rCtrl = Get.find<FReceiptCtrl>();
+
+    if (rCtrl.imeiz.value.isEmpty || rCtrl.deviceDetailsz.value.isEmpty) {
       Snack().showSnackBar(context: context, message: 'Please select a device');
 
       return;
     }
 
-    if (_rCtrl.images.isEmpty || _rCtrl.images.length < 2) {
+    if (rCtrl.images.isEmpty || rCtrl.images.length < 2) {
       Snack().showSnackBar(
           context: context, message: 'Please select at least two images');
 
       return;
     }
 
-    if (_rCtrl.org.value == Org.none) {
+    if (rCtrl.org.value == Org.none) {
       Snack().showSnackBar(
           context: context, message: 'Please select device loan company');
 
       return;
     }
 
-    if (_rCtrl.date.isEmpty) {
+    if (rCtrl.date.isEmpty) {
       Snack().showSnackBar(
           context: context, message: 'Please select receipt date');
 
@@ -335,13 +335,13 @@ class ReceiptForm extends StatelessWidget {
 
       final customerName = _cusNameCtrl.text.trim().toUpperCase();
 
-      final imei = int.parse(_rCtrl.imeiz.value);
-      final deviceDetails = _rCtrl.deviceDetailsz.value;
-      final downloadUrls = _rCtrl.downloadUrls;
-      final shopId = _rCtrl.shopId;
-      final receiptDate = _rCtrl.date.first;
-      final smUuid = _rCtrl.smUuid;
-      final org = _rCtrl.organisation;
+      final imei = int.parse(rCtrl.imeiz.value);
+      final deviceDetails = rCtrl.deviceDetailsz.value;
+      final downloadUrls = rCtrl.downloadUrls;
+      final shopId = rCtrl.shopId;
+      final receiptDate = rCtrl.date.first;
+      final smUuid = rCtrl.smUuid;
+      final org = rCtrl.organisation;
 
       ReceiptEntity receipt = ReceiptEntity(
         imei: imei,
@@ -358,20 +358,15 @@ class ReceiptForm extends StatelessWidget {
         org: org,
       );
 
-      _rCtrl.tReceipt = receipt;
+      rCtrl.tReceipt = receipt;
 
-      await toPostingPage(context).then((value) {
-        _rCtrl.postReceipt();
-      });
+      await toPostingPage(context);
     }
-
-    // fetch receipts
-    final uuid = Get.find<SharedCtrl>().userData.uuid;
-    _rCtrl.fetchReceipts(uuid);
-
   }
 
   void _showCalendar(BuildContext context) async {
+    final rCtrl = Get.find<FReceiptCtrl>();
+
     final date = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -380,15 +375,19 @@ class ReceiptForm extends StatelessWidget {
     );
 
     if (date != null) {
-      _rCtrl.date.assign(date);
+      rCtrl.date.assign(date);
     }
   }
 
   Future toPostingPage(BuildContext context) async {
+    final rCtrl = Get.find<FReceiptCtrl>();
+
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => const PostingReceipt(),
       ),
     );
+
+    rCtrl.postReceipt();
   }
 }

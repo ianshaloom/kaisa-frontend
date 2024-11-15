@@ -8,7 +8,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../../core/constants/image_path_const.dart';
 import '../../../shared/shared_models.dart';
 import '../../../theme/text_scheme.dart';
-import '../../receipt/domain/entity/receipt_entity.dart';
+import '../../feature-receipts/f_receipt.dart';
 import '../shop_ctrl.dart';
 import '../widgets/donut_chart.dart';
 import 'receipt_list.dart';

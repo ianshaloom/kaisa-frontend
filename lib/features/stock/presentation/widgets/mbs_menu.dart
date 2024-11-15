@@ -3,15 +3,15 @@ import 'package:get/get.dart';
 import 'package:kaisa/theme/text_scheme.dart';
 
 import '../../../../core/widgets/custom_filled_btn.dart';
-import '../../../receipt/presentation/controller/receipt_ctrl.dart';
-import '../../../receipt/presentation/widgets/mbs_receipt_view.dart';
+import '../../../feature-receipts/f_receipt_ctrl.dart';
+import '../../../feature-receipts/presentation/widgets/mbs_receipt_view.dart';
 import '../../../../shared/shared_ctrl.dart';
 import '../controller/stock_ctrl.dart';
 import 'mbs_shoplist.dart';
 
 final _sCtrl = Get.find<StockCtrl>();
 final _shCtrl = Get.find<SharedCtrl>();
-final _rCtrl = Get.find<ReceiptCtrl>();
+final _rCtrl = Get.find<FReceiptCtrl>();
 
 class MbsMenuStockItem extends StatelessWidget {
   final bool sold;

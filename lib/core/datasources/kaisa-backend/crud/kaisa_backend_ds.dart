@@ -23,6 +23,16 @@ class KaisaBackendDS {
 
       return true;
     } on DioException catch (e) {
+      final statusCode = e.response?.statusCode;
+
+      // print('💡 ------------ ${statusCode.toString()}');
+
+      if (statusCode == 400) {
+        final message = e.response?.data['error'] as String;
+
+        throw FetchDataException(message);
+      }
+
       throw FetchDataException(e.message);
     }
   }
@@ -33,9 +43,19 @@ class KaisaBackendDS {
       Response response = await dio.post(order, data: data);
 
       if (response.statusCode != 200) {
-        throw FetchDataException(response.data['message']);
+        throw PostDataException(response.data['message']);
       }
     } on DioException catch (e) {
+      final statusCode = e.response?.statusCode;
+
+      // print('💡 ------------ ${statusCode.toString()}');
+
+      if (statusCode == 400) {
+        final message = e.response?.data['error'] as String;
+
+        throw PostDataException(message);
+      }
+
       throw PostDataException(e.message);
     }
   }
@@ -46,9 +66,19 @@ class KaisaBackendDS {
       Response response = await dio.post(receipt, data: data);
 
       if (response.statusCode != 200) {
-        throw FetchDataException(response.data['message']);
+        throw PostDataException(response.data['message']);
       }
     } on DioException catch (e) {
+      final statusCode = e.response?.statusCode;
+
+      // print('💡 ------------ ${statusCode.toString()}');
+
+      if (statusCode == 400) {
+        final message = e.response?.data['error'] as String;
+
+        throw PostDataException(message);
+      }
+
       throw PostDataException(e.message);
     }
   }
@@ -59,9 +89,19 @@ class KaisaBackendDS {
       Response response = await dio.post(orderTrans, data: data);
 
       if (response.statusCode != 200) {
-        throw FetchDataException(response.data['message']);
+        throw PostDataException(response.data['message']);
       }
     } on DioException catch (e) {
+      final statusCode = e.response?.statusCode;
+
+      // print('💡 ------------ ${statusCode.toString()}');
+
+      if (statusCode == 400) {
+        final message = e.response?.data['error'] as String;
+
+        throw PostDataException(message);
+      }
+
       throw PostDataException(e.message);
     }
   }
@@ -72,14 +112,23 @@ class KaisaBackendDS {
       Response response = await dio.patch(orderTrans, data: data);
 
       if (response.statusCode != 200) {
-        throw FetchDataException(response.data['message']);
+        throw PatchDataException(response.data['message']);
       }
     } on DioException catch (e) {
+      final statusCode = e.response?.statusCode;
+
+      // print('💡 ------------ ${statusCode.toString()}');
+
+      if (statusCode == 400) {
+        final message = e.response?.data['error'] as String;
+
+        throw PatchDataException(message);
+      }
       throw PatchDataException(e.message);
     }
   }
 
-    // fETCH wEEKLY sALES
+  // fETCH wEEKLY sALES
   Future<List<Map<String, dynamic>>> fetchWeeklySales() async {
     try {
       List<Map<String, dynamic>> sales;
@@ -103,6 +152,16 @@ class KaisaBackendDS {
 
       return sales;
     } on DioException catch (e) {
+      final statusCode = e.response?.statusCode;
+
+      // print('💡 ------------ ${statusCode.toString()}');
+
+      if (statusCode == 400) {
+        final message = e.response?.data['error'] as String;
+
+        throw FetchDataException(message);
+      }
+
       throw FetchDataException(e.message);
     }
   }

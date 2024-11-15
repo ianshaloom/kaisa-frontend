@@ -4,8 +4,8 @@ import 'package:intl/intl.dart';
 
 import '../../../core/utils/utility_methods.dart';
 import '../../../theme/text_scheme.dart';
-import '../../receipt/domain/entity/receipt_entity.dart';
-import '../../receipt/presentation/views/receipt_view.dart';
+import '../../feature-receipts/f_receipt.dart';
+import '../../feature-receipts/presentation/views/receipt_listview.dart';
 
 class ReceiptsPage extends StatelessWidget {
   final String day;

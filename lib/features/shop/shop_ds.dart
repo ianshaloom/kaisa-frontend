@@ -5,7 +5,7 @@ import '../../core/constants/constants.dart';
 import '../../core/datasources/kaisa-backend/crud/kaisa_backend_ds.dart';
 import '../../core/errors/cloud_storage_exceptions.dart';
 import '../../core/utils/utility_methods.dart';
-import '../receipt/domain/entity/receipt_entity.dart';
+import '../feature-receipts/f_receipt.dart';
 
 class ShopDs {
   static final shop =

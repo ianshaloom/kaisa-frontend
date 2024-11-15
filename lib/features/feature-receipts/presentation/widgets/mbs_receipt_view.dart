@@ -2,13 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:kaisa/features/receipt/domain/entity/receipt_entity.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../../theme/text_scheme.dart';
-import '../controller/receipt_ctrl.dart';
+import '../../f_receipt.dart';
+import '../../f_receipt_ctrl.dart';
 
-final _rCtrl = Get.find<ReceiptCtrl>();
 
 class MbsReceiptView extends StatelessWidget {
   const MbsReceiptView({super.key});
@@ -17,6 +16,8 @@ class MbsReceiptView extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
+
+final rCtrl = Get.find<FReceiptCtrl>();
 
     return Column(
       children: [
@@ -34,7 +35,7 @@ class MbsReceiptView extends StatelessWidget {
             children: [
               Obx(
                 () {
-                  if (_rCtrl.requestInProgress1.value) {
+                  if (rCtrl.fetchRequest.value) {
                     return Shimmer.fromColors(
                       baseColor: colorScheme.primary.withOpacity(0.1),
                       highlightColor: colorScheme.primary.withOpacity(0.2),
@@ -48,10 +49,10 @@ class MbsReceiptView extends StatelessWidget {
                     );
                   }
 
-                  if (_rCtrl.requestFailure != null) {
+                  if (rCtrl.fetchFailure != null) {
                     return Center(
                       child: Text(
-                        _rCtrl.requestFailure!.errorMessage,
+                        rCtrl.fetchFailure!.errorMessage,
                         style: bodyMedium(textTheme),
                       ),
                     );
@@ -66,8 +67,8 @@ class MbsReceiptView extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       children: [
-                        for (int i = 0; i < _rCtrl.downloadUrlsList.length; i++)
-                          CaroselTile(imgUrl: _rCtrl.downloadUrlsList[i]),
+                        for (int i = 0; i < rCtrl.downloadUrlsList.length; i++)
+                          CaroselTile(imgUrl: rCtrl.downloadUrlsList[i]),
                       ],
                     ),
                   );
@@ -87,7 +88,7 @@ class MbsReceiptView extends StatelessWidget {
               const SizedBox(height: 10),
               Obx(
                 () {
-                  if (_rCtrl.requestInProgress1.value) {
+                  if (rCtrl.fetchRequest.value) {
                     return Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 12),
@@ -146,12 +147,12 @@ class MbsReceiptView extends StatelessWidget {
                     );
                   }
 
-                  if (_rCtrl.requestFailure != null) {
+                  if (rCtrl.fetchFailure != null) {
                     return const Center();
                   }
 
                   return TileGroupTwo(
-                    receipt: _rCtrl.selReceipt,
+                    receipt: rCtrl.selReceipt,
                   );
                 },
               ),

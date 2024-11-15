@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../core/datasources/firestore/models/kaisa-user/kaisa_user.dart';
 import '../core/utils/utility_methods.dart';
-import '../features/receipt/domain/entity/receipt_entity.dart';
+import '../features/feature-receipts/f_receipt.dart';
 
 class DailySales {
   const DailySales({
@@ -169,5 +169,5 @@ class DonutData {
   DonutData(this.color, this.percent);
 
   final Color color;
-  final double percent;
+  double percent;
 }

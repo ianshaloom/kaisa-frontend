@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 import '../../core/errors/failure_n_success.dart';
 import '../../shared/shared_models.dart';
-import '../receipt/domain/entity/receipt_entity.dart';
+import '../feature-receipts/f_receipt.dart';
 import 'shop_usecase.dart';
 
 class ShopCtrl extends GetxController {
@@ -97,7 +97,7 @@ class ShopCtrl extends GetxController {
   List<DonutData> buildPieChartData() {
     final pieListData = listDailySales;
 
-    return List.generate(
+    List<DonutData> data = List.generate(
       pieListData.length,
       (index) {
         final data = pieListData[index];
@@ -108,7 +108,23 @@ class ShopCtrl extends GetxController {
 
         return pieData;
       },
-    );
+    ).toList();
+
+    final b = data.fold<double>(0, (sum, data) => sum + data.percent) <= 100;
+
+    if (!b) {
+      // balance the data
+      final diff =
+          data.fold<double>(0, (sum, data) => sum + data.percent) - 100;
+
+      final reduced = data.firstWhere((element) => element.percent > diff);
+
+      reduced.percent -= diff;
+
+      return data;
+    }
+
+    return data;
   }
 
   //  return a double from a percentage
@@ -125,7 +141,7 @@ class ShopCtrl extends GetxController {
     return p;
   }
 
-  reset(String uuid){
+  reset(String uuid) {
     navIndex.value = 0;
     fetchWeeklySales(uuid);
   }

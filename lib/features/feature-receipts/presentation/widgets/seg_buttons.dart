@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../theme/text_scheme.dart';
-import '../controller/receipt_ctrl.dart';
-
-final _ctrl = Get.find<ReceiptCtrl>();
+import '../../f_receipt_ctrl.dart';
 
 class SingleChoice extends StatelessWidget {
   const SingleChoice({super.key});
@@ -12,6 +10,8 @@ class SingleChoice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+
+    final ctrl = Get.find<FReceiptCtrl>();
 
     return Obx(() {
       return SegmentedButton<Org>(
@@ -60,9 +60,9 @@ class SingleChoice extends StatelessWidget {
             ),
           ),
         ],
-        selected: <Org>{_ctrl.org.value},
+        selected: <Org>{ctrl.org.value},
         onSelectionChanged: (Set<Org> newSelection) {
-          _ctrl.org.value = newSelection.first;
+          ctrl.org.value = newSelection.first;
         },
       );
     });

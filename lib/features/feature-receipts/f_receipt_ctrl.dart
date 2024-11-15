@@ -2,21 +2,16 @@ import 'dart:io';
 
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kaisa/core/errors/failure_n_success.dart';
 
-import '../../../../core/errors/failure_n_success.dart';
-import '../../domain/entity/receipt_entity.dart';
-import '../../domain/usecase/receipt_usecase.dart';
+import 'f_receipt.dart';
+import 'f_receipt_usc.dart';
 
 enum Org { none, watu, mkopa, onfon, other }
 
-class ReceiptCtrl extends GetxController {
-  final ReceiptUsecase receiptUsecase;
-  ReceiptCtrl(this.receiptUsecase);
-
-  var requestInProgress1 = false.obs;
-  var progressStatus = 'Uploading images...'.obs;
-  var requestInProgress2 = false.obs;
-  Failure? requestFailure;
+class FReceiptCtrl extends GetxController {
+  final FReceiptUsecase receiptUsecase;
+  FReceiptCtrl(this.receiptUsecase);
 
   final _receipts = <ReceiptEntity>[].obs;
   List<ReceiptEntity> get receipts => _receipts;
@@ -25,8 +20,6 @@ class ReceiptCtrl extends GetxController {
   var _selReceipt = ReceiptEntity.empty;
   ReceiptEntity get selReceipt => _selReceipt;
   set receipt(ReceiptEntity value) => _selReceipt = value;
-
-  // FOR RECEIPT FORM
 
   var _toBeUploaded = ReceiptEntity.empty;
   ReceiptEntity get toBeUploaded => _toBeUploaded;
@@ -46,10 +39,9 @@ class ReceiptCtrl extends GetxController {
   var cashPrice = 0;
   var date = <DateTime>[].obs;
   var org = Org.none.obs;
-  var downloadUrls = <String>[];
 
+  // Pick an image.
   var images = <File>[].obs;
-// Pick an image.
   void pickImage() async {
     ImagePicker picker = ImagePicker();
     XFile? i =
@@ -108,48 +100,55 @@ class ReceiptCtrl extends GetxController {
     downloadUrls.clear();
   }
 
-  Future<void> uploadImages() async {
-    requestFailure = null;
-    requestInProgress1.value = true;
+  Failure? uploadingImgFailure;
+  var uploadingImgInProgress = false.obs;
+  var downloadUrls = <String>[];
+
+  uploadImages() async {
+    uploadingImgFailure = null;
+    uploadingImgInProgress.value = true;
 
     String leading = imeiz.value;
 
     final result = await receiptUsecase.uploadImage(images, leading);
 
     result.fold(
-      (failure) => requestFailure = failure,
+      (failure) => uploadingImgFailure = failure,
       (urls) => downloadUrls.assignAll(urls),
     );
 
-    requestInProgress1.value = false;
+    uploadingImgInProgress.value = false;
   }
 
-  void createReceipt(ReceiptEntity receipt) async {
-    requestFailure = null;
-    requestInProgress1.value = true;
+  Failure? postingRFailure;
+  var postingRInProgress = false.obs;
+
+  createReceipt(ReceiptEntity receipt) async {
+    postingRFailure = null;
+    postingRInProgress.value = true;
 
     final result = await receiptUsecase.createReceipt(receipt);
 
     result.fold(
-      (failure) => requestFailure = failure,
+      (failure) => postingRFailure = failure,
       (_) {
         clearImagesMemory();
-       
       },
     );
 
-    requestInProgress1.value = false;
+    postingRInProgress.value = false;
   }
 
-  Future<String> postReceipt() async {
-    requestFailure = null;
+  var requestStatus = 'Uploading images...'.obs;
 
+  Future<String> postReceipt() async {
     if (downloadUrls.isEmpty) {
       // update progress status
-      progressStatus.value = 'Uploading images...';
+      requestStatus.value = 'Uploading images...';
+
       await uploadImages();
 
-      if (requestFailure != null) {
+      if (uploadingImgFailure != null) {
         return 'fail upload';
       }
 
@@ -157,12 +156,12 @@ class ReceiptCtrl extends GetxController {
       final r = _toBeUploaded.copyWith(receiptImgUrl: downloadUrls);
 
       // update progress status
-      progressStatus.value = 'Posting receipt...';
+      requestStatus.value = 'Posting receipt...';
 
       // post receipt
       createReceipt(r);
 
-      if (requestFailure != null) {
+      if (postingRFailure != null) {
         return 'fail post';
       }
 
@@ -173,43 +172,47 @@ class ReceiptCtrl extends GetxController {
     final r = _toBeUploaded.copyWith(receiptImgUrl: downloadUrls);
 
     // update progress status
-    progressStatus.value = 'Posting Receipt...';
+    requestStatus.value = 'Posting Receipt...';
 
     // post receipt
     createReceipt(r);
 
-    if (requestFailure != null) {
+    if (postingRFailure != null) {
       return 'fail post';
     }
+
     return 'success';
   }
 
   // RECEIPT CRUD
+  Failure? fetchFailure;
+  var fetchRequest = false.obs;
+
   void fetchReceipts(String uuid) async {
-    requestFailure = null;
-    requestInProgress1.value = true;
+    fetchFailure = null;
+    fetchRequest.value = true;
 
     final result = await receiptUsecase.fetchReceipts(uuid);
 
     result.fold(
-      (failure) => requestFailure = failure,
+      (failure) => fetchFailure = failure,
       (receipts) => this.receipts = receipts,
     );
 
-    requestInProgress1.value = false;
+    fetchRequest.value = false;
   }
 
   void fetchReceipt() async {
-    requestFailure = null;
-    requestInProgress1.value = true;
+    fetchFailure = null;
+    fetchRequest.value = true;
 
     final result = await receiptUsecase.fetchReceipt(imei, shopId);
 
     result.fold(
-      (failure) => requestFailure = failure,
+      (failure) => fetchFailure = failure,
       (receipt) => _selReceipt = receipt,
     );
 
-    requestInProgress1.value = false;
+    fetchRequest.value = false;
   }
 }

@@ -4,13 +4,12 @@ import 'package:get/get.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../../theme/text_scheme.dart';
-import '../controller/receipt_ctrl.dart';
+import '../../f_receipt_ctrl.dart';
 
-final _ctrl = Get.find<ReceiptCtrl>();
+
 
 class ReceiptImage extends StatelessWidget {
-  final String imei;
-  ReceiptImage({super.key, required this.imei});
+  ReceiptImage({super.key});
 
   final controller = PageController(
     initialPage: 0,
@@ -23,11 +22,13 @@ class ReceiptImage extends StatelessWidget {
 
     final bolded = bodyMedium(textTheme).copyWith(fontSize: 10);
 
+    final ctrl = Get.find<FReceiptCtrl>();
+
     return Column(
       children: [
         Expanded(
           child: Obx(
-            () => _ctrl.images.isEmpty
+            () => ctrl.images.isEmpty
                 ? Container(
                     margin: const EdgeInsets.symmetric(horizontal: 20),
                     width: double.infinity,
@@ -159,14 +160,14 @@ class ReceiptImage extends StatelessWidget {
                       Expanded(
                         child: PageView.builder(
                           controller: controller,
-                          itemCount: _ctrl.images.length,
+                          itemCount: ctrl.images.length,
                           itemBuilder: (context, index) {
                             return Container(
                               alignment: Alignment.center,
                               child: Stack(
                                 children: [
                                   Image.file(
-                                    _ctrl.images[index],
+                                    ctrl.images[index],
                                     fit: BoxFit.fitHeight,
                                   ),
                                   Positioned(
@@ -177,7 +178,7 @@ class ReceiptImage extends StatelessWidget {
                                       backgroundColor: color.surface,
                                       child: IconButton(
                                         onPressed: () =>
-                                            _ctrl.removeImage(index),
+                                            ctrl.removeImage(index),
                                         icon: Icon(
                                           CupertinoIcons.delete,
                                           color: color.error,
@@ -195,7 +196,7 @@ class ReceiptImage extends StatelessWidget {
                       const SizedBox(height: 5),
                       SmoothPageIndicator(
                         controller: controller,
-                        count: _ctrl.images.length,
+                        count: ctrl.images.length,
                         effect: WormEffect(
                           dotWidth: 5,
                           dotHeight: 5,
@@ -214,9 +215,9 @@ class ReceiptImage extends StatelessWidget {
           children: [
             Expanded(
               child: Obx(
-                () => _ctrl.images.isEmpty
+                () => ctrl.images.isEmpty
                     ? TextButton.icon(
-                        onPressed: () => _ctrl.pickImage(),
+                        onPressed: () => ctrl.pickImage(),
                         icon: const Icon(Icons.image),
                         label: Text(
                           'Select Image',
@@ -232,7 +233,7 @@ class ReceiptImage extends StatelessWidget {
                         ),
                       )
                     : TextButton.icon(
-                        onPressed: () => _ctrl.pickImage(),
+                        onPressed: () => ctrl.pickImage(),
                         icon: const Icon(Icons.image),
                         label: Text(
                           'Select More Images',
@@ -249,26 +250,6 @@ class ReceiptImage extends StatelessWidget {
                       ),
               ),
             ),
-            /* const SizedBox(width: 10),
-             Expanded(
-              child: ElevatedButton.icon(
-                onPressed: () =>
-                    CloudStorageDs().uploadImage(_ctrl.images[1], imei),
-                icon: const Icon(Icons.upload),
-                label: Text(
-                  'Upload Image',
-                  style: bodyRegular(textTheme).copyWith(
-                    color: color.primary,
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  elevation: 0.5,
-                ),
-              ),
-            ), */
           ],
         )
       ],

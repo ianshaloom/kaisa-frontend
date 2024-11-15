@@ -29,20 +29,22 @@ class NetworkConst {
   static String get kBaseUrlBackend => url();
 
   static String url() {
-  final svr = Get.find<SharedCtrl>().userData.srv;
+    final svr = Get.find<SharedCtrl>().userData.srv;
 
-    if(svr.isEmpty) {
+    if (svr.isEmpty) {
       // ignore: avoid_print
       print(' 🚩 No server 🚩');
 
       return 'https://kaisa-backend-vslzx7k-moolsha-nai.globeapp.dev';
     } else {
-       // ignore: avoid_print
+      // ignore: avoid_print
       print(' 🏁 Yes server 🏁');
+
       return 'https://kaisa-backend-$svr-moolsha-nai.globeapp.dev';
+      // return 'http://192.168.0.102:8080';
     }
   }
 
   // const String kBaseUrlBackend = 'http://192.168.0.114:8080';
-// http://192.168.0.114:8080
+//http://192.168.0.102:8080/
 }

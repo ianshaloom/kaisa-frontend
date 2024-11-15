@@ -11,13 +11,12 @@ import '../features/phonetransaction/presentation/views/smartphone_detail.dart';
 import '../features/phonetransaction/presentation/views/smartphone_grid_list.dart';
 import '../features/phonetransaction/presentation/views/trans_history.dart';
 import '../features/profile/presentation/views/profile_view.dart';
-import '../features/receipt/presentation/views/receipt_view.dart';
+import '../features/feature-receipts/presentation/views/receipt_listview.dart';
 import '../features/shop/views/shop_view.dart';
 import '../features/stock/presentation/views/stock_view.dart';
 import '../features/zkeleton/views/zleton.dart';
 
 final router = GoRouter(
-  debugLogDiagnostics: true,
   routes: <GoRoute>[
     GoRoute(
       path: RoutePath.root.path,

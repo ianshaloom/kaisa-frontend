@@ -14,6 +14,7 @@ class AppException implements Exception {
 }
 
 class FetchDataException extends AppException {
+  
   FetchDataException(String? details)
       : super(
           code: "fetch-data",

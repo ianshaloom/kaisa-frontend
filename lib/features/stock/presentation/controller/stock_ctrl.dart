@@ -33,7 +33,21 @@ class StockCtrl extends GetxController {
 
     result.fold(
       (failure) => requestFailure = failure,
-      (stockItems) => this.stockItems = stockItems,
+      (stks) {
+        // sort the stock items that have been fetched
+        // let the unsold items come first
+        stks.sort((a, b) {
+          if (a.isSold == b.isSold) {
+            return 0;
+          } else if (a.isSold) {
+            return 1;
+          } else {
+            return -1;
+          }
+        });
+
+        stockItems = stks;
+      },
     );
 
     requestInProgress1.value = false;
