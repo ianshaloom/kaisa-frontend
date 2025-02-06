@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<!-- Intenet Permission -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="kaisa"
+        android:label="Kaisa"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

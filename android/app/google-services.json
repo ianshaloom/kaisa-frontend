@@ -33,6 +33,35 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:818180271880:android:61d7f2c33192da707e86bd",
+        "android_client_info": {
+          "package_name": "com.example.kaisa_admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "818180271880-6v2k9hp9jcnd2ko4ht9d9ddbfjk9ti7i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqCwKfZpQzXA51HzoSsAVnsc-Zs9ihoXs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "818180271880-6v2k9hp9jcnd2ko4ht9d9ddbfjk9ti7i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"
